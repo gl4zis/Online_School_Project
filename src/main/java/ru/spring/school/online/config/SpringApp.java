@@ -19,10 +19,9 @@ import org.thymeleaf.spring6.view.ThymeleafViewResolver;
 import java.util.List;
 import java.util.ArrayList;
 
-@SpringBootApplication(scanBasePackages = "org.spring.test")
-@EntityScan("org.spring.test.domain")
-@EnableJpaRepositories("org.spring.test.repository")
-@EnableWebMvc
+@SpringBootApplication(scanBasePackages = "ru.spring.school.online")
+@EntityScan("ru.spring.school.online.models")
+@EnableJpaRepositories("ru.spring.school.online.repositories")
 public class SpringApp implements WebMvcConfigurer {
 
     public static void main(String[] args) {
@@ -32,22 +31,22 @@ public class SpringApp implements WebMvcConfigurer {
     @Autowired
     private ApplicationContext applicationContext;
 
-    @Bean
-    public SpringResourceTemplateResolver templateResolver() {
-        SpringResourceTemplateResolver templateResolver = new SpringResourceTemplateResolver();
-        templateResolver.setApplicationContext(applicationContext);
-        templateResolver.setPrefix("/WEB-INF/views/");
-        templateResolver.setSuffix(".html");
-        return templateResolver;
-    }
-
-    @Bean
-    public SpringTemplateEngine templateEngine() {
-        SpringTemplateEngine templateEngine = new SpringTemplateEngine();
-        templateEngine.setTemplateResolver(templateResolver());
-        templateEngine.setEnableSpringELCompiler(true);
-        return templateEngine;
-    }
+//    @Bean
+//    public SpringResourceTemplateResolver templateResolver() {
+//        SpringResourceTemplateResolver templateResolver = new SpringResourceTemplateResolver();
+////        templateResolver.setApplicationContext(applicationContext);
+////        templateResolver.setPrefix("WEB_INF/views/");
+////        templateResolver.setSuffix(".html");
+//        return templateResolver;
+//    }
+//
+//    @Bean
+//    public SpringTemplateEngine templateEngine() {
+//        SpringTemplateEngine templateEngine = new SpringTemplateEngine();
+//        templateEngine.setTemplateResolver(templateResolver());
+//        templateEngine.setEnableSpringELCompiler(true);
+//        return templateEngine;
+//    }
 
     /* Should be replaced by "spring.mvc.hiddenmethod.filter.enabled=true"
     in application.properties
@@ -63,10 +62,10 @@ public class SpringApp implements WebMvcConfigurer {
         return filterRegistrationBean;
     }
 
-    @Override
-    public void configureViewResolvers(ViewResolverRegistry registry) {
-        ThymeleafViewResolver resolver = new ThymeleafViewResolver();
-        resolver.setTemplateEngine(templateEngine());
-        registry.viewResolver(resolver);
-    }
+//    @Override
+//    public void configureViewResolvers(ViewResolverRegistry registry) {
+//        ThymeleafViewResolver resolver = new ThymeleafViewResolver();
+//        resolver.setTemplateEngine(templateEngine());
+//        registry.viewResolver(resolver);
+//    }
 }
