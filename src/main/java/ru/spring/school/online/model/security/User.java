@@ -1,10 +1,8 @@
 package ru.spring.school.online.model.security;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,22 +13,24 @@ import java.util.Collections;
 @Entity(name = "usr")
 @Data
 @RequiredArgsConstructor
-public abstract class User implements UserDetails {
+@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PRIVATE, force = true)
+public class User implements UserDetails {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     protected final String username;
     protected final String password;
 
     protected String firstname;
     protected String lastname;
-    protected int age;
-    protected int classNumber;
+    protected Integer age;
+    protected Integer classNumber;
     protected String photo;  //Will be realised in future
     protected String description;
-    protected long phoneNumber;
+    protected Long phoneNumber;
     protected final String email;
 
+    @Enumerated(value = EnumType.STRING)
     protected final Role role;
 
     @Override
@@ -58,7 +58,6 @@ public abstract class User implements UserDetails {
         return true;
     }
 
-
     @RequiredArgsConstructor
     protected enum Role {
         ADMIN(new SimpleGrantedAuthority("ADMIN")),
@@ -66,5 +65,13 @@ public abstract class User implements UserDetails {
         STUDENT(new SimpleGrantedAuthority("STUDENT"));
 
         private final GrantedAuthority authority;
+
+        public static Role getByName(String roleName) {
+            for (Role role : Role.values()) {
+                if (role.name().equals(roleName))
+                    return role;
+            }
+            return null;
+        }
     }
 }
