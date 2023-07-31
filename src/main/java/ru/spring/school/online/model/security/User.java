@@ -14,7 +14,7 @@ import java.util.Collections;
 @Data
 @RequiredArgsConstructor
 @AllArgsConstructor
-@NoArgsConstructor(access = AccessLevel.PRIVATE, force = true)
+@NoArgsConstructor(access = AccessLevel.PROTECTED, force = true)
 public class User implements UserDetails {
 
     @Id
@@ -65,13 +65,5 @@ public class User implements UserDetails {
         STUDENT(new SimpleGrantedAuthority("STUDENT"));
 
         private final GrantedAuthority authority;
-
-        public static Role getByName(String roleName) {
-            for (Role role : Role.values()) {
-                if (role.name().equals(roleName))
-                    return role;
-            }
-            return null;
-        }
     }
 }

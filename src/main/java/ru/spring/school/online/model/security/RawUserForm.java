@@ -23,6 +23,6 @@ public class RawUserForm {
 
     public User toUser(PasswordEncoder passwordEncoder) {
         return new User(username, passwordEncoder.encode(password), firstname, lastname,
-                age, classNumber, photo, description, phoneNumber, email, User.Role.getByName(role));
+                age, classNumber, photo, description, phoneNumber, email, User.Role.valueOf(role));
     }
 }
