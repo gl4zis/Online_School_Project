@@ -54,6 +54,7 @@ public class SecurityConfig {
                 .formLogin(form -> {
                     form.loginPage("/login");
                     form.permitAll();
+                    form.defaultSuccessUrl("/profile");
                 })
                 .getOrBuild();
     }
