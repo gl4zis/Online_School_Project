@@ -1,12 +1,16 @@
 package ru.spring.school.online.controller;
 
 import jakarta.annotation.security.PermitAll;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.View;
 import ru.spring.school.online.model.security.RawUserForm;
 import ru.spring.school.online.model.security.User;
 import ru.spring.school.online.repository.UserRepository;
@@ -22,7 +26,7 @@ public class RegisterController {
     private PasswordEncoder passwordEncoder;
 
     @ModelAttribute(name = "userForm")
-    public RawUserForm form(){
+    public RawUserForm form() {
         return new RawUserForm();
     }
 
@@ -32,27 +36,17 @@ public class RegisterController {
     }
 
     @GetMapping
-    public String register(){
+    public String register() {
         return "register";
     }
 
     @PostMapping
     public String processRegistration(@ModelAttribute("userForm") RawUserForm userForm,
-                                      @RequestParam("role") String role, HttpServletRequest request) {
-        userForm.setRole(role);
+                                      HttpServletRequest request
+    ) {
         User user = userForm.toUser(passwordEncoder);
         userRepository.save(user);
-        authAfterRegistration(request, userForm.getUsername(), userForm.getPassword());
-        return "redirect:/profile";
+        request.setAttribute(View.RESPONSE_STATUS_ATTRIBUTE, HttpStatus.TEMPORARY_REDIRECT);
+        return "redirect:/login";
     }
-
-    public void authAfterRegistration(HttpServletRequest request, String username, String password) {
-        try {
-            request.login(username, password);
-
-        } catch (ServletException e) {
-            e.printStackTrace();
-        }
-    }
-
 }

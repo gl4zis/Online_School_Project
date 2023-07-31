@@ -43,6 +43,7 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http.authorizeHttpRequests((auth) -> auth
                         .requestMatchers(AntPathRequestMatcher.antMatcher("/register"),
+                                AntPathRequestMatcher.antMatcher("/register/admin"),
                                 AntPathRequestMatcher.antMatcher("/callback/"),
                                 AntPathRequestMatcher.antMatcher("/webjars/**"),
                                 AntPathRequestMatcher.antMatcher("/error**"),
@@ -50,8 +51,10 @@ public class SecurityConfig {
                         .permitAll()
                         .anyRequest().authenticated())
                 .httpBasic(Customizer.withDefaults())
-                .formLogin(form -> {form.loginPage("/login");
-                    form.permitAll();})
+                .formLogin(form -> {
+                    form.loginPage("/login");
+                    form.permitAll();
+                })
                 .getOrBuild();
     }
 }

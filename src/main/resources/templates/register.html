@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Registration</title>
+</head>
+<body>
+<h1>Registration</h1>
+<form th:action="@{/register}" th:method="post" th:object="${userForm}">
+    <label for="username">Username: </label>
+    <input id="username" th:field="*{username}" type="text"/>
+    <br/>
+
+    <label for="password">Password: </label>
+    <input id="password" th:field="*{password}" type="password"/>
+    <br/>
+
+    <label for="confirm">Confirm password: </label>
+    <input id="confirm" name="confirm" type="password"/><br/>
+
+    <span>Sign up as:</span>
+    <br/>
+    <input checked id="student" th:field="*{role}" type="radio" value="STUDENT"/>
+    <!--Fucking 'checked' doesn't work!!!-->
+    <label for="student">student</label>
+    <br/>
+
+    <input id="teacher" th:field="*{role}" type="radio" value="TEACHER"/>
+    <label for="teacher">teacher</label>
+    <br/>
+
+    <button type="submit">Sign up</button>
+</form>
+</body>
+</html>

@@ -1,8 +1,10 @@
 package ru.spring.school.online.model.security;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.Id;
 import lombok.*;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -20,7 +22,8 @@ public class User implements UserDetails {
     @Id
     protected final String username;
     protected final String password;
-
+    @Enumerated(value = EnumType.STRING)
+    protected final Role role;
     protected String firstname;
     protected String lastname;
     protected Integer age;
@@ -28,10 +31,7 @@ public class User implements UserDetails {
     protected String photo;  //Will be realised in future
     protected String description;
     protected Long phoneNumber;
-    protected final String email;
-
-    @Enumerated(value = EnumType.STRING)
-    protected final Role role;
+    protected String email;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -59,7 +59,7 @@ public class User implements UserDetails {
     }
 
     @RequiredArgsConstructor
-    protected enum Role {
+    public enum Role {
         ADMIN(new SimpleGrantedAuthority("ADMIN")),
         TEACHER(new SimpleGrantedAuthority("TEACHER")),
         STUDENT(new SimpleGrantedAuthority("STUDENT"));

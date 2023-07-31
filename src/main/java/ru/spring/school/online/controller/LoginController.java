@@ -10,12 +10,12 @@ import ru.spring.school.online.model.security.RawUserForm;
 @RequestMapping("/login")
 public class LoginController {
     @ModelAttribute(name = "userForm")
-    public RawUserForm form(){
+    public RawUserForm form() {
         return new RawUserForm();
     }
 
     @GetMapping
-    public String login(){
+    public String login() {
         return "login";
     }
 }
