@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Registration admin</title>
+</head>
+<body>
+  <form th:method="post" th:action="@{/register}" th:object="${userForm}">
+      <label for="username">Username</label>
+      <input type="text" th:field="*{username}" id="username"/>
+      <br/>
+      <label for="password">Password</label>
+      <input type="password" th:field="*{password}" id="password"/>
+      <input type="hidden" name="role" value="ADMIN"/>
+      <br/>
+      <button type="submit">Sign up</button>
+  </form>
+</body>
+</html>
