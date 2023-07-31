@@ -1,5 +1,6 @@
 package ru.spring.school.online.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,11 +15,8 @@ import ru.spring.school.online.repository.UserRepository;
 @RequestMapping("/profile")
 public class ProfileController {
 
-    private final UserRepository userRepo;
-
-    public ProfileController(UserRepository userRepo) {
-        this.userRepo = userRepo;
-    }
+    @Autowired
+    private UserRepository userRepo;
 
     @ModelAttribute("user")
     public User user(@AuthenticationPrincipal User user){
@@ -30,14 +28,14 @@ public class ProfileController {
         return "profile";
     }
 
-    @GetMapping("/settings")
+    @GetMapping("/edit")
     public String getProfileSettings(){
         return "profile_settings";
     }
 
-    @PostMapping("/settings")
+    @PostMapping()
     public String processProfileSettings(@ModelAttribute User user){
         userRepo.save(user);
-        return "redirect:/profile/settings";
+        return "profile";
     }
 }
