@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html  lang="en"
+       xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Profile</title>
+</head>
+<body>
+<a th:href="@{/}">back</a>
+<p th:text="'@' + ${user.username}">username</p>
+<p th:text="(${user.firstname}?${user.firstname}:'') + ' ' + (${user.lastname}?${user.lastname}:'')">username</p>
+<p th:text="${#strings.toLowerCase(user.role)}"></p>
+<br/>
+<p>If you want to edit your profile click
+    <a th:href="@{/profile/settings}">here</a>.
+</p>
+</body>
+</html>

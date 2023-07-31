@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Profile Settings</title>
+</head>
+<body>
+<a th:href="@{/profile}">back</a>
+<h1>Settings</h1>
+<form method="POST" th:action="@{/profile/settings}" th:object="${user}">
+    <label for = "firstname" >Firstname: </label>
+    <input id = "firstname" th:field="*{firstname}" type="text" th:value="${user.firstname}"/><br/>
+
+    <label for = "lastname" >Lastname: </label>
+    <input id = "lastname" th:field="*{lastname}" type="text" th:value="${user.lastname}"/><br/>
+
+    <label for = "age" >Age: </label>
+    <input id = "age" th:field="*{age}" type="text" th:value="${user.age}"/><br/>
+
+    <div sec:authorize="hasRole('STUDENT')">
+        <label for = "classNumber" >Class Number: </label>
+        <input id = "classNumber" th:field="*{classNumber}" type="text" th:value="${user.classNumber}"/><br/>
+    </div>
+
+    <div sec:authorize="hasRole('TEACHER')">
+        <label for = "description" >Description: </label>
+        <input id = "description" th:field="*{description}" type="text" th:value="${user.description}"/><br/>
+    </div>
+
+    <label for = "phone_number" >Phone number: </label>
+    <input id = "phone_number" th:field="*{phoneNumber}" type="text" th:value="${user.phoneNumber}"/><br/>
+
+    <label for = "email" >Email: </label>
+    <input id = "email" th:field="*{email}" type="email" th:value="${user.email}"/><br/>
+
+    <input type="submit" value="Submit changes"/>
+</form>
+</body>
+</html>

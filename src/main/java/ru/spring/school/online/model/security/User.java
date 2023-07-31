@@ -60,9 +60,9 @@ public class User implements UserDetails {
 
     @RequiredArgsConstructor
     public enum Role {
-        ADMIN(new SimpleGrantedAuthority("ADMIN")),
-        TEACHER(new SimpleGrantedAuthority("TEACHER")),
-        STUDENT(new SimpleGrantedAuthority("STUDENT"));
+        ADMIN(new SimpleGrantedAuthority( "ROLE_ADMIN")),
+        TEACHER(new SimpleGrantedAuthority("ROLE_TEACHER")),
+        STUDENT(new SimpleGrantedAuthority("ROLE_STUDENT"));
 
         private final GrantedAuthority authority;
     }
