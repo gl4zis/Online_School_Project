@@ -1,6 +1,5 @@
 package ru.spring.school.online.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,8 +13,11 @@ import ru.spring.school.online.repository.UserRepository;
 @RequestMapping("/profile")
 public class ProfileController {
 
-    @Autowired
-    private UserRepository userRepo;
+    private final UserRepository userRepo;
+
+    public ProfileController(UserRepository userRepo) {
+        this.userRepo = userRepo;
+    }
 
     @ModelAttribute("user")
     public User user(@AuthenticationPrincipal User user) {
