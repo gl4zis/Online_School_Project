@@ -18,7 +18,7 @@ public class AdminController {
     private UserRepository userRepository;
 
     @ModelAttribute("user")
-    public User user(@AuthenticationPrincipal User user){
+    public User user(@AuthenticationPrincipal User user) {
         return user;
     }
 

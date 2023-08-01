@@ -9,30 +9,30 @@
 <a th:href="@{/profile}">back</a>
 <h1>Settings</h1>
 <form method="POST" th:action="@{/profile}" th:object="${user}">
-    <label for = "firstname" >Firstname: </label>
-    <input id = "firstname" th:field="*{firstname}" type="text" th:value="${user.firstname}"/><br/>
+    <label for="firstname">Firstname: </label>
+    <input id="firstname" th:field="*{firstname}" th:value="${user.firstname}" type="text"/><br/>
 
-    <label for = "lastname" >Lastname: </label>
-    <input id = "lastname" th:field="*{lastname}" type="text" th:value="${user.lastname}"/><br/>
+    <label for="lastname">Lastname: </label>
+    <input id="lastname" th:field="*{lastname}" th:value="${user.lastname}" type="text"/><br/>
 
-    <label for = "age" >Age: </label>
-    <input id = "age" th:field="*{age}" type="text" th:value="${user.age}"/><br/>
+    <label for="age">Age: </label>
+    <input id="age" th:field="*{age}" th:value="${user.age}" type="text"/><br/>
 
     <div sec:authorize="hasRole('STUDENT')">
-        <label for = "classNumber" >Class Number: </label>
-        <input id = "classNumber" th:field="*{classNumber}" type="text" th:value="${user.classNumber}"/><br/>
+        <label for="classNumber">Class Number: </label>
+        <input id="classNumber" th:field="*{classNumber}" th:value="${user.classNumber}" type="text"/><br/>
     </div>
 
     <div sec:authorize="hasRole('TEACHER')">
-        <label for = "description" >Description: </label>
-        <input id = "description" th:field="*{description}" type="text" th:value="${user.description}"/><br/>
+        <label for="description">Description: </label>
+        <input id="description" th:field="*{description}" th:value="${user.description}" type="text"/><br/>
     </div>
 
-    <label for = "phone_number" >Phone number: </label>
-    <input id = "phone_number" th:field="*{phoneNumber}" type="text" th:value="${user.phoneNumber}"/><br/>
+    <label for="phone_number">Phone number: </label>
+    <input id="phone_number" th:field="*{phoneNumber}" th:value="${user.phoneNumber}" type="text"/><br/>
 
-    <label for = "email" >Email: </label>
-    <input id = "email" th:field="*{email}" type="email" th:value="${user.email}"/><br/>
+    <label for="email">Email: </label>
+    <input id="email" th:field="*{email}" th:value="${user.email}" type="email"/><br/>
 
     <input type="submit" value="Submit changes"/>
 </form>

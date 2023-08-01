@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 public class LoggingAspect {
 
     @Before("ru.spring.school.online.aspect.PointcutDescr.allControllerGetMethods()")
-    public void beforeAllControllerGetMethodsLoggingAdvice(JoinPoint joinPoint){
+    public void beforeAllControllerGetMethodsLoggingAdvice(JoinPoint joinPoint) {
         MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
         log.info("{}.{}: some one is trying to {}", methodSignature.getDeclaringTypeName(), methodSignature.getName(), methodSignature.getName());
     }

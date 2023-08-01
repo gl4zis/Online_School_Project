@@ -3,31 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <title>Registration</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
 </head>
 <body>
-<h1>Registration</h1>
+<h3>Registration for students</h3>
+<h5>If you are teacher, ask administration to register you<br/>
+    <a th:href="@{/contacts}">Contacts page</a>
+</h5>
 <form th:action="@{/register}" th:method="post" th:object="${userForm}">
     <label for="username">Username: </label>
     <input id="username" th:field="*{username}" type="text"/>
+    <div class="exception" th:errors="*{username}" th:if="${#fields.hasErrors('username')}">Name error</div>
     <br/>
 
     <label for="password">Password: </label>
     <input id="password" th:field="*{password}" type="password"/>
+    <div class="exception" th:errors="*{password}" th:if="${#fields.hasErrors('password')}">Password error</div>
     <br/>
 
     <label for="confirm">Confirm password: </label>
-    <input id="confirm" name="confirm" type="password"/><br/>
+    <input id="confirm" th:field="*{passwordConfirm}" type="password"/><br/>
+    <div class="exception" th:errors="*{passwordsEquals}" th:if="${#fields.hasErrors('passwordsEquals')}">Confirm
+        error
+    </div>
 
-    <span>Sign up as:</span>
-    <br/>
-    <input checked id="student" th:field="*{role}" type="radio" value="STUDENT"/>
-    <!--Fucking 'checked' doesn't work!!!-->
-    <label for="student">student</label>
-    <br/>
-
-    <input id="teacher" th:field="*{role}" type="radio" value="TEACHER"/>
-    <label for="teacher">teacher</label>
-    <br/>
+    <input th:attr="name='role'" type="hidden" value="STUDENT"/>
 
     <button type="submit">Sign up</button>
 </form>

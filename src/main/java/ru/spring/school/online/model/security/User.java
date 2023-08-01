@@ -33,13 +33,13 @@ public class User implements UserDetails {
     protected String description;
     protected Long phoneNumber;
     protected String email;
-    
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         if (confirmed)
             return Collections.singletonList(role != null ? role.authority : Role.UNCONFIRMED.authority);
-        else 
+        else
             return Collections.singletonList(Role.UNCONFIRMED.authority);
     }
 
@@ -66,7 +66,7 @@ public class User implements UserDetails {
     @RequiredArgsConstructor
     public enum Role {
         UNCONFIRMED(new SimpleGrantedAuthority("ROLE_UNCONFIRMED")),
-        ADMIN(new SimpleGrantedAuthority( "ROLE_ADMIN")),
+        ADMIN(new SimpleGrantedAuthority("ROLE_ADMIN")),
         TEACHER(new SimpleGrantedAuthority("ROLE_TEACHER")),
         STUDENT(new SimpleGrantedAuthority("ROLE_STUDENT"));
 
