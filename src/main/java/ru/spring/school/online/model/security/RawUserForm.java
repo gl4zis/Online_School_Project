@@ -1,18 +1,25 @@
 package ru.spring.school.online.model.security;
 
-import jakarta.validation.constraints.AssertTrue;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Component;
+import ru.spring.school.online.repository.UserRepository;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Component
 public class RawUserForm {
+
+    private UserRepository userRepo;
+
+    public RawUserForm(UserRepository userRepo){
+        this.userRepo = userRepo;
+    }
 
     @NotBlank(message = "Username shouldn't be empty")
     @Size(min = 3, max = 30, message = "Username size must be between 3 and 30 characters")
@@ -29,9 +36,14 @@ public class RawUserForm {
     public User toUser(PasswordEncoder passwordEncoder) {
         return new User(username, passwordEncoder.encode(password), User.Role.valueOf(role));
     }
+    @AssertTrue(message = "This username is taken")
+    public boolean isUsernameUnique(){
+        return username == null || !userRepo.existsById(username);
+    }
 
     @AssertTrue(message = "Passwords should be equals")
     public boolean isPasswordsEquals() {
         return passwordConfirm == null || password.equals(passwordConfirm);
     }
+
 }
