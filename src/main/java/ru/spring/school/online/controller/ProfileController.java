@@ -4,7 +4,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import ru.spring.school.online.model.security.User;
 import ru.spring.school.online.repository.UserRepository;
@@ -34,7 +34,7 @@ public class ProfileController {
         return "profile_settings";
     }
 
-    @PostMapping()
+    @PatchMapping()
     public String processProfileSettings(@ModelAttribute User user) {
         userRepo.save(user);
         return "redirect:/profile";
