@@ -16,7 +16,7 @@ import java.util.Collections;
 @Data
 @RequiredArgsConstructor
 @AllArgsConstructor
-@NoArgsConstructor(access = AccessLevel.PROTECTED, force = true)
+@NoArgsConstructor(access = AccessLevel.PRIVATE, force = true)
 public class User implements UserDetails {
 
     @Id
@@ -24,6 +24,7 @@ public class User implements UserDetails {
     protected final String password;
     @Enumerated(value = EnumType.STRING)
     protected final Role role;
+    protected boolean confirmed = true; //Will be realised soon
     protected String firstname;
     protected String lastname;
     protected Integer age;
@@ -32,10 +33,14 @@ public class User implements UserDetails {
     protected String description;
     protected Long phoneNumber;
     protected String email;
+    
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.singletonList(role.authority);
+        if (confirmed)
+            return Collections.singletonList(role != null ? role.authority : Role.UNCONFIRMED.authority);
+        else 
+            return Collections.singletonList(Role.UNCONFIRMED.authority);
     }
 
     @Override
@@ -60,6 +65,7 @@ public class User implements UserDetails {
 
     @RequiredArgsConstructor
     public enum Role {
+        UNCONFIRMED(new SimpleGrantedAuthority("ROLE_UNCONFIRMED")),
         ADMIN(new SimpleGrantedAuthority( "ROLE_ADMIN")),
         TEACHER(new SimpleGrantedAuthority("ROLE_TEACHER")),
         STUDENT(new SimpleGrantedAuthority("ROLE_STUDENT"));

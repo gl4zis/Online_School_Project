@@ -8,7 +8,7 @@
 <body>
 <a th:href="@{/profile}">back</a>
 <h1>Settings</h1>
-<form method="POST" th:action="@{/profile/settings}" th:object="${user}">
+<form method="POST" th:action="@{/profile}" th:object="${user}">
     <label for = "firstname" >Firstname: </label>
     <input id = "firstname" th:field="*{firstname}" type="text" th:value="${user.firstname}"/><br/>
 

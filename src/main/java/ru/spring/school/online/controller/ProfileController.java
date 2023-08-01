@@ -36,6 +36,6 @@ public class ProfileController {
     @PostMapping()
     public String processProfileSettings(@ModelAttribute User user){
         userRepo.save(user);
-        return "profile";
+        return "redirect:/profile";
     }
 }
