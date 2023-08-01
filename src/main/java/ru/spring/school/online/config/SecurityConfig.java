@@ -49,6 +49,9 @@ public class SecurityConfig {
                                 AntPathRequestMatcher.antMatcher("/error**"),
                                 AntPathRequestMatcher.antMatcher("/css/**"))
                         .permitAll()
+                        .requestMatchers(AntPathRequestMatcher.antMatcher("/admin"),
+                                AntPathRequestMatcher.antMatcher("/admin/**"))
+                        .hasRole("ADMIN")
                         .anyRequest().authenticated())
                 .httpBasic(Customizer.withDefaults())
                 .formLogin(form -> {
