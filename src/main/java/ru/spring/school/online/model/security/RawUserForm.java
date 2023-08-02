@@ -10,6 +10,8 @@ import lombok.NoArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import ru.spring.school.online.repository.UserRepository;
 
+import java.util.Collections;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -31,7 +33,7 @@ public class RawUserForm {
     }
 
     public User toUser(PasswordEncoder passwordEncoder) {
-        return new User(username, passwordEncoder.encode(password), User.Role.valueOf(role));
+        return new User(username, passwordEncoder.encode(password), Collections.singleton(User.Role.valueOf(role)));
     }
 
     @AssertTrue(message = "This username is taken")
