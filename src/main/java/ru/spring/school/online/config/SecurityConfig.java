@@ -24,17 +24,6 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
-    @Bean
-    public UserDetailsService userDetailsService(UserRepository userRepository) {
-        return username -> {
-            Optional<User> user = userRepository.findById(username);
-            if (user.isPresent())
-                return user.get();
-            else
-                throw new UsernameNotFoundException("User '" + username + "' not found");
-        };
-    }
-
     /*
     Further change requestMatchers(AntPathRequestMatcher.antMatcher("/register/**")).hasRole("ADMIN")
     Useless for now

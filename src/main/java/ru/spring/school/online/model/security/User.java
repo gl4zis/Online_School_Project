@@ -1,6 +1,9 @@
 package ru.spring.school.online.model.security;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.AssertTrue;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -12,36 +15,47 @@ import java.util.*;
 @Data
 @RequiredArgsConstructor
 @AllArgsConstructor
-@NoArgsConstructor(access = AccessLevel.PRIVATE, force = true)
 public class User implements UserDetails {
 
     @Id
-    protected final String username;
-    protected final String password;
-    @ElementCollection(fetch = FetchType.EAGER)
+    @NotBlank(message = "Username shouldn't be empty")
+    @Size(min = 3, max = 30, message = "Username size must be between 3 and 30 characters")
+    protected String username;
+    @NotBlank(message = "Password shouldn't be empty")
+    @Size(min = 6, message = "Password should be longer than 5 characters")
+    protected String password;
+    @Transient
+    protected String passwordConfirm;
     @Enumerated(value = EnumType.STRING)
-    protected final Set<Role> roles;
+    protected Role role;
     protected boolean confirmed = true; //Will be realised soon
     protected String firstname;
     protected String lastname;
+    protected String patronymic;
     protected Date dateOfBirth;
-    protected String photoURL;  //Will be realised in future
-    protected String description;
-    protected Long phoneNumber;
+    protected int grade;
+    @Column(unique = true)
     protected String email;
-
+    protected String photoURL; //Will be realised in future
+    protected Long phoneNumber;
+    protected String description;
+    @Enumerated(value = EnumType.STRING)
+    @ManyToMany(fetch = FetchType.EAGER)
+    protected Set<Subject> subjects;
+    protected String education;
+    @ElementCollection(targetClass = String.class, fetch = FetchType.EAGER)
+    protected Set<String> diplomas;
+    protected int seniority;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         if (confirmed) {
-            if (roles == null)
-                return Collections.singleton(Role.UNCONFIRMED.authority);
-            Set<GrantedAuthority> authorities = new HashSet<>();
-            for (Role role : roles)
-                authorities.add(role.authority);
-            return authorities;
+            if (role == null){
+                return Collections.singletonList(Unconfirmed.AUTHORITY);
+            }
+            return Collections.singletonList(role.authority);
         } else
-            return Collections.singletonList(Role.UNCONFIRMED.authority);
+            return Collections.singletonList(Unconfirmed.AUTHORITY);
     }
 
     @Override
@@ -63,14 +77,20 @@ public class User implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+    private static class Unconfirmed{
+        private static final GrantedAuthority AUTHORITY = new SimpleGrantedAuthority("ROLE_UNCONFIRMED");
+    }
 
     @RequiredArgsConstructor
     public enum Role {
-        UNCONFIRMED(new SimpleGrantedAuthority("ROLE_UNCONFIRMED")),
         ADMIN(new SimpleGrantedAuthority("ROLE_ADMIN")),
         TEACHER(new SimpleGrantedAuthority("ROLE_TEACHER")),
         STUDENT(new SimpleGrantedAuthority("ROLE_STUDENT"));
 
         private final GrantedAuthority authority;
+    }
+    @AssertTrue(message = "Passwords should be equals")
+    public boolean isPasswordsEquals() {
+        return passwordConfirm == null || password.equals(passwordConfirm);
     }
 }

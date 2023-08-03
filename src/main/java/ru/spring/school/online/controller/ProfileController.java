@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import ru.spring.school.online.config.UserService;
 import ru.spring.school.online.model.security.User;
 import ru.spring.school.online.repository.UserRepository;
 
@@ -13,13 +14,13 @@ import ru.spring.school.online.repository.UserRepository;
 @RequestMapping("/profile")
 public class ProfileController {
 
-    private final UserRepository userRepo;
+    private final UserService userService;
 
-    public ProfileController(UserRepository userRepo) {
-        this.userRepo = userRepo;
+    public ProfileController(UserService userService) {
+        this.userService = userService;
     }
 
-    @ModelAttribute("user")
+    @ModelAttribute("userForm")
     public User user(@AuthenticationPrincipal User user) {
         return user;
     }
@@ -36,7 +37,7 @@ public class ProfileController {
 
     @PatchMapping()
     public String processProfileSettings(@ModelAttribute User user) {
-        userRepo.save(user);
+        userService.saveUser(user);
         return "redirect:/profile";
     }
 }
