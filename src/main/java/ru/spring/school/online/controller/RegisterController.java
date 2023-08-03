@@ -47,6 +47,9 @@ public class RegisterController {
                                       SessionStatus sessionStatus
     ) throws ServletException {
         if (!isSecondStage) {
+            if (errors.hasErrors()) {
+                return "register";
+            }
             if (!userService.isUsernameUnique(user)) {
                 model.addAttribute("usernameUnique", "This username is taken");
                 return "register";
@@ -57,7 +60,6 @@ public class RegisterController {
             return "register";
         } else {
             if (errors.hasErrors()) {
-                System.out.println(errors);
                 return "register";
             }
             if (!userService.isEmailUnique(user)) {
