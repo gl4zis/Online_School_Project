@@ -28,8 +28,13 @@ public class UserService implements UserDetailsService {
         Optional<User> user = userRepo.findById(username);
         if (user.isPresent())
             return user.get();
-        else
-            throw new UsernameNotFoundException("User '" + username + "' not found");
+        else {
+            Optional<User> userByEmail = userRepo.findUserByEmail(username);
+            if (userByEmail.isPresent())
+                return userByEmail.get();
+            else
+                throw new UsernameNotFoundException("User '" + username + "' not found");
+        }
     }
 
     public Iterable<User> allUsers() {
@@ -38,6 +43,11 @@ public class UserService implements UserDetailsService {
 
     public boolean isUsernameUnique(User user) {
         Optional<User> userFormDB = userRepo.findById(user.getUsername());
+        return userFormDB.isEmpty();
+    }
+
+    public boolean isEmailUnique(User user) {
+        Optional<User> userFormDB = userRepo.findUserByEmail(user.getEmail());
         return userFormDB.isEmpty();
     }
 

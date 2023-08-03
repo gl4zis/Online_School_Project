@@ -59,6 +59,10 @@ public class RegisterController {
                 System.out.println(errors);
                 return "register";
             }
+            if (!userService.isEmailUnique(user)) {
+                model.addAttribute("emailUnique", "This email is taken");
+                return "register";
+            }
             userService.saveUser(user, true);
             request.login(user.getUsername(), user.getPassword());
             sessionStatus.isComplete();
