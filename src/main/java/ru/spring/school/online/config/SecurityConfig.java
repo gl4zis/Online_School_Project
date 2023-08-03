@@ -25,13 +25,14 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http.authorizeHttpRequests((auth) -> auth
-                        .requestMatchers(AntPathRequestMatcher.antMatcher("/register"),
-                                AntPathRequestMatcher.antMatcher("/register/continue"),
-                                AntPathRequestMatcher.antMatcher("/callback/"),
+                        .requestMatchers(AntPathRequestMatcher.antMatcher("/callback/"),
                                 AntPathRequestMatcher.antMatcher("/webjars/**"),
                                 AntPathRequestMatcher.antMatcher("/error**"),
                                 AntPathRequestMatcher.antMatcher("/css/**"))
                         .permitAll()
+                        .requestMatchers(AntPathRequestMatcher.antMatcher("/register"),
+                                AntPathRequestMatcher.antMatcher("/login"))
+                        .anonymous()
                         .requestMatchers(AntPathRequestMatcher.antMatcher("/admin"),
                                 AntPathRequestMatcher.antMatcher("/admin/**"))
                         .hasRole("ADMIN")
@@ -39,7 +40,6 @@ public class SecurityConfig {
                 .httpBasic(Customizer.withDefaults())
                 .formLogin(form -> {
                     form.loginPage("/login");
-                    form.permitAll();
                     form.defaultSuccessUrl("/profile");
                 })
                 .getOrBuild();
