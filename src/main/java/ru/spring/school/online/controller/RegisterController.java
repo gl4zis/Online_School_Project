@@ -52,6 +52,7 @@ public class RegisterController {
                 return "register";
             }
             model.addAttribute("isSecondStage", true);
+            user.setRole(User.Role.STUDENT);
             user.setGotUsername(true);
             return "register";
         } else {
