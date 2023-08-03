@@ -1,21 +1,23 @@
 package ru.spring.school.online.controller;
 
+import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.View;
 import ru.spring.school.online.config.UserService;
 import ru.spring.school.online.model.security.User;
 
+import java.util.Enumeration;
+
 @Controller
 @RequestMapping("/register")
+@SessionAttributes("userForm")
 public class RegisterController {
 
     private final UserService userService;
@@ -39,18 +41,31 @@ public class RegisterController {
         return "register";
     }
 
+    @GetMapping("/continue")
+    public String registerContinue(){
+        return "register_continue";
+    }
+
+    @PostMapping("/continue")
+    public String registerContinue(@ModelAttribute("userForm") User user,
+                                   HttpServletRequest request, SessionStatus sessionStatus) throws ServletException {
+        userService.saveUser(user);
+        request.login(user.getUsername(), user.getPasswordConfirm());
+        sessionStatus.isComplete();
+        return "redirect:/profile";
+    }
+
     @PostMapping
     public String processRegistration(@ModelAttribute("userForm") @Valid User user,
                                       Errors errors,
-                                      HttpServletRequest request,
-                                      Model model) {
+                                      Model model, HttpServletRequest request) {
         if (errors.hasErrors())
             return "register";
-        if (!userService.registerUser(user)){
+        if (!userService.isUsernameUnique(user)){
             model.addAttribute("usernameUnique", "This username is taken");
             return "register";
         }
-        request.setAttribute(View.RESPONSE_STATUS_ATTRIBUTE, HttpStatus.TEMPORARY_REDIRECT);
-        return "redirect:/login";
+        model.addAttribute(request);
+        return "redirect:/register/continue";
     }
 }

@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import ru.spring.school.online.repository.SubjectRepository;
 import ru.spring.school.online.repository.UserRepository;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -37,13 +36,12 @@ public class UserService implements UserDetailsService {
         return userRepo.findAll();
     }
 
-    public boolean registerUser(User user) {
+    public boolean isUsernameUnique(User user) {
         Optional<User> userFormDB = userRepo.findById(user.getUsername());
         if (userFormDB.isPresent()){
             return false;
         }
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        userRepo.save(user);
         return true;
     }
 

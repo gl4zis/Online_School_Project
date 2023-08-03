@@ -15,6 +15,7 @@
     <input id="username" th:field="*{username}" type="text"/>
     <div class="exception" th:errors="*{username}" th:if="${#fields.hasErrors('username')}">Name error</div>
     <div class="exception" th:text="${usernameUnique}" th:if="${usernameUnique}">Name unique error</div>
+    <br/>
 
     <label for="password">Password: </label>
     <input id="password" th:field="*{password}" type="password"/>

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Registration</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+<h3>Registration for students</h3>
+<form th:action="@{/register/continue}" th:method="post" th:object="${userForm}">
+    <label for="firstname" class="required">Firstname: </label>
+    <input id="firstname" th:field="*{firstname}" type="text" required="required"/>
+    <div class="exception" th:errors="*{firstname}" th:if="${#fields.hasErrors('firstname')}">Firstname error</div>
+    <br/>
+
+    <label for="lastname" class="required">Lastname: </label>
+    <input id="lastname" th:field="*{lastname}" type="text" required="required"/>
+    <div class="exception" th:errors="*{lastname}" th:if="${#fields.hasErrors('lastname')}">Lastname error</div>
+    <br/>
+
+    <label for="patronymic">Patronymic: </label>
+    <input id="patronymic" th:field="*{patronymic}" type="text"/>
+    <div class="exception" th:errors="*{patronymic}" th:if="${#fields.hasErrors('patronymic')}">Patronymic error</div>
+    <br/>
+
+    <label for="dateOfBirth" class="required">Birth date: </label>
+    <input id="dateOfBirth" th:field="*{dateOfBirth}" type="date" required="required"/>
+    <div class="exception" th:errors="*{dateOfBirth}" th:if="${#fields.hasErrors('dateOfBirth')}">Date of birth error</div>
+    <br/>
+
+    <label for="grade" class="required">Grade: </label>
+    <input id="grade" th:field="*{grade}" type="number" required="required"/>
+    <div class="exception" th:errors="*{grade}" th:if="${#fields.hasErrors('grade')}">Grade error</div>
+    <br/>
+
+    <label for="email" class="required">Email: </label>
+    <input id="email" th:field="*{email}" type="email" required="required"/>
+    <div class="exception" th:errors="*{email}" th:if="${#fields.hasErrors('email')}">Email error</div>
+    <br/>
+
+    <button type="submit">Sign up</button>
+</form>
+</body>
+</html>

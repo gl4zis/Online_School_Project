@@ -32,7 +32,7 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http.authorizeHttpRequests((auth) -> auth
                         .requestMatchers(AntPathRequestMatcher.antMatcher("/register"),
-                                AntPathRequestMatcher.antMatcher("/register/admin"),
+                                AntPathRequestMatcher.antMatcher("/register/continue"),
                                 AntPathRequestMatcher.antMatcher("/callback/"),
                                 AntPathRequestMatcher.antMatcher("/webjars/**"),
                                 AntPathRequestMatcher.antMatcher("/error**"),

@@ -35,7 +35,7 @@ public class ProfileController {
         return "profile_settings";
     }
 
-    @PatchMapping()
+    @PatchMapping
     public String processProfileSettings(@ModelAttribute User user) {
         userService.saveUser(user);
         return "redirect:/profile";
