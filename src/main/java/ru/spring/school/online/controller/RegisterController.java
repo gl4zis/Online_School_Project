@@ -13,7 +13,7 @@ import ru.spring.school.online.service.UserService;
 
 @Controller
 @RequestMapping("/register")
-@SessionAttributes("userForm")
+@SessionAttributes({"userForm", "isSecondStage"})
 public class RegisterController {
 
     private final UserService userService;
@@ -41,21 +41,22 @@ public class RegisterController {
     @PostMapping
     public String processRegistration(@ModelAttribute("userForm") @Valid User user,
                                       Errors errors,
+                                      @ModelAttribute("isSecondStage") boolean isSecondStage,
                                       Model model,
                                       HttpServletRequest request,
                                       SessionStatus sessionStatus
     ) throws ServletException {
-        if (user.getFirstname() == null) {
-            boolean isSecondStage = !errors.hasErrors();
+        if (!isSecondStage) {
             if (!userService.isUsernameUnique(user)) {
                 model.addAttribute("usernameUnique", "This username is taken");
-                isSecondStage = false;
+                return "register";
             }
-            model.addAttribute("isSecondStage", isSecondStage);
+            model.addAttribute("isSecondStage", true);
+            user.setGotUsername(true);
             return "register";
         } else {
             if (errors.hasErrors()) {
-                model.addAttribute("isSecondStage", true);
+                System.out.println(errors);
                 return "register";
             }
             userService.saveUser(user, true);

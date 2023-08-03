@@ -15,6 +15,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 @Entity(name = "usr")
 @Data
@@ -34,6 +35,7 @@ public class User implements UserDetails {
     @Enumerated(value = EnumType.STRING)
     protected Role role;
     protected boolean confirmed = true; //Will be realised soon
+    protected boolean gotUsername = false;
     protected String firstname;
     protected String lastname;
     protected String patronymic;
@@ -100,4 +102,62 @@ public class User implements UserDetails {
     private static class Unconfirmed {
         private static final GrantedAuthority AUTHORITY = new SimpleGrantedAuthority("ROLE_UNCONFIRMED");
     }
+
+    @AssertTrue(message = "Firstname can't be blank")
+    public boolean isFirstnameValid(){
+        return !gotUsername || role == Role.ADMIN || (firstname!= null && !firstname.isBlank());
+    }
+
+    @AssertTrue(message = "Lastname can't be blank")
+    public boolean isLastnameValid(){
+        return !gotUsername || role == Role.ADMIN || (lastname!= null && !lastname.isBlank());
+    }
+
+    @AssertTrue(message = "Patronymic can't be blank")
+    public boolean isPatronymicValid(){
+        return patronymic == null || !patronymic.isBlank();
+    }
+
+    @AssertTrue(message = "Birth date should be in the past")
+    public boolean isBirthDateValid(){
+        return !gotUsername  || role == Role.ADMIN || (dateOfBirth!= null && !(dateOfBirth.compareTo(new Date()) > 0));
+    }
+
+    @AssertTrue(message = "Grade should be between 9 and 11")
+    public boolean isGradeValid(){
+        return !gotUsername || role != Role.STUDENT || (grade >= 9 && grade <= 11);
+    }
+
+    @AssertTrue(message = "Email should be correct.")
+    public boolean isEmailValid(){
+        return !gotUsername || role == Role.ADMIN || (email != null && Pattern.matches("^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}$", email));
+    }
+
+    @AssertTrue(message = "Phone should be correct.")
+    public boolean isPhoneValid(){
+        return phoneNumber == null || Pattern.matches("^\\d{11}$", phoneNumber.toString());
+    }
+
+    @AssertTrue(message = "Description can't be blank")
+    public boolean isDescriptionValid(){
+        return !gotUsername || role != Role.TEACHER || (description!= null && !description.isBlank());
+    }
+
+    @AssertTrue(message = "There should be between 1 and 3 subjects")
+    public boolean isSubjectsValid(){
+        return !gotUsername || role != Role.TEACHER || (subjects!= null && subjects.size() >= 1 && subjects.size() <= 3);
+    }
+
+    @AssertTrue(message = "Education can't be blank")
+    public boolean isEducationValid(){
+        return !gotUsername || role != Role.TEACHER || (education!= null && !education.isBlank());
+    }
+
+    @AssertTrue(message = "seniority can't be negative")
+    public boolean isSeniorityValid(){
+        return !gotUsername || role != Role.TEACHER || seniority >= 0;
+    }
+
+
 }
+
