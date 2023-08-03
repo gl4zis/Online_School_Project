@@ -6,9 +6,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import ru.spring.school.online.config.UserService;
 import ru.spring.school.online.model.security.User;
-import ru.spring.school.online.repository.UserRepository;
+import ru.spring.school.online.service.UserService;
 
 @Controller
 @RequestMapping("/profile")
@@ -37,7 +36,7 @@ public class ProfileController {
 
     @PatchMapping
     public String processProfileSettings(@ModelAttribute User user) {
-        userService.saveUser(user);
+        userService.updateUser(user);
         return "redirect:/profile";
     }
 }

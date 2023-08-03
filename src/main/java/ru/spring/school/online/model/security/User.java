@@ -4,12 +4,17 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Date;
+import java.util.Set;
 
 @Entity(name = "usr")
 @Data
@@ -47,10 +52,15 @@ public class User implements UserDetails {
     protected Set<String> diplomas;
     protected int seniority;
 
+    @AssertTrue(message = "Passwords should be equals")
+    public boolean isPasswordsEquals() {
+        return passwordConfirm == null || password.equals(passwordConfirm);
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         if (confirmed) {
-            if (role == null){
+            if (role == null) {
                 return Collections.singletonList(Unconfirmed.AUTHORITY);
             }
             return Collections.singletonList(role.authority);
@@ -77,9 +87,6 @@ public class User implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
-    private static class Unconfirmed{
-        private static final GrantedAuthority AUTHORITY = new SimpleGrantedAuthority("ROLE_UNCONFIRMED");
-    }
 
     @RequiredArgsConstructor
     public enum Role {
@@ -89,8 +96,8 @@ public class User implements UserDetails {
 
         private final GrantedAuthority authority;
     }
-    @AssertTrue(message = "Passwords should be equals")
-    public boolean isPasswordsEquals() {
-        return passwordConfirm == null || password.equals(passwordConfirm);
+
+    private static class Unconfirmed {
+        private static final GrantedAuthority AUTHORITY = new SimpleGrantedAuthority("ROLE_UNCONFIRMED");
     }
 }

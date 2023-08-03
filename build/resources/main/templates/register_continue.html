@@ -18,11 +18,6 @@
     <div class="exception" th:errors="*{lastname}" th:if="${#fields.hasErrors('lastname')}">Lastname error</div>
     <br/>
 
-    <label for="patronymic">Patronymic: </label>
-    <input id="patronymic" th:field="*{patronymic}" type="text"/>
-    <div class="exception" th:errors="*{patronymic}" th:if="${#fields.hasErrors('patronymic')}">Patronymic error</div>
-    <br/>
-
     <label for="dateOfBirth" class="required">Birth date: </label>
     <input id="dateOfBirth" th:field="*{dateOfBirth}" type="date" required="required"/>
     <div class="exception" th:errors="*{dateOfBirth}" th:if="${#fields.hasErrors('dateOfBirth')}">Date of birth error</div>

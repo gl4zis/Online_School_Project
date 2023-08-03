@@ -1,11 +1,11 @@
-package ru.spring.school.online.config;
+package ru.spring.school.online.service;
 
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import ru.spring.school.online.model.security.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import ru.spring.school.online.model.security.User;
 import ru.spring.school.online.repository.SubjectRepository;
 import ru.spring.school.online.repository.UserRepository;
 
@@ -32,25 +32,34 @@ public class UserService implements UserDetailsService {
             throw new UsernameNotFoundException("User '" + username + "' not found");
     }
 
-    public Iterable<User> allUsers(){
+    public Iterable<User> allUsers() {
         return userRepo.findAll();
     }
 
     public boolean isUsernameUnique(User user) {
         Optional<User> userFormDB = userRepo.findById(user.getUsername());
-        if (userFormDB.isPresent()){
+        return userFormDB.isEmpty();
+    }
+
+    public void saveUser(User user, boolean needsEncoding) {
+        if (needsEncoding) {
+            String password = user.getPassword();
+            user.setPassword(passwordEncoder.encode(password));
+            userRepo.save(user);
+            user.setPassword(password);
+        } else
+            userRepo.save(user);
+    }
+
+    public boolean updateUser(User user) {
+        if (isUsernameUnique(user))
             return false;
-        }
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        saveUser(user, false);
         return true;
     }
 
-    public void saveUser(User user) {
-        userRepo.save(user);
-    }
-
-    public boolean deleteUser(String username){
-        if (userRepo.findById(username).isPresent()){
+    public boolean deleteUser(String username) {
+        if (userRepo.findById(username).isPresent()) {
             userRepo.deleteById(username);
             return true;
         }

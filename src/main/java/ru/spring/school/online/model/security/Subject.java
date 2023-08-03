@@ -1,7 +1,7 @@
 package ru.spring.school.online.model.security;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.Data;
 
 import java.util.Set;
 
