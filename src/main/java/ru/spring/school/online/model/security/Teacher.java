@@ -20,7 +20,6 @@ public class Teacher extends User {
     private String lastName; //*
     private String patronymic;
     private Date dateOfBirth; //*
-    private String email; //*
     private String photoURL; //*
     private Long phoneNumber; //*
     @Enumerated(value = EnumType.STRING)

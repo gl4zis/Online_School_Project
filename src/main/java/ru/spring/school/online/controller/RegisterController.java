@@ -50,7 +50,19 @@ public class RegisterController {
                                       Errors errors,
                                       Model model
     ) throws ServletException {
-        return registerFirstStage(user, model, errors);
+        if (errors.hasErrors())
+            return "register";
+        if (!userService.isUsernameUnique(user)) {
+            model.addAttribute("usernameUnique", "This username is taken");
+            return "register";
+        }
+        if (!userService.isEmailUnique(user)) {
+            model.addAttribute("emailUnique", "This email is taken");
+            return "register";
+        }
+        user.setRole(User.Role.STUDENT);
+        model.addAttribute("studentForm", user.toStudent());
+        return "redirect:/register/continue";
     }
 
     @PostMapping("/continue")
@@ -60,39 +72,13 @@ public class RegisterController {
                                       HttpServletRequest request,
                                       SessionStatus sessionStatus
     ) throws ServletException {
-        return registerSecondStage(student, model, errors,
-                request, sessionStatus);
-    }
-
-    public boolean checkingRegisterErrors(User user, Model model, Errors errors) {
         if (errors.hasErrors())
-            return true;
-        if (!userService.isUsernameUnique(user)) {
-            model.addAttribute("usernameUnique", "This username is taken");
-            return true;
-        }
-        return false;
-    }
-
-    public String registerFirstStage(User user, Model model, Errors errors) {
-        if (checkingRegisterErrors(user, model, errors))
             return "register";
-        user.setRole(User.Role.STUDENT);
-        model.addAttribute("studentForm", user.toStudent());
-        return "redirect:/register/continue";
-    }
-
-    public String registerSecondStage(Student student, Model model, Errors errors,
-                                      HttpServletRequest request,
-                                      SessionStatus sessionStatus) {
-        if (checkingRegisterErrors(student, model, errors)) {
-            System.out.println(errors);
-            return "register";
-        }
         userService.saveUser(student, true);
         loginUser(request, sessionStatus, student);
         return "redirect:/profile";
     }
+
 
     public void loginUser(HttpServletRequest request,
                           SessionStatus sessionStatus,

@@ -2,6 +2,7 @@ package ru.spring.school.online.model.security;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.AssertTrue;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -33,6 +34,7 @@ public class User implements UserDetails {
     @Enumerated(value = EnumType.STRING)
     protected Role role;
     @Column(nullable = false, unique = true)
+    @Email(message = "Input correct email")
     protected String email;
 
     @AssertTrue(message = "Passwords should be equals")
