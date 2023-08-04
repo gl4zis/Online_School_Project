@@ -14,12 +14,10 @@ import java.util.Optional;
 @Service
 public class UserService implements UserDetailsService {
     final UserRepository userRepo;
-    final SubjectRepository subjectRepo;
     final PasswordEncoder passwordEncoder;
 
-    public UserService(UserRepository userRepo, SubjectRepository subjectRepo, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepo, PasswordEncoder passwordEncoder) {
         this.userRepo = userRepo;
-        this.subjectRepo = subjectRepo;
         this.passwordEncoder = passwordEncoder;
     }
 

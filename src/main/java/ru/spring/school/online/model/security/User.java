@@ -81,4 +81,8 @@ public class User implements UserDetails {
     public Student toStudent(){
         return new Student(this);
     }
+
+    public Teacher toTeacher(){
+        return new Teacher(this);
+    }
 }

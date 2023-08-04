@@ -4,28 +4,85 @@
 <head>
     <meta charset="UTF-8">
     <title>Profile Settings</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
 </head>
 <body>
 <a th:href="@{/profile}">back</a>
 <h1>Settings</h1>
 <form th:action="@{/profile}" th:method="PATCH" th:object="${userForm}">
-    <label for="firstname">Firstname: </label>
-    <input id="firstname" th:field="*{firstname}" th:value="${userForm.firstname}" type="text"/><br/>
 
-    <label for="lastname">Lastname: </label>
-    <input id="lastname" th:field="*{lastname}" th:value="${userForm.lastname}" type="text"/><br/>
+    <div sec:authorize="!hasRole('ADMIN')">
+        <p>Personal:</p>
+        <label class="required" for="firstname">Firstname: </label>
+        <input id="firstname" required="required" th:field="*{firstname}" type="text"/>
+        <div class="exception" th:errors="*{firstname}" th:if="${#fields.hasErrors('firstname')}">Firstname error</div>
+        <br/>
 
+        <label class="required" for="lastname">Lastname: </label>
+        <input id="lastname" required="required" th:field="*{lastname}" type="text"/>
+        <div class="exception" th:errors="*{lastname}" th:if="${#fields.hasErrors('lastname')}">Lastname error</div>
+        <br/>
 
-    <div sec:authorize="hasRole('TEACHER')">
-        <label for="description">Description: </label>
-        <input id="description" th:field="*{description}" th:value="${userForm.description}" type="text"/><br/>
+        <label for="patronymic">Patronymic: </label>
+        <input id="patronymic" th:field="*{patronymic}" type="text"/>
+        <br/>
+
+        <label class="required" for="dateOfBirth">Birth date: </label>
+        <input id="dateOfBirth" required="required" th:field="*{dateOfBirth}" type="date"/>
+        <div class="exception" th:errors="*{dateOfBirth}" th:if="${#fields.hasErrors('dateOfBirth')}">Birth date error</div>
+        <br/>
+
+        <p>Professional:</p>
+        <div sec:authorize="hasRole('STUDENT')">
+            <label class="required" for="grade">Grade: </label>
+            <input id="grade" required="required" th:field="*{grade}" type="number"/>
+            <div class="exception" th:errors="*{grade}" th:if="${#fields.hasErrors('grade')}">Grade error</div>
+            <br/>
+        </div>
+
+        <div sec:authorize="hasRole('TEACHER') || hasRole('ROLE_UNCONFIRMED_TEACHER')">
+
+            <label class="required" for="education">Education: </label>
+            <input id="education" required="required" th:field="*{education}" type="text"/>
+            <div class="exception" th:errors="*{education}" th:if="${#fields.hasErrors('education')}">Education error</div>
+            <br/>
+
+            <label class="required" for="workExperience">Work experience: </label>
+            <input id="workExperience" required="required" th:field="*{workExperience}" type="number"/>
+            <div class="exception" th:errors="*{workExperience}" th:if="${#fields.hasErrors('workExperience')}">Work experience error</div>
+            <br/>
+
+            <label for="description">Description: </label>
+            <textarea id="description" th:field="*{description}" th:value="${userForm.description}" rows="5" cols="30"></textarea><br/>
+
+            <label class="required" for="subjects">My subjects:</label><br/>
+            <div id="subjects" th:each="subject:${subjects}">
+                <input th:field="*{subjects}" type="checkbox" th:value="${subject.id}"/>
+                <span th:text="${subject.name}">Subject</span><br/>
+            </div>
+            <div class="exception" th:errors="*{subjects}" th:if="${#fields.hasErrors('subjects')}">Subjects error</div>
+            <br/>
+        </div>
     </div>
 
-    <label for="phone_number">Phone number: </label>
-    <input id="phone_number" th:field="*{phoneNumber}" th:value="${userForm.phoneNumber}" type="text"/><br/>
+    <p>Confidentials:</p>
+    <label for="username" class="required">Username: </label>
+    <input id="username" th:field="*{username}" type="text" required="required"/>
+    <div class="exception" th:errors="*{username}" th:if="${#fields.hasErrors('username')}">Name error</div>
+    <div class="exception" th:if="${usernameUnique}" th:text="${usernameUnique}">Name unique error</div>
+    <br/>
 
-    <label for="email">Email: </label>
-    <input id="email" th:field="*{email}" th:value="${userForm.email}" type="email"/><br/>
+    <label for="email" class="required">Email: </label>
+    <input id="email" required="required" th:field="*{email}" type="email"/>
+    <div class="exception" th:errors="*{email}" th:if="${#fields.hasErrors('email')}">Email error</div>
+    <div class="exception" th:if="${emailUnique}" th:text="${emailUnique}">Email unique error</div>
+
+    <div sec:authorize="!hasRole('ADMIN')">
+        <label th:class="${#authorization.expression('hasRole(''TEACHER'') || hasRole(''ROLE_UNCONFIRMED_TEACHER'')')?'required':''}" for="phone_number">Phone number: </label>
+        <input id="phone_number" th:field="*{phoneNumber}" type="text" th:required="${#authorization.expression('hasRole(''TEACHER'') || hasRole(''ROLE_UNCONFIRMED_TEACHER'')')?'required':null}"/><br/>
+        <div class="exception" th:errors="*{phoneValid}" th:if="${#fields.hasErrors('phoneValid')}">Phone number error</div>
+        <br/>
+    </div>
 
     <input type="submit" value="Submit changes"/>
 </form>
