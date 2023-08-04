@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import ru.spring.school.online.model.security.Student;
 import ru.spring.school.online.model.security.User;
 import ru.spring.school.online.service.UserService;
 

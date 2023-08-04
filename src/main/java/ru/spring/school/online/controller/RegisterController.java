@@ -8,12 +8,13 @@ import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
+import ru.spring.school.online.model.security.Student;
 import ru.spring.school.online.model.security.User;
 import ru.spring.school.online.service.UserService;
 
 @Controller
 @RequestMapping("/register")
-@SessionAttributes({"userForm", "isSecondStage"})
+@SessionAttributes({"studentForm", "isSecondStage"})
 public class RegisterController {
 
     private final UserService userService;
@@ -38,20 +39,29 @@ public class RegisterController {
         return "register";
     }
 
+    @GetMapping("/continue")
+    public String registerContinue(Model model) {
+        model.addAttribute("isSecondStage", true);
+        return "register";
+    }
+
     @PostMapping
     public String processRegistration(@ModelAttribute("userForm") @Valid User user,
                                       Errors errors,
-                                      @ModelAttribute("isSecondStage") boolean isSecondStage,
+                                      Model model
+    ) throws ServletException {
+        return registerFirstStage(user, model, errors);
+    }
+
+    @PostMapping("/continue")
+    public String processRegistrationContinue(@ModelAttribute("studentForm") @Valid Student student,
+                                      Errors errors,
                                       Model model,
                                       HttpServletRequest request,
                                       SessionStatus sessionStatus
     ) throws ServletException {
-        if (!isSecondStage) {
-            return registerFirstStage(user, model, errors);
-        } else {
-            return registerSecondStage(user, model, errors,
-                    request, sessionStatus);
-        }
+        return registerSecondStage(student, model, errors,
+                request, sessionStatus);
     }
 
     public boolean checkingRegisterErrors(User user, Model model, Errors errors) {
@@ -67,18 +77,20 @@ public class RegisterController {
     public String registerFirstStage(User user, Model model, Errors errors) {
         if (checkingRegisterErrors(user, model, errors))
             return "register";
-        model.addAttribute("isSecondStage", true);
         user.setRole(User.Role.STUDENT);
-        return "register";
+        model.addAttribute("studentForm", user.toStudent());
+        return "redirect:/register/continue";
     }
 
-    public String registerSecondStage(User user, Model model, Errors errors,
+    public String registerSecondStage(Student student, Model model, Errors errors,
                                       HttpServletRequest request,
                                       SessionStatus sessionStatus) {
-        if (checkingRegisterErrors(user, model, errors))
+        if (checkingRegisterErrors(student, model, errors)) {
+            System.out.println(errors);
             return "register";
-        userService.saveUser(user, true);
-        loginUser(request, sessionStatus, user);
+        }
+        userService.saveUser(student, true);
+        loginUser(request, sessionStatus, student);
         return "redirect:/profile";
     }
 

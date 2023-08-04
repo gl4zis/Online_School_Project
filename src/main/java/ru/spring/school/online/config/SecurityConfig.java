@@ -31,7 +31,8 @@ public class SecurityConfig {
                                 AntPathRequestMatcher.antMatcher("/css/**"))
                         .permitAll()
                         .requestMatchers(AntPathRequestMatcher.antMatcher("/register"),
-                                AntPathRequestMatcher.antMatcher("/login"))
+                                AntPathRequestMatcher.antMatcher("/login"),
+                                AntPathRequestMatcher.antMatcher("/register/continue"))
                         .anonymous()
                         .requestMatchers(AntPathRequestMatcher.antMatcher("/admin"),
                                 AntPathRequestMatcher.antMatcher("/admin/**"))

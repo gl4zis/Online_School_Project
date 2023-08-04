@@ -32,6 +32,7 @@ public class User implements UserDetails {
     protected String passwordConfirm;
     @Enumerated(value = EnumType.STRING)
     protected Role role;
+    @Column(nullable = false, unique = true)
     protected String email;
 
     @AssertTrue(message = "Passwords should be equals")
@@ -73,5 +74,9 @@ public class User implements UserDetails {
         UNCONFIRMED_STUDENT(new SimpleGrantedAuthority("ROLE_UNCONFIRMED_STUDENT"));
 
         private final GrantedAuthority authority;
+    }
+
+    public Student toStudent(){
+        return new Student(this);
     }
 }

@@ -1,6 +1,7 @@
 package ru.spring.school.online.model.security;
 
 import jakarta.persistence.Entity;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,13 +15,22 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Student extends User {
-
-    private String firstName; //*
-    private String lastName; //*
+    @NotBlank
+    private String firstname; //*
+    @NotBlank
+    private String lastname; //*
     private String patronymic;
     private Date dateOfBirth; //*
     private Byte grade; //*
     private String email; //*
     private String photoURL;
     private Long phoneNumber;
+
+    public Student(User user){
+        this.username = user.getUsername();
+        this.password = user.getPassword();
+        this.role = user.getRole();
+        this.email = user.getEmail();
+    }
+
 }
