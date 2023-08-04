@@ -33,28 +33,32 @@
 
 <form th:action="@{/register}" th:if="${isSecondStage}" th:method="post" th:object="${userForm}">
     <label class="required" for="firstname">Firstname: </label>
-    <input id="firstname"  th:field="*{firstname}" type="text" required="required"/>
-    <div class="exception" th:errors="*{firstnameValid}" th:if="${#fields.hasErrors('firstnameValid')}">Firstname error</div>
+    <input id="firstname" required="required" th:field="*{firstname}" type="text"/>
+    <div class="exception" th:errors="*{firstnameValid}" th:if="${#fields.hasErrors('firstnameValid')}">Firstname
+        error
+    </div>
     <br/>
 
     <label class="required" for="lastname">Lastname: </label>
-    <input id="lastname"  th:field="*{lastname}" type="text" required="required"/>
-    <div class="exception" th:errors="*{lastnameValid}" th:if="${#fields.hasErrors('lastnameValid')}">Lastname error</div>
+    <input id="lastname" required="required" th:field="*{lastname}" type="text"/>
+    <div class="exception" th:errors="*{lastnameValid}" th:if="${#fields.hasErrors('lastnameValid')}">Lastname error
+    </div>
     <br/>
 
     <label class="required" for="dateOfBirth">Birth date: </label>
-    <input id="dateOfBirth"  th:field="*{dateOfBirth}" type="date" required="required"/>
-    <div class="exception" th:errors="*{birthDateValid}" th:if="${#fields.hasErrors('birthDateValid')}">Date of birth error
+    <input id="dateOfBirth" required="required" th:field="*{dateOfBirth}" type="date"/>
+    <div class="exception" th:errors="*{birthDateValid}" th:if="${#fields.hasErrors('birthDateValid')}">Date of birth
+        error
     </div>
     <br/>
 
     <label class="required" for="grade">Grade: </label>
-    <input id="grade"  th:field="*{grade}" type="number" required="required"/>
+    <input id="grade" required="required" th:field="*{grade}" type="number"/>
     <div class="exception" th:errors="*{gradeValid}" th:if="${#fields.hasErrors('gradeValid')}">Grade error</div>
     <br/>
 
     <label class="required" for="email">Email: </label>
-    <input id="email"  th:field="*{email}" type="email" required="required"/>
+    <input id="email" required="required" th:field="*{email}" type="email"/>
     <div class="exception" th:errors="*{emailValid}" th:if="${#fields.hasErrors('emailValid')}">Email error</div>
     <div class="exception" th:if="${emailUnique}" th:text="${emailUnique}">Email unique error</div>
     <br/>

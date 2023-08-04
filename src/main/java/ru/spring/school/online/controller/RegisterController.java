@@ -47,27 +47,50 @@ public class RegisterController {
                                       SessionStatus sessionStatus
     ) throws ServletException {
         if (!isSecondStage) {
-            if (!userService.isUsernameUnique(user)) {
-                model.addAttribute("usernameUnique", "This username is taken");
-                return "register";
-            }
-            model.addAttribute("isSecondStage", true);
-            user.setRole(User.Role.STUDENT);
-            user.setGotUsername(true);
-            return "register";
+            return registerFirstStage(user, model, errors);
         } else {
-            if (errors.hasErrors()) {
-                System.out.println(errors);
-                return "register";
-            }
-            if (!userService.isEmailUnique(user)) {
-                model.addAttribute("emailUnique", "This email is taken");
-                return "register";
-            }
-            userService.saveUser(user, true);
+            return registerSecondStage(user, model, errors,
+                    request, sessionStatus);
+        }
+    }
+
+    public boolean checkingRegisterErrors(User user, Model model, Errors errors) {
+        if (errors.hasErrors())
+            return true;
+        if (!userService.isUsernameUnique(user)) {
+            model.addAttribute("usernameUnique", "This username is taken");
+            return true;
+        }
+        return false;
+    }
+
+    public String registerFirstStage(User user, Model model, Errors errors) {
+        if (checkingRegisterErrors(user, model, errors))
+            return "register";
+        model.addAttribute("isSecondStage", true);
+        user.setRole(User.Role.STUDENT);
+        user.setGotUsername(true);
+        return "register";
+    }
+
+    public String registerSecondStage(User user, Model model, Errors errors,
+                                      HttpServletRequest request,
+                                      SessionStatus sessionStatus) {
+        if (checkingRegisterErrors(user, model, errors))
+            return "register";
+        userService.saveUser(user, true);
+        loginUser(request, sessionStatus, user);
+        return "redirect:/profile";
+    }
+
+    public void loginUser(HttpServletRequest request,
+                          SessionStatus sessionStatus,
+                          User user) {
+        try {
             request.login(user.getUsername(), user.getPassword());
             sessionStatus.isComplete();
-            return "redirect:/profile";
+        } catch (ServletException e) {
+            e.printStackTrace();
         }
     }
 }
