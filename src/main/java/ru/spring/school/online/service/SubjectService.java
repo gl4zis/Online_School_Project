@@ -2,7 +2,6 @@ package ru.spring.school.online.service;
 
 import org.springframework.stereotype.Service;
 import ru.spring.school.online.model.security.Subject;
-import ru.spring.school.online.model.security.User;
 import ru.spring.school.online.repository.SubjectRepository;
 
 @Service

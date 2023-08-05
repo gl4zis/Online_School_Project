@@ -12,7 +12,7 @@
 </h5>
 <form th:action="@{/register}" th:if="${!isSecondStage}" th:method="post" th:object="${userForm}">
     <label for="username">Username: </label>
-    <input id="username" th:field="*{username}" type="text" required="required"/>
+    <input id="username" required="required" th:field="*{username}" type="text"/>
     <div class="exception" th:errors="*{username}" th:if="${#fields.hasErrors('username')}">Name error</div>
     <div class="exception" th:if="${usernameUnique}" th:text="${usernameUnique}">Name unique error</div>
     <br/>
@@ -24,12 +24,12 @@
     <br/>
 
     <label for="password">Password: </label>
-    <input id="password" th:field="*{password}" type="password" required="required"/>
+    <input id="password" required="required" th:field="*{password}" type="password"/>
     <div class="exception" th:errors="*{password}" th:if="${#fields.hasErrors('password')}">Password error</div>
     <br/>
 
     <label for="confirm">Confirm password: </label>
-    <input id="confirm" th:field="*{passwordConfirm}" type="password" required="required"/><br/>
+    <input id="confirm" required="required" th:field="*{passwordConfirm}" type="password"/><br/>
     <div class="exception" th:errors="*{passwordsEquals}" th:if="${#fields.hasErrors('passwordsEquals')}">Confirm
         error
     </div>
@@ -37,7 +37,7 @@
     <button type="submit">Next</button>
 </form>
 
-<form th:action="@{/register/continue}" th:if="${isSecondStage}" th:method="post" th:object="${studentForm}">
+<form th:action="@{/register}" th:if="${isSecondStage}" th:method="PUT" th:object="${studentForm}">
     <label class="required" for="firstname">Firstname: </label>
     <input id="firstname" required="required" th:field="*{firstname}" type="text"/>
     <div class="exception" th:errors="*{firstname}" th:if="${#fields.hasErrors('firstname')}">Firstname error</div>

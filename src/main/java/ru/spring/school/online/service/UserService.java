@@ -6,7 +6,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import ru.spring.school.online.model.security.User;
-import ru.spring.school.online.repository.SubjectRepository;
 import ru.spring.school.online.repository.UserRepository;
 
 import java.util.Optional;
@@ -59,11 +58,8 @@ public class UserService implements UserDetailsService {
             userRepo.save(user);
     }
 
-    public boolean updateUser(User user) {
-        if (isUsernameUnique(user))
-            return false;
+    public void updateUser(User user) {
         saveUser(user, false);
-        return true;
     }
 
     public boolean deleteUser(String username) {

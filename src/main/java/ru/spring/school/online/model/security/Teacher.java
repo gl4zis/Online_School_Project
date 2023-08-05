@@ -33,7 +33,7 @@ public class Teacher extends User {
     private String description;
     private Byte workExperience; //*
 
-    public Teacher(User user){
+    public Teacher(User user) {
         this.username = user.getUsername();
         this.password = user.getPassword();
         this.role = user.getRole();
@@ -42,7 +42,7 @@ public class Teacher extends User {
 
     @Transient
     @AssertTrue(message = "Input correct phone")
-    public boolean isPhoneValid(){
+    public boolean isPhoneValid() {
         return phoneNumber != null && Pattern.matches("\\d{11,12}", phoneNumber.toString());
     }
 }

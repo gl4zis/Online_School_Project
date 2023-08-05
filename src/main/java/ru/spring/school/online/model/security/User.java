@@ -67,22 +67,21 @@ public class User implements UserDetails {
         return true;
     }
 
+    public Student toStudent() {
+        return new Student(this);
+    }
+
+    public Teacher toTeacher() {
+        return new Teacher(this);
+    }
+
     @RequiredArgsConstructor
     public enum Role {
         ADMIN(new SimpleGrantedAuthority("ROLE_ADMIN")),
         TEACHER(new SimpleGrantedAuthority("ROLE_TEACHER")),
         UNCONFIRMED_TEACHER(new SimpleGrantedAuthority("ROLE_UNCONFIRMED_TEACHER")),
-        STUDENT(new SimpleGrantedAuthority("ROLE_STUDENT")),
-        UNCONFIRMED_STUDENT(new SimpleGrantedAuthority("ROLE_UNCONFIRMED_STUDENT"));
+        STUDENT(new SimpleGrantedAuthority("ROLE_STUDENT"));
 
         private final GrantedAuthority authority;
-    }
-
-    public Student toStudent(){
-        return new Student(this);
-    }
-
-    public Teacher toTeacher(){
-        return new Teacher(this);
     }
 }

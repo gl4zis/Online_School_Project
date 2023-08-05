@@ -29,7 +29,7 @@ public class ProfileController {
 
     @ModelAttribute("userForm")
     public User user(@AuthenticationPrincipal User user) {
-        return switch (user.getRole()){
+        return switch (user.getRole()) {
             case UNCONFIRMED_TEACHER -> user.toTeacher();
             case STUDENT -> (Student) user;
             case TEACHER -> (Teacher) user;
@@ -38,7 +38,7 @@ public class ProfileController {
     }
 
     @ModelAttribute("subjects")
-    public Iterable<Subject> subjects(){
+    public Iterable<Subject> subjects() {
         return subjectService.allSubjects();
     }
 
@@ -54,10 +54,10 @@ public class ProfileController {
 
     @PatchMapping
     public String processProfileSettings(@ModelAttribute("userForm") @Valid User user, Errors errors) {
-        if (errors.hasErrors()){
+        if (errors.hasErrors()) {
             return "profile_settings";
         }
-        if (user.getRole() == User.Role.UNCONFIRMED_TEACHER){
+        if (user.getRole() == User.Role.UNCONFIRMED_TEACHER) {
             user.setRole(User.Role.TEACHER);
         }
         userService.updateUser(user);

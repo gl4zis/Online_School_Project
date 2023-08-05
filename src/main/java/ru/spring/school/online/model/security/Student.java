@@ -28,7 +28,7 @@ public class Student extends User {
     private String lastname; //*
     private String patronymic;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    @NotNull(message = "Please provide a date.")
+    @NotNull(message = "Please provide a date")
     @Past(message = "Date should be in the past")
     private Date dateOfBirth; //*
     @NotNull(message = "Grade can't be null")
@@ -37,7 +37,7 @@ public class Student extends User {
     private String photoURL;
     private Long phoneNumber;
 
-    public Student(User user){
+    public Student(User user) {
         this.username = user.getUsername();
         this.password = user.getPassword();
         this.role = user.getRole();
@@ -46,7 +46,7 @@ public class Student extends User {
 
     @Transient
     @AssertTrue(message = "Input correct phone")
-    public boolean isPhoneValid(){
+    public boolean isPhoneValid() {
         return phoneNumber == null || Pattern.matches("\\d{11,12}", phoneNumber.toString());
     }
 
