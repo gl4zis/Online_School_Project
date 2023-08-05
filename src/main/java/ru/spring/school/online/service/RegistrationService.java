@@ -35,17 +35,20 @@ public class RegistrationService {
         return true;
     }
 
+    /**
+     * true if there are errors!!
+     */
     public boolean checkRegErrors(User user, Errors errors, Model model) {
         if (errors.hasErrors())
-            return false;
+            return true;
         if (!userService.isUsernameUnique(user)) {
             model.addAttribute("usernameUnique", "This username is taken");
-            return false;
+            return true;
         }
         if (!userService.isEmailUnique(user)) {
             model.addAttribute("emailUnique", "This email is taken");
-            return false;
+            return true;
         }
-        return true;
+        return false;
     }
 }

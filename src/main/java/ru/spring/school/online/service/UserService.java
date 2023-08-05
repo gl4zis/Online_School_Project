@@ -34,6 +34,13 @@ public class UserService implements UserDetailsService {
         }
     }
 
+    public User findUser(String username) {
+        Optional<User> userOpt = userRepo.findById(username);
+        if (userOpt.isPresent())
+            return userOpt.get();
+        throw new UsernameNotFoundException("User '" + username + "' not found");
+    }
+
     public Iterable<User> allUsers() {
         return userRepo.findAll();
     }

@@ -11,7 +11,7 @@
     </p>
     <div th:each="user : ${users}">
         <a th:href="@{/admin/users/{id}(id=${user.getUsername()})}"
-           th:text="${user.getFirstname()} + ' ' + ${user.getLastname()}">User</a>
+           th:text="${user.getUsername()} + ' ' + ${user.getEmail()}">User</a>
     </div>
     <form th:action="@{/admin/users/new}" th:method="get">
         <button type="submit">Register new user</button>

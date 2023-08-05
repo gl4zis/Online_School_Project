@@ -18,8 +18,8 @@ import java.util.regex.Pattern;
 @AllArgsConstructor
 public class Teacher extends User {
 
-    private String firstName; //*
-    private String lastName; //*
+    private String firstname; //*
+    private String lastname; //*
     private String patronymic;
     private Date dateOfBirth; //*
     private String photoURL; //*

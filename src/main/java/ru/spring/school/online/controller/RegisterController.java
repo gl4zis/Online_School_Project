@@ -38,7 +38,7 @@ public class RegisterController {
                                       Errors errors,
                                       Model model
     ) {
-        if (!regService.checkRegErrors(user, errors, model))
+        if (regService.checkRegErrors(user, errors, model))
             return "register";
         user.setRole(User.Role.STUDENT);
         model.addAttribute("studentForm", user.toStudent());

@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en"
-      xmlns:th="http://www.thymeleaf.org">
+      xmlns:sec="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Profile Settings</title>
@@ -84,8 +84,10 @@
 
     <div sec:authorize="!hasRole('ADMIN')">
         <label for="phone_number"
-               th:class="${#authorization.expression('hasRole(''TEACHER'') || hasRole(''ROLE_UNCONFIRMED_TEACHER'')')?'required':''}">Phone number: </label>
-        <input id="phone_number" th:field="*{phoneNumber}" th:required="${#authorization.expression('hasRole(''TEACHER'') || hasRole(''ROLE_UNCONFIRMED_TEACHER'')')?'required':null}"
+               th:class="${#authorization.expression('hasRole(''TEACHER'') || hasRole(''ROLE_UNCONFIRMED_TEACHER'')')?'required':''}">Phone
+            number: </label>
+        <input id="phone_number" th:field="*{phoneNumber}"
+               th:required="${#authorization.expression('hasRole(''TEACHER'') || hasRole(''ROLE_UNCONFIRMED_TEACHER'')')?'required':null}"
                type="text"/><br/>
         <div class="exception" th:errors="*{phoneValid}" th:if="${#fields.hasErrors('phoneValid')}">Phone number error
         </div>
