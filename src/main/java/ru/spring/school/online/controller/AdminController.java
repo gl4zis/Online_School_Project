@@ -56,7 +56,6 @@ public class AdminController {
             case "TEACHER" -> user.setRole(User.Role.UNCONFIRMED_TEACHER);
         }
         regService.regNewUser(user);
-        regService.loginUser(request, sessionStatus, user);
         return "redirect:/admin/users";
     }
 

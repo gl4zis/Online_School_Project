@@ -8,8 +8,10 @@
 <body>
 <a th:href="@{/}">Back</a>
 <p th:text="'@' + ${userForm.username}">username</p>
-<p th:text="(${userForm.firstname}?${userForm.firstname}:'') + ' ' + (${userForm.lastname}?${userForm.lastname}:'')">
-    username</p>
+<div sec:authorize="!hasRole('ADMIN')">
+    <p th:text="(${userForm.firstname}?${userForm.firstname}:'') + ' ' + (${userForm.lastname}?${userForm.lastname}:'')">
+        username</p>
+</div>
 <p th:text="${#strings.toLowerCase(userForm.role)}"></p>
 <br/>
 <p>If you want to edit your profile click
