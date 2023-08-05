@@ -1,33 +1,35 @@
 package ru.spring.school.online.controller;
 
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
-
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
 import ru.spring.school.online.model.security.Student;
 import ru.spring.school.online.model.security.Subject;
 import ru.spring.school.online.model.security.Teacher;
 import ru.spring.school.online.model.security.User;
+import ru.spring.school.online.service.RegistrationService;
 import ru.spring.school.online.service.SubjectService;
 import ru.spring.school.online.service.UserService;
 
 @Controller
 @RequestMapping("/profile")
+@SessionAttributes("oldUsername")
 public class ProfileController {
 
     private final UserService userService;
     private final SubjectService subjectService;
 
-    public ProfileController(UserService userService, SubjectService subjectService) {
+    private final RegistrationService regService;
+
+    public ProfileController(UserService userService, SubjectService subjectService, RegistrationService regService) {
         this.userService = userService;
         this.subjectService = subjectService;
+        this.regService = regService;
     }
 
     @ModelAttribute("userForm")
@@ -54,8 +56,30 @@ public class ProfileController {
         return "profile_settings";
     }
 
+    @GetMapping("/edit/login")
+    @PreAuthorize("!hasRole('UNCONFIRMED_TEACHER')")
+    public String getProfileSettingsLogin(Model model, @AuthenticationPrincipal User user) {
+        model.addAttribute("oldUsername", user.getUsername());
+        return "profile_settings_login";
+    }
+
+    @PatchMapping("/edit/login")
+    public String processProfileSettingsLogin(@ModelAttribute("userForm") @Valid User user,
+                                              Errors errors,
+                                              @ModelAttribute("oldUsername") String oldUsername,
+                                              Model model,
+                                              SessionStatus session) {
+        if (regService.checkRegErrors(user, errors, model)) {
+            return "profile_settings_login";
+        }
+        userService.updateUser(user);
+        userService.deleteUser(oldUsername);
+        session.isComplete();
+        return "redirect:/logout";
+    }
+
     @PatchMapping
-    public String processProfileSettings(@ModelAttribute("userForm") @Valid User user, Errors errors, HttpServletRequest request, SessionStatus session) {
+    public String processProfileSettings(@ModelAttribute("userForm") @Valid User user, Errors errors) {
         if (errors.hasErrors()) {
             return "profile_settings";
         }

@@ -64,7 +64,7 @@ public class AdminController {
     public String userProfile(@PathVariable("id") String username,
                               Model model) {
         User user = userService.findUser(username);
-        model.addAttribute("user", user);
+        model.addAttribute("userForm", user);
         return "profile";
     }
 }
