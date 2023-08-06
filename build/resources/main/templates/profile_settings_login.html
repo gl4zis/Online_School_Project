@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="UTF-8">
   <title>Profile Settings</title>
@@ -7,18 +7,16 @@
 </head>
 <body>
   <a th:href="@{/profile/edit}">back</a>
-  <form th:action="@{/profile/edit/login}" th:method="PATCH" th:object="${userForm}">
+  <form th:action="@{/profile/edit}" th:method="PATCH">
 
     <label for="username">Username: </label>
-    <input id="username" required="required" th:field="*{username}" type="text"/>
-    <div class="exception" th:errors="*{username}" th:if="${#fields.hasErrors('username')}">Name error</div>
-    <div class="exception" th:if="${usernameUnique}" th:text="${usernameUnique}">Name unique error</div>
+    <input id="username" required="required" name="username" th:value="${username}" type="text"/>
+    <div class="exception" th:if="${usernameError}" th:text="${usernameError}">Name error</div>
     <br/>
 
     <label class="required" for="email">Email: </label>
-    <input id="email" required="required" th:field="*{email}" type="email"/>
-    <div class="exception" th:errors="*{email}" th:if="${#fields.hasErrors('email')}">Email error</div>
-    <div class="exception" th:if="${emailUnique}" th:text="${emailUnique}">Email unique error</div>
+    <input id="email" required="required" name="email" th:value="${email}" type="email"/>
+    <div class="exception" th:if="${emailError}" th:text="${emailError}">Email unique error</div>
     <br/>
 
     <input type="submit" value="Submit changes"/>

@@ -1,7 +1,6 @@
 package ru.spring.school.online.controller;
 
 import jakarta.validation.Valid;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -57,23 +56,37 @@ public class ProfileController {
     }
 
     @GetMapping("/edit/login")
-    @PreAuthorize("!hasRole('UNCONFIRMED_TEACHER')")
     public String getProfileSettingsLogin(Model model, @AuthenticationPrincipal User user) {
-        model.addAttribute("oldUsername", user.getUsername());
+        model.addAttribute("username", user.getUsername());
+        model.addAttribute("email", user.getEmail());
         return "profile_settings_login";
     }
 
-    @PatchMapping("/edit/login")
-    public String processProfileSettingsLogin(@ModelAttribute("userForm") @Valid User user,
-                                              Errors errors,
-                                              @ModelAttribute("oldUsername") String oldUsername,
+    @PatchMapping("/edit")
+    public String processProfileSettingsLogin(@RequestParam String username,
+                                              @RequestParam String email,
+                                              @AuthenticationPrincipal User user,
                                               Model model,
                                               SessionStatus session) {
-        if (regService.checkRegErrors(user, errors, model)) {
-            return "profile_settings_login";
+        String oldUsername = user.getUsername();
+        if (!user.getUsername().equals(username)) {
+            if (userService.usernameValidate(username))
+                user.setUsername(username);
+            else {
+                model.addAttribute("usernameError", "Username is not valid or unique");
+                return "profile_settings_login";
+            }
         }
-        userService.updateUser(user);
+        if (!user.getEmail().equals(email)) {
+            if (userService.emailValidate(email))
+                user.setEmail(email);
+            else {
+                model.addAttribute("emailError", "Email is not valid or unique");
+                return "profile_settings_login";
+            }
+        }
         userService.deleteUser(oldUsername);
+        userService.updateUser(user);
         session.isComplete();
         return "redirect:/logout";
     }
