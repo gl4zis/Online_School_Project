@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Profile Settings</title>
@@ -14,7 +14,7 @@
     <div class="exception" th:if="${usernameError}" th:text="${usernameError}">Name error</div>
     <br/>
 
-    <label class="required" for="email">Email: </label>
+    <label for="email">Email: </label>
     <input id="email" name="email" required="required" th:value="${email}" type="email"/>
     <div class="exception" th:if="${emailError}" th:text="${emailError}">Email unique error</div>
     <br/>

@@ -59,7 +59,7 @@ public class UserService implements UserDetailsService {
     public void saveUser(User user, boolean needsEncoding) {
         if (needsEncoding) {
             String password = user.getPassword();
-            user.setPassword(passwordEncoder.encode(password));
+            user.setPassword(encodePassword(password));
             userRepo.save(user);
             user.setPassword(password);
         } else
@@ -75,7 +75,7 @@ public class UserService implements UserDetailsService {
     }
 
     public boolean emailValidate(String email) {
-        Pattern emailRegex = Pattern.compile("^\\w+@\\w+\\.\\w{2,5}$");
+        Pattern emailRegex = Pattern.compile("^[\\w.%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}$");
         if (email == null)
             return false;
         if (!emailRegex.matcher(email).find())
@@ -93,5 +93,21 @@ public class UserService implements UserDetailsService {
             return true;
         }
         return false;
+    }
+
+    private String encodePassword(String password){
+        return passwordEncoder.encode(password);
+    }
+
+    public boolean checkOldPassword(String inputPassword, String currentPassword){
+        return passwordEncoder.matches(inputPassword, currentPassword);
+    }
+
+    public boolean isPasswordValid(String password){
+        return (password != null && password.length() >= 6);
+    }
+
+    public boolean isPasswordsEquals(String password, String passwordConfirm){
+        return password.equals(passwordConfirm);
     }
 }

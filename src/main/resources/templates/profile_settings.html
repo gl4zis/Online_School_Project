@@ -12,6 +12,9 @@
     <a th:href="@{/profile/edit/login}">here</a>.
 </p>
 
+<p>If you want to edit your password click
+    <a th:href="@{/profile/edit/password}">here</a>.
+</p>
 
 <h1>Settings</h1>
 <form th:action="@{/profile}" th:method="PATCH" th:object="${userForm}">

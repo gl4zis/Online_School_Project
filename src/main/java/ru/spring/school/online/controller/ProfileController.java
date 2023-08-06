@@ -17,18 +17,15 @@ import ru.spring.school.online.service.UserService;
 
 @Controller
 @RequestMapping("/profile")
-@SessionAttributes("oldUsername")
 public class ProfileController {
 
     private final UserService userService;
     private final SubjectService subjectService;
 
-    private final RegistrationService regService;
 
-    public ProfileController(UserService userService, SubjectService subjectService, RegistrationService regService) {
+    public ProfileController(UserService userService, SubjectService subjectService) {
         this.userService = userService;
         this.subjectService = subjectService;
-        this.regService = regService;
     }
 
     @ModelAttribute("userForm")
@@ -62,12 +59,39 @@ public class ProfileController {
         return "profile_settings_login";
     }
 
+    @GetMapping("/edit/password")
+    public String getProfileSettingsPassword() {
+        return "profile_settings_password";
+    }
+
+    @PatchMapping("/edit/password")
+    public String processProfileSettingsPassword(@RequestParam String oldPassword,
+                                                 @RequestParam String newPassword,
+                                                 @RequestParam String passwordConfirm,
+                                                 @AuthenticationPrincipal User user,
+                                                 Model model){
+        if (!userService.checkOldPassword(oldPassword, user.getPassword())){
+            model.addAttribute("oldPasswordIncorrect", "Wrong password");
+            return "profile_settings_password";
+        }
+        if (!userService.isPasswordValid(newPassword)){
+            model.addAttribute("passwordException", "Password should be longer than 5 characters");
+            return "profile_settings_password";
+        }
+        if (!userService.isPasswordsEquals(newPassword, passwordConfirm)){
+            model.addAttribute("passwordEqualsException", "Passwords should be equals");
+            return "profile_settings_password";
+        }
+        user.setPassword(newPassword);
+        userService.saveUser(user, true);
+        return "redirect:/logout";
+    }
+
     @PatchMapping("/edit")
     public String processProfileSettingsLogin(@RequestParam String username,
                                               @RequestParam String email,
                                               @AuthenticationPrincipal User user,
-                                              Model model,
-                                              SessionStatus session) {
+                                              Model model) {
         String oldUsername = user.getUsername();
         if (!user.getUsername().equals(username)) {
             if (userService.usernameValidate(username))
@@ -87,7 +111,6 @@ public class ProfileController {
         }
         userService.deleteUser(oldUsername);
         userService.updateUser(user);
-        session.isComplete();
         return "redirect:/logout";
     }
 
