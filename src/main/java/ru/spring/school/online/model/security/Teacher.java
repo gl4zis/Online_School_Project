@@ -34,7 +34,7 @@ public class Teacher extends User {
     @Enumerated(value = EnumType.STRING)
     @ManyToMany(fetch = FetchType.EAGER)
     @NotNull
-    @Size(min = 1, max = 3, message="You must choose between 1 and 3 subjects")
+    @Size(min = 1, max = 3, message = "You must choose between 1 and 3 subjects")
     private Set<Subject> subjects; //*
     @NotBlank(message = "Education can't be blank")
     private String education; //*

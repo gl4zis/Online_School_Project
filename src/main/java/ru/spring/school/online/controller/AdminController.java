@@ -53,8 +53,10 @@ public class AdminController {
             return "adm_teach_register";
         switch (roleName) {
             case "ADMIN" -> user.setRole(User.Role.ADMIN);
-            case "TEACHER" -> {user.setRole(User.Role.UNCONFIRMED_TEACHER);
-            user = user.toTeacher();}
+            case "TEACHER" -> {
+                user.setRole(User.Role.UNCONFIRMED_TEACHER);
+                user = user.toTeacher();
+            }
         }
         regService.regNewUser(user);
         return "redirect:/admin/users";

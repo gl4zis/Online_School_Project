@@ -29,7 +29,7 @@ public class RegistrationService {
     }
 
     public boolean regNewUser(User user) {
-        if (!userService.isUsernameUnique(user))
+        if (!userService.isUsernameUnique(user.getUsername()))
             return false;
         userService.saveUser(user, true);
         return true;
@@ -41,11 +41,11 @@ public class RegistrationService {
     public boolean checkRegErrors(User user, Errors errors, Model model) {
         if (errors.hasErrors())
             return true;
-        if (!userService.isUsernameUnique(user)) {
+        if (!userService.isUsernameUnique(user.getUsername())) {
             model.addAttribute("usernameUnique", "This username is taken");
             return true;
         }
-        if (!userService.isEmailUnique(user)) {
+        if (!userService.isEmailUnique(user.getEmail())) {
             model.addAttribute("emailUnique", "This email is taken");
             return true;
         }
