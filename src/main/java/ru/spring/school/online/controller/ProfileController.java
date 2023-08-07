@@ -15,6 +15,7 @@ import ru.spring.school.online.service.UserService;
 
 @Controller
 @RequestMapping("/profile")
+@SessionAttributes({"copyUser", "userForm"})
 public class ProfileController {
 
     private final UserService userService;
@@ -28,6 +29,8 @@ public class ProfileController {
 
     @ModelAttribute("userForm")
     public User user(@AuthenticationPrincipal User user) {
+        user.setOldUsername(user.getUsername());
+        user.setOldEmail(user.getEmail());
         return switch (user.getRole()) {
             case STUDENT -> (Student) user;
             case TEACHER, UNCONFIRMED_TEACHER -> (Teacher) user;
@@ -51,9 +54,7 @@ public class ProfileController {
     }
 
     @GetMapping("/edit/login")
-    public String getProfileSettingsLogin(Model model, @AuthenticationPrincipal User user) {
-        User copyUser = user.copy();
-        model.addAttribute("copyUser", copyUser);
+    public String getProfileSettingsLogin() {
         return "profile_settings_login";
     }
 
@@ -68,60 +69,31 @@ public class ProfileController {
                                                  @RequestParam String passwordConfirm,
                                                  @AuthenticationPrincipal User user,
                                                  Model model) {
-        if (!userService.checkOldPassword(oldPassword, user.getPassword())) {
-            model.addAttribute("oldPasswordIncorrect", "Wrong password");
+        if (!userService.setNewPassword(oldPassword, newPassword, passwordConfirm,
+                user, model))
             return "profile_settings_password";
-        }
-        if (!userService.isPasswordValid(newPassword)) {
-            model.addAttribute("passwordException", "Password should be longer than 5 characters");
-            return "profile_settings_password";
-        }
-        if (!userService.isPasswordsEquals(newPassword, passwordConfirm)) {
-            model.addAttribute("passwordEqualsException", "Passwords should be equals");
-            return "profile_settings_password";
-        }
         user.setPassword(newPassword);
         userService.saveUser(user, true);
         return "redirect:/logout";
     }
 
     @PatchMapping("/edit/login")
-    public String processProfileSettingsLogin(@ModelAttribute @Valid User copyUser,
+    public String processProfileSettingsLogin(@ModelAttribute("userForm") @Valid User user,
                                               Errors errors,
-                                              @AuthenticationPrincipal User user,
                                               Model model) {
-        model.addAttribute("copyUser", copyUser);
-        String oldUsername = user.getUsername();
-        String newUsername = copyUser.getUsername();
-        String newEmail = copyUser.getEmail();
-        if (errors.hasFieldErrors("username") || errors.hasFieldErrors("email"))
+        if (!userService.setUsernameUnique(user, errors, model))
             return "profile_settings_login";
-        if (!user.getUsername().equals(newUsername)) {
-            if (userService.isUsernameUnique(newUsername))
-                user.setUsername(newUsername);
-            else {
-                model.addAttribute("usernameUnique", "Username is taken");
-                return "profile_settings_login";
-            }
-        }
-        if (!user.getEmail().equals(newEmail)) {
-            if (userService.isEmailUnique(newEmail))
-                user.setEmail(newEmail);
-            else {
-                model.addAttribute("emailUnique", "Email is taken");
-                return "profile_settings_login";
-            }
-        }
-        userService.deleteUser(oldUsername);
+        userService.deleteUser(user.getOldUsername());
         userService.updateUser(user);
         return "redirect:/logout";
     }
 
-    @PatchMapping
-    public String processProfileSettings(@ModelAttribute("userForm") @Valid User user, Errors errors) {
-        if (errors.hasErrors()) {
+    @PatchMapping("/edit")
+    public String processProfileSettings(@ModelAttribute("userForm") @Valid User user,
+                                         Errors errors,
+                                         Model model) {
+        if (!userService.setEmailUnique(user, errors, model))
             return "profile_settings";
-        }
         if (user.getRole() == User.Role.UNCONFIRMED_TEACHER) {
             user.setRole(User.Role.TEACHER);
         }

@@ -5,6 +5,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.Model;
+import org.springframework.validation.Errors;
 import ru.spring.school.online.model.security.User;
 import ru.spring.school.online.repository.UserRepository;
 
@@ -45,13 +47,17 @@ public class UserService implements UserDetailsService {
         return userRepo.findAll();
     }
 
-    public boolean isUsernameUnique(String username) {
-        Optional<User> userFormDB = userRepo.findById(username);
+    public Optional<User> findByEmail(String email) {
+        return userRepo.findUserByEmail(email);
+    }
+
+    public boolean isUsernameUnique(User user) {
+        Optional<User> userFormDB = userRepo.findById(user.getUsername());
         return userFormDB.isEmpty();
     }
 
-    public boolean isEmailUnique(String email) {
-        Optional<User> userFormDB = userRepo.findUserByEmail(email);
+    public boolean isEmailUnique(User user) {
+        Optional<User> userFormDB = userRepo.findUserByEmail(user.getEmail());
         return userFormDB.isEmpty();
     }
 
@@ -81,15 +87,50 @@ public class UserService implements UserDetailsService {
         return passwordEncoder.encode(password);
     }
 
-    public boolean checkOldPassword(String inputPassword, String currentPassword) {
-        return passwordEncoder.matches(inputPassword, currentPassword);
+    /**
+     * false if there are error!
+     */
+    public boolean setUsernameUnique(User user, Errors errors, Model model) {
+        if (errors.hasErrors())
+            return false;
+        if (!user.getUsername().equals(user.getOldUsername()) && !isUsernameUnique(user)) {
+            model.addAttribute("usernameUnique", "This username is taken");
+            return false;
+        }
+        return true;
     }
 
-    public boolean isPasswordValid(String password) {
-        return (password != null && password.length() >= 6);
+    /**
+     * false if there are error!
+     */
+    public boolean setEmailUnique(User user, Errors errors, Model model) {
+        if (errors.hasErrors())
+            return false;
+        if (!user.getEmail().equals(user.getOldEmail()) && !isEmailUnique(user)) {
+            model.addAttribute("emailUnique", "This email is taken");
+            return false;
+        }
+        return true;
     }
 
-    public boolean isPasswordsEquals(String password, String passwordConfirm) {
-        return password.equals(passwordConfirm);
+    /**
+     * false if there are error!
+     */
+    public boolean setNewPassword(String oldPassword, String newPassword, String passwordConfirm,
+                                  User user, Model model
+    ) {
+        if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
+            model.addAttribute("oldPasswordIncorrect", "Wrong password");
+            return false;
+        }
+        if (newPassword == null || newPassword.length() < 6) {
+            model.addAttribute("passwordException", "Password should be longer than 5 characters");
+            return false;
+        }
+        if (!newPassword.equals(passwordConfirm)) {
+            model.addAttribute("passwordEqualsException", "Passwords should be equals");
+            return false;
+        }
+        return true;
     }
 }

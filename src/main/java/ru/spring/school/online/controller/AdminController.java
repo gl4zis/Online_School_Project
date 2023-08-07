@@ -49,7 +49,8 @@ public class AdminController {
                                   HttpServletRequest request,
                                   SessionStatus sessionStatus
     ) {
-        if (regService.checkRegErrors(user, errors, model))
+        if (!userService.setUsernameUnique(user, errors, model) |
+                !userService.setEmailUnique(user, errors, model))
             return "adm_teach_register";
         switch (roleName) {
             case "ADMIN" -> user.setRole(User.Role.ADMIN);
