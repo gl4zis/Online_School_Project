@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Profile Settings</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+<a th:href="@{/profile/edit}">back</a>
+<form th:action="@{/profile/edit/login}" th:method="PATCH" th:object="${userForm}">
+
+    <label for="username">Username: </label>
+    <input id="username" required="required" th:field="*{username}" type="text"/>
+    <div class="exception" th:if="${usernameUnique}" th:text="${usernameUnique}">Name error</div>
+    <div class="exception" th:errors="*{username}" th:if="${#fields.hasErrors('username')}">Name error</div>
+    <br/>
+
+    <input type="submit" value="Submit changes"/>
+</form>
+
+</body>
+</html>

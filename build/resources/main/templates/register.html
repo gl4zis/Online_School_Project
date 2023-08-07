@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Registration</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+<h3>Registration for students</h3>
+<h5>If you are teacher, ask administration to register you<br/>
+    <a th:href="@{/contacts}">Contacts page</a>
+</h5>
+<form th:action="@{/register}" th:if="${!isSecondStage}" th:method="post" th:object="${userForm}">
+    <label for="username">Username: </label>
+    <input id="username" required="required" th:field="*{username}" type="text"/>
+    <div class="exception" th:errors="*{username}" th:if="${#fields.hasErrors('username')}">Name error</div>
+    <div class="exception" th:if="${usernameUnique}" th:text="${usernameUnique}">Name unique error</div>
+    <br/>
+
+    <label for="email">Email: </label>
+    <input id="email" required="required" th:field="*{email}" type="email"/>
+    <div class="exception" th:errors="*{email}" th:if="${#fields.hasErrors('email')}">Email error</div>
+    <div class="exception" th:if="${emailUnique}" th:text="${emailUnique}">Email unique error</div>
+    <br/>
+
+    <label for="password">Password: </label>
+    <input id="password" required="required" th:field="*{password}" type="password"/>
+    <div class="exception" th:errors="*{password}" th:if="${#fields.hasErrors('password')}">Password error</div>
+    <br/>
+
+    <label for="confirm">Confirm password: </label>
+    <input id="confirm" required="required" th:field="*{passwordConfirm}" type="password"/><br/>
+    <div class="exception" th:errors="*{passwordsEquals}" th:if="${#fields.hasErrors('passwordsEquals')}">Confirm
+        error
+    </div>
+
+    <button type="submit">Next</button>
+</form>
+
+<form th:action="@{/register}" th:if="${isSecondStage}" th:method="PUT" th:object="${studentForm}">
+    <label class="required" for="firstname">Firstname: </label>
+    <input id="firstname" required="required" th:field="*{firstname}" type="text"/>
+    <div class="exception" th:errors="*{firstname}" th:if="${#fields.hasErrors('firstname')}">Firstname error</div>
+    <br/>
+
+    <label class="required" for="lastname">Lastname: </label>
+    <input id="lastname" required="required" th:field="*{lastname}" type="text"/>
+    <div class="exception" th:errors="*{lastname}" th:if="${#fields.hasErrors('lastname')}">Lastname error</div>
+    <br/>
+
+    <label class="required" for="dateOfBirth">Birth date: </label>
+    <input id="dateOfBirth" required="required" th:field="*{dateOfBirth}" type="date"/>
+    <div class="exception" th:errors="*{dateOfBirth}" th:if="${#fields.hasErrors('dateOfBirth')}">Birth date error</div>
+    <br/>
+
+    <label class="required" for="grade">Grade: </label>
+    <input id="grade" required="required" th:field="*{grade}" type="number"/>
+    <div class="exception" th:errors="*{grade}" th:if="${#fields.hasErrors('grade')}">Grade error</div>
+    <br/>
+
+    <button type="submit">Sign up</button>
+</form>
+</body>
+</html>
