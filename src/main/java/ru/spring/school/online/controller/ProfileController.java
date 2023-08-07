@@ -6,12 +6,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.bind.support.SessionStatus;
 import ru.spring.school.online.model.security.Student;
 import ru.spring.school.online.model.security.Subject;
 import ru.spring.school.online.model.security.Teacher;
 import ru.spring.school.online.model.security.User;
-import ru.spring.school.online.service.RegistrationService;
 import ru.spring.school.online.service.SubjectService;
 import ru.spring.school.online.service.UserService;
 
@@ -54,13 +52,13 @@ public class ProfileController {
 
     @GetMapping("/edit/login")
     public String getProfileSettingsLogin(Model model, @AuthenticationPrincipal User user) {
-        model.addAttribute("username", user.getUsername());
-        model.addAttribute("email", user.getEmail());
+        User copyUser = user.copy();
+        model.addAttribute("copyUser", copyUser);
         return "profile_settings_login";
     }
 
     @GetMapping("/edit/password")
-    public String getProfileSettingsPassword() {
+    public String getProfileSettingsPassword(Model model) {
         return "profile_settings_password";
     }
 
@@ -69,16 +67,16 @@ public class ProfileController {
                                                  @RequestParam String newPassword,
                                                  @RequestParam String passwordConfirm,
                                                  @AuthenticationPrincipal User user,
-                                                 Model model){
-        if (!userService.checkOldPassword(oldPassword, user.getPassword())){
+                                                 Model model) {
+        if (!userService.checkOldPassword(oldPassword, user.getPassword())) {
             model.addAttribute("oldPasswordIncorrect", "Wrong password");
             return "profile_settings_password";
         }
-        if (!userService.isPasswordValid(newPassword)){
+        if (!userService.isPasswordValid(newPassword)) {
             model.addAttribute("passwordException", "Password should be longer than 5 characters");
             return "profile_settings_password";
         }
-        if (!userService.isPasswordsEquals(newPassword, passwordConfirm)){
+        if (!userService.isPasswordsEquals(newPassword, passwordConfirm)) {
             model.addAttribute("passwordEqualsException", "Passwords should be equals");
             return "profile_settings_password";
         }
@@ -87,25 +85,30 @@ public class ProfileController {
         return "redirect:/logout";
     }
 
-    @PatchMapping("/edit")
-    public String processProfileSettingsLogin(@RequestParam String username,
-                                              @RequestParam String email,
+    @PatchMapping("/edit/login")
+    public String processProfileSettingsLogin(@ModelAttribute @Valid User copyUser,
+                                              Errors errors,
                                               @AuthenticationPrincipal User user,
                                               Model model) {
+        model.addAttribute("copyUser", copyUser);
         String oldUsername = user.getUsername();
-        if (!user.getUsername().equals(username)) {
-            if (userService.usernameValidate(username))
-                user.setUsername(username);
+        String newUsername = copyUser.getUsername();
+        String newEmail = copyUser.getEmail();
+        if (errors.hasFieldErrors("username") || errors.hasFieldErrors("email"))
+            return "profile_settings_login";
+        if (!user.getUsername().equals(newUsername)) {
+            if (userService.isUsernameUnique(newUsername))
+                user.setUsername(newUsername);
             else {
-                model.addAttribute("usernameError", "Username is not valid or unique");
+                model.addAttribute("usernameUnique", "Username is taken");
                 return "profile_settings_login";
             }
         }
-        if (!user.getEmail().equals(email)) {
-            if (userService.emailValidate(email))
-                user.setEmail(email);
+        if (!user.getEmail().equals(newEmail)) {
+            if (userService.isEmailUnique(newEmail))
+                user.setEmail(newEmail);
             else {
-                model.addAttribute("emailError", "Email is not valid or unique");
+                model.addAttribute("emailUnique", "Email is taken");
                 return "profile_settings_login";
             }
         }

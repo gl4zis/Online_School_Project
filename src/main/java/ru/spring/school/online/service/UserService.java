@@ -9,7 +9,6 @@ import ru.spring.school.online.model.security.User;
 import ru.spring.school.online.repository.UserRepository;
 
 import java.util.Optional;
-import java.util.regex.Pattern;
 
 @Service
 public class UserService implements UserDetailsService {
@@ -66,23 +65,6 @@ public class UserService implements UserDetailsService {
             userRepo.save(user);
     }
 
-    public boolean usernameValidate(String username) {
-        if (username == null)
-            return false;
-        if (username.length() < 3 || username.length() > 30)
-            return false;
-        return isUsernameUnique(username);
-    }
-
-    public boolean emailValidate(String email) {
-        Pattern emailRegex = Pattern.compile("^[\\w.%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}$");
-        if (email == null)
-            return false;
-        if (!emailRegex.matcher(email).find())
-            return false;
-        return isEmailUnique(email);
-    }
-
     public void updateUser(User user) {
         saveUser(user, false);
     }
@@ -95,19 +77,19 @@ public class UserService implements UserDetailsService {
         return false;
     }
 
-    private String encodePassword(String password){
+    private String encodePassword(String password) {
         return passwordEncoder.encode(password);
     }
 
-    public boolean checkOldPassword(String inputPassword, String currentPassword){
+    public boolean checkOldPassword(String inputPassword, String currentPassword) {
         return passwordEncoder.matches(inputPassword, currentPassword);
     }
 
-    public boolean isPasswordValid(String password){
+    public boolean isPasswordValid(String password) {
         return (password != null && password.length() >= 6);
     }
 
-    public boolean isPasswordsEquals(String password, String passwordConfirm){
+    public boolean isPasswordsEquals(String password, String passwordConfirm) {
         return password.equals(passwordConfirm);
     }
 }

@@ -7,16 +7,18 @@
 </head>
 <body>
 <a th:href="@{/profile/edit}">back</a>
-<form th:action="@{/profile/edit}" th:method="PATCH">
+<form th:action="@{/profile/edit/login}" th:method="PATCH" th:object="${copyUser}">
 
     <label for="username">Username: </label>
-    <input id="username" name="username" required="required" th:value="${username}" type="text"/>
-    <div class="exception" th:if="${usernameError}" th:text="${usernameError}">Name error</div>
+    <input id="username" required="required" th:field="*{username}" type="text"/>
+    <div class="exception" th:if="${usernameError}" th:text="${usernameUnique}">Name error</div>
+    <div class="exception" th:errors="*{username}" th:if="${#fields.hasErrors('username')}">Name error</div>
     <br/>
 
     <label for="email">Email: </label>
-    <input id="email" name="email" required="required" th:value="${email}" type="email"/>
-    <div class="exception" th:if="${emailError}" th:text="${emailError}">Email unique error</div>
+    <input id="email" required="required" th:field="*{email}" type="email"/>
+    <div class="exception" th:if="${emailError}" th:text="${emailUnique}">Email unique error</div>
+    <div class="exception" th:errors="*{email}" th:if="${#fields.hasErrors('email')}">Name error</div>
     <br/>
 
     <input type="submit" value="Submit changes"/>

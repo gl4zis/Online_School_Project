@@ -67,6 +67,16 @@ public class User implements UserDetails {
         return true;
     }
 
+    public User copy() {
+        User user = new User();
+        user.setUsername(username);
+        user.setPassword(password);
+        user.setPasswordConfirm(passwordConfirm);
+        user.setEmail(email);
+        user.setRole(role);
+        return user;
+    }
+
     public Student toStudent() {
         return new Student(this);
     }
