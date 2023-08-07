@@ -86,6 +86,7 @@ public class User implements UserDetails {
         UNCONFIRMED_TEACHER(new SimpleGrantedAuthority("ROLE_UNCONFIRMED_TEACHER")),
         STUDENT(new SimpleGrantedAuthority("ROLE_STUDENT"));
 
+
         private final GrantedAuthority authority;
     }
 }

@@ -31,7 +31,7 @@ public class RegisterController {
     }
 
     @GetMapping
-    public String register(Model model) {
+    public String getRegistration(Model model) {
         model.addAttribute("isSecondStage", false);
         return "register";
     }
