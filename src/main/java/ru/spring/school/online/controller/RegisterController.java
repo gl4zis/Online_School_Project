@@ -10,6 +10,7 @@ import org.springframework.web.bind.support.SessionStatus;
 import ru.spring.school.online.model.security.Student;
 import ru.spring.school.online.model.security.User;
 import ru.spring.school.online.service.RegistrationService;
+import ru.spring.school.online.service.UserService;
 
 @Controller
 @RequestMapping("/register")
@@ -17,9 +18,11 @@ import ru.spring.school.online.service.RegistrationService;
 public class RegisterController {
 
     private final RegistrationService regService;
+    private final UserService userService;
 
-    public RegisterController(RegistrationService regService) {
+    public RegisterController(RegistrationService regService, UserService userSErvice) {
         this.regService = regService;
+        this.userService = userSErvice;
     }
 
     @ModelAttribute(name = "userForm")
@@ -38,7 +41,8 @@ public class RegisterController {
                                       Errors errors,
                                       Model model
     ) {
-        if (regService.checkRegErrors(user, errors, model))
+        if (!userService.setUsernameUnique(user, errors, model) |
+                !userService.setEmailUnique(user, errors, model))
             return "register";
         user.setRole(User.Role.STUDENT);
         model.addAttribute("studentForm", user.toStudent());

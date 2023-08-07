@@ -26,6 +26,8 @@ public class User implements UserDetails {
     @NotBlank(message = "Username shouldn't be empty")
     @Size(min = 3, max = 30, message = "Username size must be between 3 and 30 characters")
     protected String username;
+    @Transient
+    protected String oldUsername;
     @NotBlank(message = "Password shouldn't be empty")
     @Size(min = 6, message = "Password should be longer than 5 characters")
     protected String password;
@@ -36,6 +38,8 @@ public class User implements UserDetails {
     @Column(nullable = false, unique = true)
     @Email(message = "Input correct email")
     protected String email;
+    @Transient
+    protected String oldEmail;
 
     @AssertTrue(message = "Passwords should be equals")
     public boolean isPasswordsEquals() {
@@ -65,16 +69,6 @@ public class User implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
-    }
-
-    public User copy() {
-        User user = new User();
-        user.setUsername(username);
-        user.setPassword(password);
-        user.setPasswordConfirm(passwordConfirm);
-        user.setEmail(email);
-        user.setRole(role);
-        return user;
     }
 
     public Student toStudent() {
