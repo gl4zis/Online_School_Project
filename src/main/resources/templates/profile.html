@@ -1,21 +1,54 @@
 <!DOCTYPE html>
-<html lang="en"
-      xmlns:sec="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Profile</title>
 </head>
 <body>
 <a th:href="@{/}">Back</a>
-<p th:text="'@' + ${userForm.username}">username</p>
+
+<h3 th:text="${userForm.username}">username</h3>
+
+<p th:text="'(' + ${#strings.toLowerCase(userForm.role)} + ')'"></p>
+
+
 <div sec:authorize="!hasRole('ADMIN')">
-    <p th:text="(${userForm.firstname}?${userForm.firstname}:'') + ' ' + (${userForm.lastname}?${userForm.lastname}:'')">
-        username</p>
+    <p th:text="((${userForm.lastname}) + ' '
+    + (${userForm.firstname}) + ' '
+    + (${userForm.patronymic}?${userForm.patronymic}:''))">
+        Full name</p>
+    <label for="dateOfBirth">Birth date: </label>
+    <p id="dateOfBirth" th:text="${userForm.dateOfBirth}">Birth date</p>
+    <label for="email">Email: </label>
+    <p id="email" th:text="${userForm.email}">Email</p>
+    <label for="phone">Phone: </label>
+    <p id="phone" th:text="(${userForm.phoneNumber}?${userForm.phoneNumber}:'')">Phone number</p>
+    <div sec:authorize="hasRole('STUDENT')">
+        <label for="grade">Grade: </label>
+        <p id = grade th:text="${userForm.grade}">Grade</p>
+    </div>
+
+    <div sec:authorize="hasRole('TEACHER')">
+        <label for="subjects">Subjects: </label>
+        <div id="subjects" th:each="subject:${userForm.subjects}">
+            <p th:text="${subject.name}">Subject</p>
+        </div>
+        <label for="education">Education: </label>
+        <p id="education" th:text="${userForm.education}">Education</p>
+
+        <label for="workExperience">Work experience: </label>
+        <p id="workExperience" th:text="${userForm.workExperience}">Work experience</p>
+
+        <label for="description">About me: </label>
+        <p id="description" th:text="${userForm.description}">Description</p>
+
+        </div>
+    </div>
 </div>
-<p th:text="${#strings.toLowerCase(userForm.role)}"></p>
-<br/>
+
 <p>If you want to edit your profile click
     <a th:href="@{/profile/edit}">here</a>.
 </p>
+
 </body>
 </html>
