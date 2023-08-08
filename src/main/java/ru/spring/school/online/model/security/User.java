@@ -41,6 +41,8 @@ public class User implements UserDetails {
     @Transient
     protected String oldEmail;
 
+    private String photoURL;
+
     @AssertTrue(message = "Passwords should be equals")
     public boolean isPasswordsEquals() {
         return passwordConfirm == null || password.equals(passwordConfirm);

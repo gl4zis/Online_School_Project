@@ -34,7 +34,6 @@ public class Student extends User {
     @NotNull(message = "Grade can't be null")
     @Range(min = 9, max = 11, message = "Grade should be between 9 and 11")
     private Byte grade; //*
-    private String photoURL;
     private Long phoneNumber;
 
     public Student(User user) {

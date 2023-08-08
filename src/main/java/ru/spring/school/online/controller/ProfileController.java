@@ -4,14 +4,19 @@ import jakarta.validation.Valid;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import ru.spring.school.online.model.security.Student;
 import ru.spring.school.online.model.security.Subject;
 import ru.spring.school.online.model.security.Teacher;
 import ru.spring.school.online.model.security.User;
+import ru.spring.school.online.service.StorageService;
 import ru.spring.school.online.service.SubjectService;
 import ru.spring.school.online.service.UserService;
+
+import java.io.IOException;
 
 @Controller
 @RequestMapping("/profile")
@@ -20,11 +25,13 @@ public class ProfileController {
 
     private final UserService userService;
     private final SubjectService subjectService;
+    private final StorageService storageService;
 
 
-    public ProfileController(UserService userService, SubjectService subjectService) {
+    public ProfileController(UserService userService, SubjectService subjectService, StorageService storageService) {
         this.userService = userService;
         this.subjectService = subjectService;
+        this.storageService = storageService;
     }
 
     @ModelAttribute("userForm")
@@ -91,11 +98,18 @@ public class ProfileController {
     @PatchMapping("/edit")
     public String processProfileSettings(@ModelAttribute("userForm") @Valid User user,
                                          Errors errors,
-                                         Model model) {
+                                         Model model,
+                                         @RequestParam("profilePic") MultipartFile multipartFile) throws IOException {
         if (!userService.setEmailUnique(user, errors, model))
             return "profile_settings";
         if (user.getRole() == User.Role.UNCONFIRMED_TEACHER) {
             user.setRole(User.Role.TEACHER);
+        }
+        if (storageService.isFileValid(multipartFile)){
+            String fileName = storageService.getNormalizedFileName(multipartFile);
+            user.setPhotoURL(fileName);
+            String uploadDir = storageService.getImgStorageDir() + user.getUsername();
+            storageService.saveFile(multipartFile, uploadDir, fileName);
         }
         userService.updateUser(user);
         return "redirect:/profile";

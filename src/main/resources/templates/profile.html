@@ -11,6 +11,7 @@
 
 <p th:text="'(' + ${#strings.toLowerCase(userForm.role)} + ')'"></p>
 
+<img th:src="@{'/' + ${@environment.getProperty('storage.img.dir')} + ${userForm.username} + '/' +  ${userForm.photoURL}}">
 
 <div sec:authorize="!hasRole('ADMIN')">
     <p th:text="((${userForm.lastname}) + ' '

@@ -11,9 +11,9 @@
 
 <p th:text="'(' + ${#strings.toLowerCase(userForm.role)} + ')'"></p>
 
-<div th:if = "${#authorization.expression('hasRole(''TEACHER'')')}">ya teacher</div>
+<img th:src="@{'/' + ${@environment.getProperty('storage.img.dir')} + ${userForm.username} + '/' +  ${userForm.photoURL}}">
 
-<div sec:authorize="!hasRole('ADMIN') && !hasRole('UNCONFIRMED_TEACHER')">
+<div sec:authorize="!hasRole('ADMIN')">
     <p th:text="((${userForm.lastname}) + ' '
     + (${userForm.firstname}) + ' '
     + (${userForm.patronymic}?${userForm.patronymic}:''))">
