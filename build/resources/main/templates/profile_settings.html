@@ -22,10 +22,10 @@
     <div sec:authorize="!hasRole('ADMIN')">
         <p>Personal:</p>
         <label for="profile_pic"
-               th:class="${#authorization.expression('hasRole(''TEACHER'') || hasRole(''ROLE_UNCONFIRMED_TEACHER'')')?'required':''}">Profile
+               th:class="${#authorization.expression('hasRole(''ROLE_UNCONFIRMED_TEACHER'')')?'required':''}">Profile
             picture: </label>
         <input id="profile_pic" name="profilePic" type="file" accept="image/png, image/jpeg"
-               th:required="${#authorization.expression('hasRole(''TEACHER'') || hasRole(''ROLE_UNCONFIRMED_TEACHER'')')?'required':null}"/><br/>
+               th:required="${#authorization.expression('hasRole(''ROLE_UNCONFIRMED_TEACHER'')')?'required':null}"/><br/>
 
         <label class="required" for="firstname">Firstname: </label>
         <input id="firstname" required="required" th:field="*{firstname}" type="text"/>

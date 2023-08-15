@@ -29,7 +29,6 @@ public class Teacher extends User {
     @NotNull(message = "Please provide a date")
     @Past(message = "Date should be in the past")
     private Date dateOfBirth; //*
-    private String photoURL; //*
     private Long phoneNumber; //*
     @Enumerated(value = EnumType.STRING)
     @ManyToMany(fetch = FetchType.EAGER)
@@ -44,6 +43,8 @@ public class Teacher extends User {
     @NotNull(message = "Work experience can't be null")
     @Range(min = 0, message = "Work experience should be at least 0")
     private Byte workExperience; //*
+    @OneToMany(mappedBy = "teacher")
+    private Set<Group> groups;
 
     public Teacher(User user) {
         this.username = user.getUsername();
