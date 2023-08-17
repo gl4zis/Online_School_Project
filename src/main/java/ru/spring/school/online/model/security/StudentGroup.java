@@ -9,15 +9,16 @@ haven't decided yet
  */
 @Entity
 @Data
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"student_username", "group_id"}))
 public class StudentGroup {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    @ManyToOne
+    @ManyToOne(targetEntity = Student.class, optional = false)
     private Student student;
-    @ManyToOne
+    @ManyToOne(targetEntity = Group.class, optional = false)
     private Group group;
-    @ManyToOne
+    @ManyToOne(targetEntity = User.class, optional = false)
     private User addedBy;
 
 }

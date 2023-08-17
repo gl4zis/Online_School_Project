@@ -40,7 +40,7 @@ public class Student extends User {
     @JoinTable(name = "student_purchase")
     private Set<Course> courses;
 
-    @OneToMany(mappedBy = "student")
+    @OneToMany(mappedBy = "student", cascade = CascadeType.REMOVE)
     private Set<StudentGroup> studentGroups;
 
     public Student(User user) {

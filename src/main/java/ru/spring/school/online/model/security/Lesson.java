@@ -13,7 +13,7 @@ public class Lesson {
     private Long id;
     @ManyToOne(targetEntity = Group.class, optional = false)
     private Group group;
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date planedAt;
     private String name;
     private String attachmentURL;

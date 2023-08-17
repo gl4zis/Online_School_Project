@@ -19,7 +19,7 @@ public class Group {
     private Course course;
     @ManyToOne(targetEntity = User.class, optional = false)
     private User createdBy;
-    @OneToMany(mappedBy = "group")
+    @OneToMany(mappedBy = "group", cascade = CascadeType.REMOVE)
     public Set<StudentGroup> studentGroups;
     @OneToMany(mappedBy = "group")
     private Set<Lesson> lessons;
