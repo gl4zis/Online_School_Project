@@ -36,11 +36,11 @@ public class Student extends User {
     private Byte grade; //*
     private Long phoneNumber;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "student_purchase")
     private Set<Course> courses;
 
-    @OneToMany(mappedBy = "student", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "student", cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
     private Set<StudentGroup> studentGroups;
 
     public Student(User user) {

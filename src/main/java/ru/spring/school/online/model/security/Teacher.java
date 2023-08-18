@@ -43,7 +43,7 @@ public class Teacher extends User {
     @NotNull(message = "Work experience can't be null")
     @Range(min = 0, message = "Work experience should be at least 0")
     private Byte workExperience; //*
-    @OneToMany(mappedBy = "teacher")
+    @OneToMany(mappedBy = "teacher", fetch = FetchType.EAGER)
     private Set<Group> groups;
 
     public Teacher(User user) {
