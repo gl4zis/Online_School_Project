@@ -1,9 +1,8 @@
 package ru.spring.school.online.service;
 
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 import ru.spring.school.online.exception.IdNotFoundException;
-import ru.spring.school.online.model.security.Course;
+import ru.spring.school.online.model.course.Course;
 import ru.spring.school.online.repository.CourseRepository;
 
 import java.util.Optional;

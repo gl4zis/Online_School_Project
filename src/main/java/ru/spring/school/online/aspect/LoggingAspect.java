@@ -27,7 +27,7 @@ public class LoggingAspect {
     }
 
     @Before("ru.spring.school.online.aspect.PointcutDescr.allControllerProcessMethods()")
-    public void beforeAllControllerProcessMethodsLoggingAdvice(JoinPoint joinPoint){
+    public void beforeAllControllerProcessMethodsLoggingAdvice(JoinPoint joinPoint) {
         MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
         log.debug("{}.{}: processing", methodSignature.getDeclaringTypeName(), methodSignature.getName());
     }
@@ -36,18 +36,18 @@ public class LoggingAspect {
     public void afterReturningAllControllerProcessMethodsLoggingAdvice(JoinPoint joinPoint, Object page) {
         MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
         Object[] args = joinPoint.getArgs();
-        for (Object arg:args){
-            if (arg instanceof User user){
+        for (Object arg : args) {
+            if (arg instanceof User user) {
                 log.info("Current user {}", user);
             }
 
-            if (arg instanceof Errors errors){
-                if (errors.hasErrors()){
+            if (arg instanceof Errors errors) {
+                if (errors.hasErrors()) {
                     log.warn("Got validation exceptions: {}", errors);
                 }
             }
 
-            if (arg instanceof Model model){
+            if (arg instanceof Model model) {
                 log.debug("Current model args:\n{}", model.asMap());
             }
         }
@@ -56,21 +56,21 @@ public class LoggingAspect {
     }
 
     @Before("ru.spring.school.online.aspect.PointcutDescr.allRepositoryFindMethods()")
-    public void beforeAllRepositoryFindMethodsLoggingAdvice(JoinPoint joinPoint){
+    public void beforeAllRepositoryFindMethodsLoggingAdvice(JoinPoint joinPoint) {
         MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
         log.debug("{}.{}: trying to find", methodSignature.getDeclaringTypeName(), methodSignature.getName());
         log.debug("Current args: {}", Arrays.toString(joinPoint.getArgs()));
     }
 
     @Before("ru.spring.school.online.aspect.PointcutDescr.allRepositorySaveMethods()")
-    public void beforeAllRepositorySaveMethodsLoggingAdvice(JoinPoint joinPoint){
+    public void beforeAllRepositorySaveMethodsLoggingAdvice(JoinPoint joinPoint) {
         MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
         log.debug("{}.{}: trying to save", methodSignature.getDeclaringTypeName(), methodSignature.getName());
         log.debug("Current args: {}", Arrays.toString(joinPoint.getArgs()));
     }
 
     @Before("ru.spring.school.online.aspect.PointcutDescr.allRepositorySaveMethods()")
-    public void beforeAllRepositoryDeleteMethodsLoggingAdvice(JoinPoint joinPoint){
+    public void beforeAllRepositoryDeleteMethodsLoggingAdvice(JoinPoint joinPoint) {
         MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
         log.debug("{}.{}: trying to delete", methodSignature.getDeclaringTypeName(), methodSignature.getName());
         log.debug("Current args: {}", Arrays.toString(joinPoint.getArgs()));

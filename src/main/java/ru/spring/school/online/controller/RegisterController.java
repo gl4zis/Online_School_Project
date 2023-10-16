@@ -1,13 +1,11 @@
 package ru.spring.school.online.controller;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.Errors;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.bind.support.SessionStatus;
-import ru.spring.school.online.model.security.Student;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.SessionAttributes;
 import ru.spring.school.online.model.security.User;
 import ru.spring.school.online.service.RegistrationService;
 import ru.spring.school.online.service.UserService;
@@ -36,7 +34,7 @@ public class RegisterController {
         return "register";
     }
 
-    @PostMapping
+/*    @PostMapping
     public String processRegistration(@ModelAttribute("userForm") @Valid User user,
                                       Errors errors,
                                       Model model
@@ -61,5 +59,5 @@ public class RegisterController {
         regService.regNewUser(student);
         regService.loginUser(request, sessionStatus, student);
         return "redirect:/profile";
-    }
+    }*/
 }

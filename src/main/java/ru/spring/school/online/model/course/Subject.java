@@ -1,7 +1,8 @@
-package ru.spring.school.online.model.security;
+package ru.spring.school.online.model.course;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import ru.spring.school.online.model.security.Teacher;
 
 import java.util.Set;
 
@@ -11,8 +12,9 @@ public class Subject {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String name;
-    @Transient
-    @ManyToMany(mappedBy = "subjects")
-    private Set<User> users;
+
+    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "subjects")
+    private Set<Teacher> teachers;
 }

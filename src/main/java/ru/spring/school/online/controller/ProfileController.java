@@ -1,22 +1,14 @@
 package ru.spring.school.online.controller;
 
-import jakarta.validation.Valid;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.StringUtils;
-import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-import ru.spring.school.online.model.security.Student;
-import ru.spring.school.online.model.security.Subject;
-import ru.spring.school.online.model.security.Teacher;
+import ru.spring.school.online.model.course.Subject;
 import ru.spring.school.online.model.security.User;
 import ru.spring.school.online.service.StorageService;
 import ru.spring.school.online.service.SubjectService;
 import ru.spring.school.online.service.UserService;
-
-import java.io.IOException;
 
 @Controller
 @RequestMapping("/profile")
@@ -34,16 +26,16 @@ public class ProfileController {
         this.storageService = storageService;
     }
 
-    @ModelAttribute("userForm")
+/*    @ModelAttribute("userForm")
     public User user(@AuthenticationPrincipal User user) {
         user.setOldUsername(user.getUsername());
         user.setOldEmail(user.getEmail());
         return switch (user.getRole()) {
             case STUDENT -> (Student) user;
-            case TEACHER, UNCONFIRMED_TEACHER -> (Teacher) user;
+            case TEACHER -> (Teacher) user;
             default -> user;
         };
-    }
+    }*/
 
     @ModelAttribute("subjects")
     public Iterable<Subject> subjects() {
@@ -84,7 +76,7 @@ public class ProfileController {
         return "redirect:/logout";
     }
 
-    @PatchMapping("/edit/login")
+/*    @PatchMapping("/edit/login")
     public String processProfileSettingsLogin(@ModelAttribute("userForm") @Valid User user,
                                               Errors errors,
                                               Model model) {
@@ -113,5 +105,5 @@ public class ProfileController {
         }
         userService.updateUser(user);
         return "redirect:/profile";
-    }
+    }*/
 }

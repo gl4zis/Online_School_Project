@@ -6,7 +6,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
-import org.springframework.validation.Errors;
 import ru.spring.school.online.model.security.User;
 import ru.spring.school.online.repository.UserRepository;
 
@@ -87,9 +86,9 @@ public class UserService implements UserDetailsService {
         return passwordEncoder.encode(password);
     }
 
-    /**
+    /*    *//**
      * false if there are error!
-     */
+     *//*
     public boolean setUsernameUnique(User user, Errors errors, Model model) {
         if (errors.hasErrors())
             return false;
@@ -100,9 +99,9 @@ public class UserService implements UserDetailsService {
         return true;
     }
 
-    /**
+    *//**
      * false if there are error!
-     */
+     *//*
     public boolean setEmailUnique(User user, Errors errors, Model model) {
         if (errors.hasErrors())
             return false;
@@ -111,7 +110,7 @@ public class UserService implements UserDetailsService {
             return false;
         }
         return true;
-    }
+    }*/
 
     /**
      * false if there are error!

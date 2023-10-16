@@ -1,7 +1,0 @@
-.exception{
-    color: red;
-}
-.required:after {
-    content:" *";
-    color: red;
-}

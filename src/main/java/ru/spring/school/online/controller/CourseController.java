@@ -1,15 +1,9 @@
 package ru.spring.school.online.controller;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.server.ResponseStatusException;
-import ru.spring.school.online.exception.IdNotFoundException;
-import ru.spring.school.online.model.security.*;
+import ru.spring.school.online.model.course.Group;
 import ru.spring.school.online.service.CourseService;
 import ru.spring.school.online.service.GroupService;
 
@@ -29,7 +23,7 @@ public class CourseController {
         this.groupService = groupService;
     }
 
-    @GetMapping("/{courseId}/promo")
+/*    @GetMapping("/{courseId}/promo")
     public String getCoursePromo(@PathVariable Long courseId,
                                  Model model,
                                  @AuthenticationPrincipal User user) {
@@ -49,9 +43,9 @@ public class CourseController {
         } catch (IdNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
-    }
+    }*/
 
-    @GetMapping("/{groupId}/curriculum")
+/*    @GetMapping("/{groupId}/curriculum")
     public String getCourseCurriculum(@PathVariable Long groupId,
                                       Model model,
                                       @AuthenticationPrincipal User user) {
@@ -73,9 +67,9 @@ public class CourseController {
         } catch (IdNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
-    }
+    }*/
 
-    @GetMapping("/{courseId}/promise")
+/*    @GetMapping("/{courseId}/promise")
     public String getCoursePromise(@PathVariable Long courseId,
                                    Model model,
                                    @AuthenticationPrincipal User user){
@@ -92,12 +86,12 @@ public class CourseController {
             return "course_promise";
         }
         return String.format("redirect:/course/%d/promo", courseId);
-    }
+    }*/
 
 
-    private boolean isUserBoughtCourse(User user, Long courseId, Model model) {
+/*    private boolean isUserBoughtCourse(User user, Long courseId, Model model) {
         if (user instanceof Student student) {
-            if (student.getCourses() != null){
+            if (student.getCourses() != null) {
                 if (student.getCourses().stream()
                         .anyMatch(course -> course.getId().equals(courseId))) {
                     model.addAttribute("course", courseService.findCourse(courseId));
@@ -106,9 +100,9 @@ public class CourseController {
             }
         }
         return false;
-    }
+    }*/
 
-    private boolean isUserHasGroupById(User user,
+/*    private boolean isUserHasGroupById(User user,
                                      Long id,
                                      Model model,
                                      boolean isCourseId) {
@@ -129,12 +123,12 @@ public class CourseController {
             }
         }
         return false;
-    }
+    }*/
 
     private boolean hasGroup(Stream<Group> groupStream,
-                                     Long id,
-                                     Model model,
-                                     boolean isCourseId) {
+                             Long id,
+                             Model model,
+                             boolean isCourseId) {
         Predicate<Group> predicate = isCourseId ?
                 (group -> group.getCourse().getId().equals(id)) :
                 (group -> group.getId().equals(id));

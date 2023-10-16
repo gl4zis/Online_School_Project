@@ -1,9 +1,8 @@
-package ru.spring.school.online.model.security;
+package ru.spring.school.online.model.course;
 
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.hibernate.annotations.JdbcType;
 
 import java.util.Date;
 import java.util.Set;
@@ -13,23 +12,29 @@ import java.util.Set;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Course {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @EqualsAndHashCode.Include
     private Long id;
-    @ManyToOne(targetEntity = Subject.class, optional = false, fetch = FetchType.EAGER)
+
+    @OneToOne
     private Subject subject;
+
     private String name;
+
     private Long price;
-    @Column(columnDefinition="TEXT")
+
+    @Column(columnDefinition = "TEXT")
     private String description;
+
     private String photoURL;
+
     @Temporal(TemporalType.DATE)
     private Date startTime;
+
     @Temporal(TemporalType.DATE)
     private Date endTime;
-    @ManyToMany(mappedBy = "courses", fetch = FetchType.EAGER)
-    private Set<Student> students;
-    @OneToMany(mappedBy = "course", fetch = FetchType.EAGER)
+
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "course")
     private Set<Group> groups;
 }
 

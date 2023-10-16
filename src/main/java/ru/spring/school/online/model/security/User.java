@@ -1,10 +1,6 @@
 package ru.spring.school.online.model.security;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.AssertTrue;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -21,33 +17,21 @@ import java.util.Collections;
 @AllArgsConstructor
 @Inheritance(strategy = InheritanceType.JOINED)
 public class User implements UserDetails {
-
     @Id
-    @NotBlank(message = "Username shouldn't be empty")
-    @Size(min = 3, max = 30, message = "Username size must be between 3 and 30 characters")
     protected String username;
-    @Transient
-    protected String oldUsername;
-    @NotBlank(message = "Password shouldn't be empty")
-    @Size(min = 6, message = "Password should be longer than 5 characters")
+
     protected String password;
-    @Transient
-    protected String passwordConfirm;
+
     @Enumerated(value = EnumType.STRING)
     protected Role role;
-    @Column(nullable = false, unique = true)
-    @Email(message = "Input correct email")
+
+    @Column(unique = true)
     protected String email;
-    @Transient
-    protected String oldEmail;
 
     private String photoURL;
+    private boolean locked;
 
-    @AssertTrue(message = "Passwords should be equals")
-    public boolean isPasswordsEquals() {
-        return passwordConfirm == null || password.equals(passwordConfirm);
-    }
-
+    // Only one role is possible
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return Collections.singleton(role.authority);
@@ -60,7 +44,7 @@ public class User implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        return true;
+        return !locked;
     }
 
     @Override
@@ -85,7 +69,6 @@ public class User implements UserDetails {
     public enum Role {
         ADMIN(new SimpleGrantedAuthority("ROLE_ADMIN")),
         TEACHER(new SimpleGrantedAuthority("ROLE_TEACHER")),
-        UNCONFIRMED_TEACHER(new SimpleGrantedAuthority("ROLE_UNCONFIRMED_TEACHER")),
         STUDENT(new SimpleGrantedAuthority("ROLE_STUDENT"));
 
 

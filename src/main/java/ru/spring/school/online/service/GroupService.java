@@ -2,7 +2,7 @@ package ru.spring.school.online.service;
 
 import org.springframework.stereotype.Service;
 import ru.spring.school.online.exception.IdNotFoundException;
-import ru.spring.school.online.model.security.Group;
+import ru.spring.school.online.model.course.Group;
 import ru.spring.school.online.repository.GroupRepository;
 
 import java.util.Optional;

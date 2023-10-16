@@ -24,19 +24,17 @@ repositories {
 dependencies {
     def lombok_version = '1.18.28'
 
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-devtools:3.1.2'
-    implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6:3.1.1.RELEASE'
+    implementation 'io.jsonwebtoken:jjwt:0.12.3'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    //runtimeOnly 'com.h2database:h2:2.2.220'
     implementation 'org.springframework.boot:spring-boot-starter-log4j2'
     compileOnly "org.projectlombok:lombok:${lombok_version}"
     annotationProcessor "org.projectlombok:lombok:${lombok_version}"
     runtimeOnly 'org.postgresql:postgresql:42.6.0'
-    implementation 'org.hibernate.validator:hibernate-validator:8.0.1.Final'
 }
 
 configurations {

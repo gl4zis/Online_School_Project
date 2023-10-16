@@ -1,28 +1,20 @@
 package ru.spring.school.online.controller;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.bind.support.SessionStatus;
 import ru.spring.school.online.model.security.User;
 import ru.spring.school.online.service.RegistrationService;
 import ru.spring.school.online.service.UserService;
 
-@Controller
+@RestController
+@RequiredArgsConstructor
 @RequestMapping("/admin")
 public class AdminController {
 
     private final UserService userService;
     private final RegistrationService regService;
-
-    public AdminController(UserService userService, RegistrationService regService) {
-        this.userService = userService;
-        this.regService = regService;
-    }
 
     @ModelAttribute("user")
     public User user(@AuthenticationPrincipal User user) {
@@ -41,7 +33,7 @@ public class AdminController {
         return "adm_teach_register";
     }
 
-    @PostMapping("/users")
+/*    @PostMapping("/users")
     public String processRegister(@ModelAttribute("userForm") @Valid User user,
                                   Errors errors,
                                   Model model,
@@ -61,7 +53,7 @@ public class AdminController {
         }
         regService.regNewUser(user);
         return "redirect:/admin/users";
-    }
+    }*/
 
     @GetMapping("/users/{id}")
     public String getUserProfile(@PathVariable("id") String username,
