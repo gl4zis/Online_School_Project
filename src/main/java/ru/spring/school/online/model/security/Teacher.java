@@ -21,7 +21,9 @@ public class Teacher extends User {
     private String firstname; //*
     private String lastname; //*
     private String middleName;
-    private Date dateOfBirth; //*
+
+    @Temporal(TemporalType.DATE)
+    private Date dateOfBirth;
 
     @ManyToMany
     @JoinTable(name = "teacher_subjects",
@@ -31,13 +33,13 @@ public class Teacher extends User {
     private Set<Subject> subjects; //*
     private String education; //*
 
-    @ElementCollection(targetClass = String.class, fetch = FetchType.EAGER)
+    @ElementCollection(targetClass = String.class)
     private Set<String> diplomaURLs; //*
 
     @Column(columnDefinition = "TEXT")
     private String description;
     private Byte workExperience; //*
 
-    @OneToMany(mappedBy = "teacher", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "teacher")
     private Set<Group> groups;
 }

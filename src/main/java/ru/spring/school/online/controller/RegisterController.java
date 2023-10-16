@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.spring.school.online.dto.request.StudentRegister;
 import ru.spring.school.online.exception.UsernameIsTakenException;
 import ru.spring.school.online.model.security.Student;
+import ru.spring.school.online.model.security.User;
 import ru.spring.school.online.service.AuthService;
 import ru.spring.school.online.utils.ResponseUtils;
 import ru.spring.school.online.utils.ValidationUtils;
@@ -24,32 +25,13 @@ import ru.spring.school.online.utils.ValidationUtils;
 public class RegisterController {
     private final AuthService authService;
     private final PasswordEncoder passwordEncoder;
-    private final ResponseUtils responseUtils;
-    private final ValidationUtils validationUtils;
 
     @PostMapping
     public ResponseEntity<?> registerStudent(HttpServletRequest request,
                                              @RequestBody @Valid StudentRegister register,
                                              Errors errors
     ) {
-        final String path = request.getServletPath();
-        if (errors.hasErrors()) {
-            return responseUtils.returnError(
-                    HttpStatus.BAD_REQUEST,
-                    validationUtils.errorsToString(errors),
-                    path);
-        }
-
-        Student user = register.toStudent(passwordEncoder);
-        try {
-            String jwToken = authService.regNewUser(user);
-            return responseUtils.returnToken(jwToken);
-        } catch (UsernameIsTakenException e) {
-            return responseUtils.returnError(
-                    HttpStatus.BAD_REQUEST,
-                    e.getMessage(),
-                    path
-            );
-        }
+        User user = register.toStudent(passwordEncoder);;
+        return authService.registerUtil(request, user, errors);
     }
 }

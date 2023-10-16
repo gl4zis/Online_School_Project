@@ -50,7 +50,4 @@ public class UserService implements UserDetailsService {
     }
 
 
-    private String encodePassword(String password) {
-        return passwordEncoder.encode(password);
-    }
 }

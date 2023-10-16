@@ -34,7 +34,7 @@ public class Course {
     @Temporal(TemporalType.DATE)
     private Date endTime;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "course")
+    @OneToMany(mappedBy = "course")
     private Set<Group> groups;
 }
 

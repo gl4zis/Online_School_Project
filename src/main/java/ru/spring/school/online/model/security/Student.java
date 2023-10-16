@@ -1,9 +1,6 @@
 package ru.spring.school.online.model.security;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,6 +20,8 @@ public class Student extends User {
     private String firstname; //*
     private String lastname; //*
     private String middleName;
+
+    @Temporal(TemporalType.DATE)
     private Date dateOfBirth; //*
     private Byte grade; //*
 

@@ -36,11 +36,15 @@ public class SecurityConfig {
                 .cors(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
-                                AntPathRequestMatcher.antMatcher("/secured")
-                        ).authenticated()
-                        .requestMatchers(
-                                AntPathRequestMatcher.antMatcher("/admin")
+                                AntPathRequestMatcher.antMatcher("/admin/**")
                         ).hasRole("ADMIN")
+                        .requestMatchers(
+                                AntPathRequestMatcher.antMatcher("/teacher/**")
+                        ).hasRole("TEACHER")
+                        .requestMatchers(
+                                AntPathRequestMatcher.antMatcher("/profile"),
+                                AntPathRequestMatcher.antMatcher("info")
+                        ).authenticated()
                         .anyRequest().permitAll()
                 ).sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)

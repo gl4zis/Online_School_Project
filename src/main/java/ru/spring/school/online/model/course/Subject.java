@@ -15,6 +15,6 @@ public class Subject {
 
     private String name;
 
-    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "subjects")
+    @ManyToMany(mappedBy = "subjects")
     private Set<Teacher> teachers;
 }

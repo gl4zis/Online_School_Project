@@ -15,10 +15,9 @@ public class Lesson {
     @EqualsAndHashCode.Include
     private Long id;
 
-    @ManyToOne(targetEntity = Group.class, optional = false, fetch = FetchType.EAGER)
+    @ManyToOne(targetEntity = Group.class, optional = false)
     private Group group;
 
-    @Temporal(TemporalType.TIMESTAMP)
     private Date planedAt;
 
     private String name;

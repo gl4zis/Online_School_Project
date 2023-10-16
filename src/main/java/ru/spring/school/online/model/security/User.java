@@ -2,6 +2,7 @@ package ru.spring.school.online.model.security;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
@@ -34,7 +35,7 @@ public class User implements UserDetails {
     // Only one role is possible
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.singleton(role.authority);
+        return Collections.singleton(new SimpleGrantedAuthority("ROLE_" + role.name()));
     }
 
     @Override
@@ -59,11 +60,9 @@ public class User implements UserDetails {
 
     @RequiredArgsConstructor
     public enum Role {
-        ADMIN(new SimpleGrantedAuthority("ROLE_ADMIN")),
-        TEACHER(new SimpleGrantedAuthority("ROLE_TEACHER")),
-        STUDENT(new SimpleGrantedAuthority("ROLE_STUDENT"));
-
-
-        private final GrantedAuthority authority;
+        ADMIN,
+        TEACHER,
+        UNCONFIRMED_TEACHER,
+        STUDENT;
     }
 }

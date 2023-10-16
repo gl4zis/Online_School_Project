@@ -43,7 +43,7 @@ public class StudentRegister {
     public Student toStudent(PasswordEncoder passwordEncoder) {
         Student student = new Student();
         student.setUsername(username);
-        student.setPassword(passwordEncoder.encode(password));
+        student.setPassword(password != null ? passwordEncoder.encode(password) : null);
         student.setFirstname(firstname);
         student.setLastname(lastname);
         student.setDateOfBirth(dateOfBirth);

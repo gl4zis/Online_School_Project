@@ -19,15 +19,15 @@ public class Group {
     @EqualsAndHashCode.Include
     private Long id;
 
-    @ManyToOne(targetEntity = Teacher.class, optional = false, fetch = FetchType.EAGER)
+    @ManyToOne(targetEntity = Teacher.class, optional = false)
     private Teacher teacher;
 
-    @ManyToOne(targetEntity = Course.class, optional = false, fetch = FetchType.EAGER)
+    @ManyToOne(targetEntity = Course.class, optional = false)
     private Course course;
 
-    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "groups")
+    @ManyToMany(mappedBy = "groups")
     public Set<Student> students;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "group")
+    @OneToMany(mappedBy = "group")
     private Set<Lesson> lessons;
 }
