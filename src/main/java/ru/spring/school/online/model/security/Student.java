@@ -29,19 +29,10 @@ public class Student extends User {
 
     private Byte grade; //*
 
-    private Long phoneNumber;
-
     @ManyToMany
     @JoinTable(name = "student_groups",
             joinColumns = @JoinColumn(name = "student_username"),
             inverseJoinColumns = @JoinColumn(name = "group_id")
     )
     private Set<Group> groups;
-
-    public Student(User user) {
-        this.username = user.getUsername();
-        this.password = user.getPassword();
-        this.role = user.getRole();
-        this.email = user.getEmail();
-    }
 }

@@ -1,21 +1,30 @@
 package ru.spring.school.online.controller;
 
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import ru.spring.school.online.model.security.User;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.web.bind.annotation.*;
+import ru.spring.school.online.dto.AuthRequest;
+import ru.spring.school.online.dto.JwtResponse;
+import ru.spring.school.online.exception.ErrorResponse;
+import ru.spring.school.online.service.AuthService;
 
-@Controller
+@RestController
 @RequestMapping("/login")
+@RequiredArgsConstructor
 public class LoginController {
-    @ModelAttribute(name = "userForm")
-    public User form() {
-        return new User();
-    }
+    private final AuthService authService;
 
-    @GetMapping
-    public String getLogin() {
-        return "login";
+    @PostMapping
+    public ResponseEntity<?> authorize(@RequestBody AuthRequest request) {
+        try {
+            return ResponseEntity.ok(new JwtResponse(authService.loginUser(request)));
+        } catch (BadCredentialsException e) {
+            return new ResponseEntity<>(
+                    new ErrorResponse(e.getMessage()),
+                    HttpStatus.UNAUTHORIZED
+            );
+        }
     }
 }

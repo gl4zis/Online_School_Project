@@ -5,7 +5,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ru.spring.school.online.model.security.User;
-import ru.spring.school.online.service.RegistrationService;
+import ru.spring.school.online.service.AuthService;
 import ru.spring.school.online.service.UserService;
 
 @RestController
@@ -14,7 +14,7 @@ import ru.spring.school.online.service.UserService;
 public class AdminController {
 
     private final UserService userService;
-    private final RegistrationService regService;
+    private final AuthService regService;
 
     @ModelAttribute("user")
     public User user(@AuthenticationPrincipal User user) {
@@ -55,11 +55,11 @@ public class AdminController {
         return "redirect:/admin/users";
     }*/
 
-    @GetMapping("/users/{id}")
+/*    @GetMapping("/users/{id}")
     public String getUserProfile(@PathVariable("id") String username,
                                  Model model) {
         User user = userService.findUser(username);
         model.addAttribute("userForm", user);
         return "profile";
-    }
+    }*/
 }

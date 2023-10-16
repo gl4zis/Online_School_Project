@@ -24,7 +24,6 @@ public class Teacher extends User {
     private String middleName;
 
     private Date dateOfBirth; //*
-    private Long phoneNumber; //*
 
     @ManyToMany
     @JoinTable(name = "teacher_subjects",

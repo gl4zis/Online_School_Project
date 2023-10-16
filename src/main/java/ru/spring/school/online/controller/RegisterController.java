@@ -1,63 +1,37 @@
 package ru.spring.school.online.controller;
 
-import org.springframework.stereotype.Controller;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.annotation.*;
+import ru.spring.school.online.dto.JwtResponse;
+import ru.spring.school.online.dto.StudentRegister;
+import ru.spring.school.online.exception.ErrorResponse;
+import ru.spring.school.online.exception.UsernameIsTakenException;
+import ru.spring.school.online.model.security.Student;
 import ru.spring.school.online.model.security.User;
-import ru.spring.school.online.service.RegistrationService;
+import ru.spring.school.online.service.AuthService;
 import ru.spring.school.online.service.UserService;
 
-@Controller
+@RestController
 @RequestMapping("/register")
-@SessionAttributes({"studentForm", "isSecondStage"})
+@RequiredArgsConstructor
 public class RegisterController {
 
-    private final RegistrationService regService;
+    private final AuthService authService;
     private final UserService userService;
 
-    public RegisterController(RegistrationService regService, UserService userSErvice) {
-        this.regService = regService;
-        this.userService = userSErvice;
+    @PostMapping
+    public ResponseEntity<?> registerStudent(@RequestBody StudentRegister register) {
+        Student user = userService.getStudentFromRegister(register);
+        try {
+            return ResponseEntity.ok(new JwtResponse(authService.regNewUser(user)));
+        } catch (UsernameIsTakenException e) {
+            return new ResponseEntity<>(
+                    new ErrorResponse(e.getMessage()),
+                    HttpStatus.BAD_REQUEST
+            );
+        }
     }
-
-    @ModelAttribute(name = "userForm")
-    public User form() {
-        return new User();
-    }
-
-    @GetMapping
-    public String getRegistration(Model model) {
-        model.addAttribute("isSecondStage", false);
-        return "register";
-    }
-
-/*    @PostMapping
-    public String processRegistration(@ModelAttribute("userForm") @Valid User user,
-                                      Errors errors,
-                                      Model model
-    ) {
-        if (!userService.setUsernameUnique(user, errors, model) |
-                !userService.setEmailUnique(user, errors, model))
-            return "register";
-        user.setRole(User.Role.STUDENT);
-        model.addAttribute("studentForm", user.toStudent());
-        model.addAttribute("isSecondStage", true);
-        return "register";
-    }
-
-    @PutMapping
-    public String processRegistration2(@ModelAttribute("studentForm") @Valid Student student,
-                                       Errors errors,
-                                       HttpServletRequest request,
-                                       SessionStatus sessionStatus
-    ) {
-        if (errors.hasErrors())
-            return "register";
-        regService.regNewUser(student);
-        regService.loginUser(request, sessionStatus, student);
-        return "redirect:/profile";
-    }*/
 }

@@ -18,12 +18,12 @@ import java.util.Collections;
 @Inheritance(strategy = InheritanceType.JOINED)
 public class User implements UserDetails {
     @Id
-    protected String username;
+    protected String username;  //*
 
-    protected String password;
+    protected String password;  //*
 
     @Enumerated(value = EnumType.STRING)
-    protected Role role;
+    protected Role role;  //*
 
     @Column(unique = true)
     protected String email;
@@ -55,14 +55,6 @@ public class User implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
-    }
-
-    public Student toStudent() {
-        return new Student(this);
-    }
-
-    public Teacher toTeacher() {
-        return new Teacher(this);
     }
 
     @RequiredArgsConstructor

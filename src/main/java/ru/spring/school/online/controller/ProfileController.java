@@ -1,5 +1,6 @@
 package ru.spring.school.online.controller;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -7,24 +8,16 @@ import org.springframework.web.bind.annotation.*;
 import ru.spring.school.online.model.course.Subject;
 import ru.spring.school.online.model.security.User;
 import ru.spring.school.online.service.StorageService;
-import ru.spring.school.online.service.SubjectService;
 import ru.spring.school.online.service.UserService;
 
-@Controller
+@RestController
 @RequestMapping("/profile")
-@SessionAttributes({"copyUser", "userForm"})
+@RequiredArgsConstructor
 public class ProfileController {
 
     private final UserService userService;
-    private final SubjectService subjectService;
+   // private final SubjectService subjectService;
     private final StorageService storageService;
-
-
-    public ProfileController(UserService userService, SubjectService subjectService, StorageService storageService) {
-        this.userService = userService;
-        this.subjectService = subjectService;
-        this.storageService = storageService;
-    }
 
 /*    @ModelAttribute("userForm")
     public User user(@AuthenticationPrincipal User user) {
@@ -37,10 +30,10 @@ public class ProfileController {
         };
     }*/
 
-    @ModelAttribute("subjects")
+/*    @ModelAttribute("subjects")
     public Iterable<Subject> subjects() {
         return subjectService.allSubjects();
-    }
+    }*/
 
     @GetMapping
     public String getProfile() {
@@ -62,7 +55,7 @@ public class ProfileController {
         return "profile_settings_password";
     }
 
-    @PatchMapping("/edit/password")
+/*    @PatchMapping("/edit/password")
     public String processProfileSettingsPassword(@RequestParam String oldPassword,
                                                  @RequestParam String newPassword,
                                                  @RequestParam String passwordConfirm,
@@ -72,9 +65,9 @@ public class ProfileController {
                 user, model))
             return "profile_settings_password";
         user.setPassword(newPassword);
-        userService.saveUser(user, true);
+        userService.saveUser(user);
         return "redirect:/logout";
-    }
+    }*/
 
 /*    @PatchMapping("/edit/login")
     public String processProfileSettingsLogin(@ModelAttribute("userForm") @Valid User user,
