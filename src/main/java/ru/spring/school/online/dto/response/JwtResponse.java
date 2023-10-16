@@ -1,4 +1,4 @@
-package ru.spring.school.online.dto;
+package ru.spring.school.online.dto.response;
 
 import lombok.Data;
 

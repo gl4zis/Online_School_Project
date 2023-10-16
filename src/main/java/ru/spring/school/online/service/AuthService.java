@@ -7,7 +7,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
-import ru.spring.school.online.dto.AuthRequest;
+import ru.spring.school.online.dto.request.AuthRequest;
 import ru.spring.school.online.exception.UsernameIsTakenException;
 import ru.spring.school.online.model.security.User;
 import ru.spring.school.online.utils.JwtTokenUtils;

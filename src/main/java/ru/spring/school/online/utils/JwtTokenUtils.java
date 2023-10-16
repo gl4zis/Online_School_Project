@@ -49,7 +49,7 @@ public class JwtTokenUtils {
     }
 
     public List<String> getRoles(String token) {
-        List<?> roles =  getAllClaimsFromToken(token).get("roles", List.class);
+        List<?> roles = getAllClaimsFromToken(token).get("roles", List.class);
         return roles.stream().map(Object::toString).toList();
     }
 

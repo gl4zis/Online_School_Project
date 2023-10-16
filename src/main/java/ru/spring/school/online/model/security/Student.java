@@ -19,14 +19,11 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Student extends User {
+
     private String firstname; //*
-
     private String lastname; //*
-
     private String middleName;
-
     private Date dateOfBirth; //*
-
     private Byte grade; //*
 
     @ManyToMany

@@ -17,12 +17,10 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Teacher extends User {
+
     private String firstname; //*
-
     private String lastname; //*
-
     private String middleName;
-
     private Date dateOfBirth; //*
 
     @ManyToMany
@@ -31,7 +29,6 @@ public class Teacher extends User {
             inverseJoinColumns = @JoinColumn(name = "subject_id")
     )
     private Set<Subject> subjects; //*
-
     private String education; //*
 
     @ElementCollection(targetClass = String.class, fetch = FetchType.EAGER)
@@ -39,16 +36,8 @@ public class Teacher extends User {
 
     @Column(columnDefinition = "TEXT")
     private String description;
-
     private Byte workExperience; //*
 
     @OneToMany(mappedBy = "teacher", fetch = FetchType.EAGER)
     private Set<Group> groups;
-
-    public Teacher(User user) {
-        this.username = user.getUsername();
-        this.password = user.getPassword();
-        this.role = user.getRole();
-        this.email = user.getEmail();
-    }
 }

@@ -1,12 +1,10 @@
 package ru.spring.school.online.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
-import ru.spring.school.online.model.course.Subject;
-import ru.spring.school.online.model.security.User;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import ru.spring.school.online.service.StorageService;
 import ru.spring.school.online.service.UserService;
 
@@ -16,7 +14,7 @@ import ru.spring.school.online.service.UserService;
 public class ProfileController {
 
     private final UserService userService;
-   // private final SubjectService subjectService;
+    // private final SubjectService subjectService;
     private final StorageService storageService;
 
 /*    @ModelAttribute("userForm")

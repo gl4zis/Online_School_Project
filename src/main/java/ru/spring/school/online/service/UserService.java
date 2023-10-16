@@ -6,8 +6,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import ru.spring.school.online.dto.StudentRegister;
-import ru.spring.school.online.model.security.Student;
 import ru.spring.school.online.model.security.User;
 import ru.spring.school.online.repository.UserRepository;
 
@@ -51,19 +49,6 @@ public class UserService implements UserDetailsService {
         userRepo.save(user);
     }
 
-    // TODO: Fields validation (non-null)
-    public Student getStudentFromRegister(StudentRegister register) {
-        Student student = new Student();
-        student.setUsername(register.getUsername());
-        student.setPassword(encodePassword(register.getPassword()));
-        student.setFirstname(register.getFirstname());
-        student.setLastname(register.getLastname());
-        student.setDateOfBirth(register.getDateOfBirth());
-        student.setGrade(register.getGrade());
-        student.setLocked(false);
-        student.setRole(User.Role.STUDENT);
-        return student;
-    }
 
     private String encodePassword(String password) {
         return passwordEncoder.encode(password);
