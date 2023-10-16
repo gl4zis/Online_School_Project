@@ -41,6 +41,8 @@ public class User implements UserDetails {
     @Transient
     protected String oldEmail;
 
+    private String photoURL;
+
     @AssertTrue(message = "Passwords should be equals")
     public boolean isPasswordsEquals() {
         return passwordConfirm == null || password.equals(passwordConfirm);
@@ -85,6 +87,7 @@ public class User implements UserDetails {
         TEACHER(new SimpleGrantedAuthority("ROLE_TEACHER")),
         UNCONFIRMED_TEACHER(new SimpleGrantedAuthority("ROLE_UNCONFIRMED_TEACHER")),
         STUDENT(new SimpleGrantedAuthority("ROLE_STUDENT"));
+
 
         private final GrantedAuthority authority;
     }

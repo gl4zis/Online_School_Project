@@ -30,19 +30,19 @@ public class AdminController {
     }
 
     @GetMapping("/users")
-    public String allUsers(Model model) {
+    public String getAllUsers(Model model) {
         model.addAttribute("users", userService.allUsers());
         return "admin_users";
     }
 
     @GetMapping("/users/new")
-    public String newUser(Model model) {
+    public String getNewUser(Model model) {
         model.addAttribute("userForm", new User());
         return "adm_teach_register";
     }
 
     @PostMapping("/users")
-    public String registerProcess(@ModelAttribute("userForm") @Valid User user,
+    public String processRegister(@ModelAttribute("userForm") @Valid User user,
                                   Errors errors,
                                   Model model,
                                   @RequestParam("_role") String roleName,
@@ -64,8 +64,8 @@ public class AdminController {
     }
 
     @GetMapping("/users/{id}")
-    public String userProfile(@PathVariable("id") String username,
-                              Model model) {
+    public String getUserProfile(@PathVariable("id") String username,
+                                 Model model) {
         User user = userService.findUser(username);
         model.addAttribute("userForm", user);
         return "profile";

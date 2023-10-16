@@ -15,7 +15,7 @@ public class RootController {
     private final SecurityContextLogoutHandler logoutHandler = new SecurityContextLogoutHandler();
 
     @GetMapping
-    public String hello(@AuthenticationPrincipal User user, Model model) {
+    public String getHello(@AuthenticationPrincipal User user, Model model) {
         model.addAttribute("user", user);
         return "hello";
     }

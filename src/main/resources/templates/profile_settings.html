@@ -17,10 +17,16 @@
 </p>
 
 <h1>Settings</h1>
-<form th:action="@{/profile/edit}" th:method="PATCH" th:object="${userForm}">
+<form th:action="@{/profile/edit}" th:method="PATCH" th:object="${userForm}" enctype="multipart/form-data">
 
     <div sec:authorize="!hasRole('ADMIN')">
         <p>Personal:</p>
+        <label for="profile_pic"
+               th:class="${#authorization.expression('hasRole(''ROLE_UNCONFIRMED_TEACHER'')')?'required':''}">Profile
+            picture: </label>
+        <input id="profile_pic" name="profilePic" type="file" accept="image/png, image/jpeg"
+               th:required="${#authorization.expression('hasRole(''ROLE_UNCONFIRMED_TEACHER'')')?'required':null}"/><br/>
+
         <label class="required" for="firstname">Firstname: </label>
         <input id="firstname" required="required" th:field="*{firstname}" type="text"/>
         <div class="exception" th:errors="*{firstname}" th:if="${#fields.hasErrors('firstname')}">Firstname error</div>
