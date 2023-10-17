@@ -1,10 +1,7 @@
 package ru.spring.school.online.model.security;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -64,11 +61,14 @@ public class User implements UserDetails {
         return true;
     }
 
+    @Getter
     @RequiredArgsConstructor
     public enum Role {
-        ADMIN,
-        TEACHER,
-        UNCONFIRMED_TEACHER,
-        STUDENT;
+        ADMIN(User.class),
+        TEACHER(Teacher.class),
+        UNCONFIRMED_TEACHER(Teacher.class),
+        STUDENT(Student.class);
+
+        private final Class<? extends User> userClass;
     }
 }

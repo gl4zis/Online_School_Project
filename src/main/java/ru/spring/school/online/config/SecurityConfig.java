@@ -43,7 +43,7 @@ public class SecurityConfig {
                         ).hasRole("TEACHER")
                         .requestMatchers(
                                 AntPathRequestMatcher.antMatcher("/profile"),
-                                AntPathRequestMatcher.antMatcher("info")
+                                AntPathRequestMatcher.antMatcher("/info")
                         ).authenticated()
                         .anyRequest().permitAll()
                 ).sessionManagement(session -> session
