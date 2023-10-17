@@ -22,6 +22,7 @@ public class User implements UserDetails {
     @Id
     protected String username;  //*
     protected String password;  //*
+    protected String email;
 
     protected String firstname; //Student|Teacher *
     protected String lastname; //Student|Teacher *
@@ -32,9 +33,6 @@ public class User implements UserDetails {
 
     @Enumerated(value = EnumType.STRING)
     protected Role role;  //*
-
-    @Column(unique = true)
-    protected String email;
 
     @Column(columnDefinition = "TEXT")
     protected String photoBase64;
