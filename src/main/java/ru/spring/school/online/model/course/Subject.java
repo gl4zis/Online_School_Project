@@ -1,10 +1,10 @@
 package ru.spring.school.online.model.course;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import lombok.Data;
-import ru.spring.school.online.model.security.Teacher;
-
-import java.util.Set;
 
 @Entity
 @Data

@@ -1,7 +1,7 @@
 package ru.spring.school.online.exception;
 
 public class UsernameIsTakenException extends Exception {
-    public UsernameIsTakenException(String message) {
-        super(message);
+    public UsernameIsTakenException(String username) {
+        super("User '" + username + "' is already exists");
     }
 }

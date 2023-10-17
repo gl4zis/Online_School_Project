@@ -8,7 +8,6 @@ import lombok.Setter;
 import ru.spring.school.online.model.course.Group;
 import ru.spring.school.online.model.course.Subject;
 
-import java.util.Date;
 import java.util.Set;
 
 @Entity

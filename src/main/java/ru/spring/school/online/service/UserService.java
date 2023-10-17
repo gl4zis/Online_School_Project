@@ -9,8 +9,6 @@ import org.springframework.stereotype.Service;
 import ru.spring.school.online.model.security.User;
 import ru.spring.school.online.repository.UserRepository;
 
-import java.util.Optional;
-
 @Service
 @RequiredArgsConstructor
 public class UserService implements UserDetailsService {
@@ -19,22 +17,12 @@ public class UserService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return userRepo.findUserByEmail(username)
-                .orElse(userRepo.findById(username)
-                        .orElseThrow(() -> new UsernameNotFoundException("User '" + username + "' not found")));
-    }
-
-    public User findByUsername(String username) {
-        return userRepo.findById(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User '" + username + "' not found"));
+        return userRepo.findById(username).orElseGet(() -> userRepo.findUserByEmail(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User '" + username + "' not found")));
     }
 
     public Iterable<User> allUsers() {
         return userRepo.findAll();
-    }
-
-    public Optional<User> findByEmail(String email) {
-        return userRepo.findUserByEmail(email);
     }
 
     public boolean isUsernameUnique(String username) {
@@ -49,5 +37,7 @@ public class UserService implements UserDetailsService {
         userRepo.save(user);
     }
 
-
+    public void deleteUser(String username) {
+        userRepo.deleteById(username);
+    }
 }

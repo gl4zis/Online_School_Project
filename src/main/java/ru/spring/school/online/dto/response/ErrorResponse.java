@@ -6,10 +6,10 @@ import java.util.Date;
 
 @Data
 public class ErrorResponse {
-    private final Date timestamp;
-    private final int status;
-    private final String reason;
-    private final String path;
+    private Date timestamp;
+    private int status;
+    private String reason;
+    private String path;
 
     public ErrorResponse(int status, String reason, String path) {
         this.status = status;

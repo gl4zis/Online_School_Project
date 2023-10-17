@@ -31,6 +31,7 @@ public class StudentRegister {
     @Pattern(message = "{user.lastname.wrong-pattern}", regexp = "^[\\wа-яА-Я]+$")
     private String lastname;
 
+    @NotNull(message = "{user.birthdate.empty}")
     @Past(message = "{user.birthdate.in-future}")
     @DateTimeFormat(pattern = "dd-MM-yyyy")
     private final Date dateOfBirth;

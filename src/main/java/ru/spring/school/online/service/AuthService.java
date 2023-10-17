@@ -41,7 +41,7 @@ public class AuthService {
 
     public String regNewUser(User user) throws UsernameIsTakenException {
         if (!userService.isUsernameUnique(user.getUsername()))
-            throw new UsernameIsTakenException("User '" + user.getUsername() + "' already exists");
+            throw new UsernameIsTakenException(user.getUsername());
         userService.saveUser(user);
         return jwtTokenUtils.generateToken(user);
     }
