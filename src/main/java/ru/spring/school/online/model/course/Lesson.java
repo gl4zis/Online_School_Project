@@ -20,9 +20,10 @@ public class Lesson {
 
     private Date planedAt;
 
-    private String name;
+    private String title;
 
-    private String attachmentURL;
+    @Column(columnDefinition = "TEXT")
+    private String attachmentFileBase64;
 
     private String meetingURL;
 }

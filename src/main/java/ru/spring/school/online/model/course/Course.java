@@ -26,7 +26,8 @@ public class Course {
     @Column(columnDefinition = "TEXT")
     private String description;
 
-    private String photoURL;
+    @Column(columnDefinition = "TEXT")
+    private String imageBase64;
 
     @Temporal(TemporalType.DATE)
     private Date startTime;

@@ -12,26 +12,26 @@ import java.util.Date;
 @Data
 public class StudentRegister {
     @NotEmpty(message = "{user.username.empty}")
-    @Size(message = "{user.username.wrongSize}", max = 20, min = 3)
-    @Pattern(message = "{user.username.wrongPattern}", regexp = "^[\\w\\d]+$")
+    @Size(message = "{user.username.wrong-size}", max = 20, min = 3)
+    @Pattern(message = "{user.username.wrong-pattern}", regexp = "^[\\w\\d]+$")
     private final String username;
 
     @NotEmpty(message = "{user.password.empty}")
-    @Size(message = "{user.password.wrongSize}", max = 50, min = 6)
-    @Pattern(message = "{user.password.wrongPattern}", regexp = "^\\S+$")
+    @Size(message = "{user.password.wrong-size}", max = 50, min = 6)
+    @Pattern(message = "{user.password.wrong-pattern}", regexp = "^\\S+$")
     private final String password;
 
     @NotEmpty(message = "{user.firstname.empty}")
-    @Size(message = "{user.firstname.wrongSize}", max = 20, min = 2)
-    @Pattern(message = "{user.firstname.wrongPattern}", regexp = "^[\\wа-яА-Я]+$")
+    @Size(message = "{user.firstname.wrong-size}", max = 20, min = 2)
+    @Pattern(message = "{user.firstname.wrong-pattern}", regexp = "^[\\wа-яА-Я]+$")
     private String firstname;
 
     @NotEmpty(message = "{user.lastname.empty}")
-    @Size(message = "{user.lastname.wrongSize}", max = 20, min = 2)
-    @Pattern(message = "{user.lastname.wrongPattern}", regexp = "^[\\wа-яА-Я]+$")
+    @Size(message = "{user.lastname.wrong-size}", max = 20, min = 2)
+    @Pattern(message = "{user.lastname.wrong-pattern}", regexp = "^[\\wа-яА-Я]+$")
     private String lastname;
 
-    @Past(message = "{user.birthdate.inFuture}")
+    @Past(message = "{user.birthdate.in-future}")
     @DateTimeFormat(pattern = "dd-MM-yyyy")
     private final Date dateOfBirth;
 

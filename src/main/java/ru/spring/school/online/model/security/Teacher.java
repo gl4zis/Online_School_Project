@@ -18,13 +18,6 @@ import java.util.Set;
 @AllArgsConstructor
 public class Teacher extends User {
 
-    private String firstname; //*
-    private String lastname; //*
-    private String middleName;
-
-    @Temporal(TemporalType.DATE)
-    private Date dateOfBirth;
-
     @ManyToMany
     @JoinTable(name = "teacher_subjects",
             joinColumns = @JoinColumn(name = "teacher_username"),
@@ -33,8 +26,9 @@ public class Teacher extends User {
     private Set<Subject> subjects; //*
     private String education; //*
 
+    @Column(columnDefinition = "TEXT")
     @ElementCollection(targetClass = String.class)
-    private Set<String> diplomaURLs; //*
+    private Set<String> diplomasBase64; //*
 
     @Column(columnDefinition = "TEXT")
     private String description;

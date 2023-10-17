@@ -1,27 +1,31 @@
 package ru.spring.school.online.model.security;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
 
-@Entity(name = "usr")
+@Entity(name = "users")
 @Data
-@RequiredArgsConstructor
+@NoArgsConstructor
 @AllArgsConstructor
 @Inheritance(strategy = InheritanceType.JOINED)
 public class User implements UserDetails {
     @Id
     protected String username;  //*
-
     protected String password;  //*
+
+    protected String firstname; //Student|Teacher *
+    protected String lastname; //Student|Teacher *
+    protected String middleName;
+
+    @Temporal(TemporalType.DATE)
+    protected Date dateOfBirth; //Student *
 
     @Enumerated(value = EnumType.STRING)
     protected Role role;  //*
@@ -29,7 +33,8 @@ public class User implements UserDetails {
     @Column(unique = true)
     protected String email;
 
-    private String photoURL;
+    @Column(columnDefinition = "TEXT")
+    protected String photoBase64;
     private boolean locked;
 
     // Only one role is possible

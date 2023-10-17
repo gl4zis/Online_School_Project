@@ -11,13 +11,13 @@ import ru.spring.school.online.model.security.User;
 @Data
 public class AuthRequest {
     @NotEmpty(message = "{user.username.empty}")
-    @Size(message = "{user.username.wrongSize}", max = 20, min = 3)
-    @Pattern(message = "{user.username.wrongPattern}", regexp = "^[\\w\\d]+$")
+    @Size(message = "{user.username.wrong-size}", max = 20, min = 3)
+    @Pattern(message = "{user.username.wrong-pattern}", regexp = "^[\\w\\d]+$")
     private final String username;
 
     @NotEmpty(message = "{user.password.empty}")
-    @Size(message = "{user.password.wrongSize}", max = 50, min = 6)
-    @Pattern(message = "{user.password.wrongPattern}", regexp = "^\\S+$")
+    @Size(message = "{user.password.wrong-size}", max = 50, min = 6)
+    @Pattern(message = "{user.password.wrong-pattern}", regexp = "^\\S+$")
     private final String password;
 
     public User toAdmin(PasswordEncoder passwordEncoder) {

@@ -15,6 +15,6 @@ public class Subject {
 
     private String name;
 
-    @ManyToMany(mappedBy = "subjects")
-    private Set<Teacher> teachers;
+    /*@ManyToMany(mappedBy = "subjects")
+    private Set<Teacher> teachers;*/
 }

@@ -9,9 +9,8 @@ import ru.spring.school.online.model.security.Teacher;
 
 import java.util.Set;
 
-@Entity
+@Entity(name = "groups")
 @Data
-@Table(name = "grp")
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Group {
     @Id
