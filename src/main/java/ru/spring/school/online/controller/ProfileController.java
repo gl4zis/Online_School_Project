@@ -39,12 +39,4 @@ public class ProfileController {
     ) {
         return profileService.getProfile(request, username);
     }
-
-/*    @PutMapping
-    public ResponseEntity<?> updateWholeUser(HttpServletRequest request,
-                                             @RequestBody @Valid ProfileUpdate update,
-                                             Errors errors
-    ) {
-
-    }*/
 }

@@ -35,11 +35,13 @@ public class UserDto {
     protected String password;
 
     @JsonView(Profile.class)
-    @Null(groups = {Login.class, StudentReg.class, AdminReg.class})
+    @Null(message = "{user.email.null}",
+            groups = {Login.class, StudentReg.class, AdminReg.class})
     protected String email;
 
     @JsonView(Profile.class)
-    @Null(groups = {Login.class, AdminReg.class})
+    @Null(message = "{user.firstname.null}",
+            groups = {Login.class, AdminReg.class})
     @NotEmpty(message = "{user.firstname.empty}",
             groups = {StudentReg.class})
     @Size(message = "{user.firstname.wrong-size}", max = 20, min = 2,
@@ -49,7 +51,8 @@ public class UserDto {
     protected String firstname;
 
     @JsonView(Profile.class)
-    @Null(groups = {Login.class, AdminReg.class})
+    @Null(message = "{user.lastname.null}",
+            groups = {Login.class, AdminReg.class})
     @NotEmpty(message = "{user.lastname.empty}",
             groups = {StudentReg.class})
     @Size(message = "{user.lastname.wrong-size}", max = 20, min = 2,
@@ -59,11 +62,13 @@ public class UserDto {
     protected String lastname;
 
     @JsonView(Profile.class)
-    @Null(groups = {Login.class, StudentReg.class, AdminReg.class})
+    @Null(message = "{user.middle-name.null}",
+            groups = {Login.class, StudentReg.class, AdminReg.class})
     protected String middleName;
 
     @JsonView(Profile.class)
-    @Null(groups = {Login.class, AdminReg.class})
+    @Null(message = "{user.birthdate.null}",
+            groups = {Login.class, AdminReg.class})
     @NotNull(message = "{user.birthdate.empty}",
             groups = {StudentReg.class})
     @Past(message = "{user.birthdate.in-future}",
@@ -72,52 +77,62 @@ public class UserDto {
     protected Date dateOfBirth;
 
     @JsonView(Profile.class)
-    @Null(groups = {Login.class, StudentReg.class, AdminReg.class})
+    @Null(message = "{user.photo.null}",
+            groups = {Login.class, StudentReg.class, AdminReg.class})
     protected String photoBase64;
 
     @JsonView(Profile.class)
-    @Null(groups = {Login.class, StudentReg.class})
-    @ValidRole(anyOf = {User.Role.ADMIN, User.Role.UNCONFIRMED_TEACHER},
+    @Null(message = "{user.role.null}",
+            groups = {Login.class, StudentReg.class})
+    @ValidRole(message = "{user.role.invalid}", anyOf = {User.Role.ADMIN, User.Role.UNCONFIRMED_TEACHER},
             groups = {AdminReg.class})
     protected User.Role role;
 
     @JsonView(Profile.class)
-    @Null(groups = {Login.class, StudentReg.class, AdminReg.class})
+    @Null(message = "{user.locked.null}",
+            groups = {Login.class, StudentReg.class, AdminReg.class})
     private Boolean locked;
 
     @JsonView(Profile.class)
-    @Null(groups = {Login.class, StudentReg.class, AdminReg.class})
+    @Null(message = "{user.courses.null}",
+            groups = {Login.class, StudentReg.class, AdminReg.class})
     private Iterable<String> courses;
 
 
     @JsonView(Profile.class)
-    @Null(groups = {Login.class, AdminReg.class})
-    @NotNull(message = "{user.grade.empty}",
+    @Null(message = "{student.grade.null}",
+            groups = {Login.class, AdminReg.class})
+    @NotNull(message = "{student.grade.empty}",
             groups = {StudentReg.class})
-    @Min(message = "{user.grade.smaller}", value = 1,
+    @Min(message = "{student.grade.smaller}", value = 1,
             groups = {StudentReg.class})
-    @Max(message = "{user.grade.bigger}", value = 11,
+    @Max(message = "{student.grade.bigger}", value = 11,
             groups = {StudentReg.class})
     private Byte studentGrade;
 
 
     @JsonView(Profile.class)
-    @Null(groups = {Login.class, StudentReg.class, AdminReg.class})
+    @Null(message = "{teacher.subjects.null}",
+            groups = {Login.class, StudentReg.class, AdminReg.class})
     private Set<String> teacherSubjects;
 
     @JsonView(Profile.class)
-    @Null(groups = {Login.class, StudentReg.class, AdminReg.class})
+    @Null(message = "{teacher.diplomas.null}",
+            groups = {Login.class, StudentReg.class, AdminReg.class})
     private Set<String> teacherDiplomasBase64;
 
     @JsonView(Profile.class)
-    @Null(groups = {Login.class, StudentReg.class, AdminReg.class})
+    @Null(message = "{teacher.education.null}",
+            groups = {Login.class, StudentReg.class, AdminReg.class})
     private String teacherEducation;
 
     @JsonView(Profile.class)
-    @Null(groups = {Login.class, StudentReg.class, AdminReg.class})
+    @Null(message = "{teacher.description.null}",
+            groups = {Login.class, StudentReg.class, AdminReg.class})
     private String teacherDescription;
 
     @JsonView(Profile.class)
-    @Null(groups = {Login.class, StudentReg.class, AdminReg.class})
+    @Null(message = "{teacher.experience.null}",
+            groups = {Login.class, StudentReg.class, AdminReg.class})
     private Byte teacherWorkExperience;
 }
