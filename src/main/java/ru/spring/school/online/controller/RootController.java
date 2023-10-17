@@ -14,7 +14,6 @@ public class RootController {
         return ResponseEntity.ok("Hello From Spring App!");
     }
 
-    //TODO: Remove on release
     @GetMapping("/info")
     public ResponseEntity<String> info(Authentication auth) {
         return ResponseEntity.ok(auth.toString());

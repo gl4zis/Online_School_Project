@@ -12,14 +12,11 @@ import java.util.Set;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Course {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @EqualsAndHashCode.Include
-    private Long id;
+    private String name;
 
     @OneToOne
     private Subject subject;
-
-    private String name;
 
     private Long price;
 

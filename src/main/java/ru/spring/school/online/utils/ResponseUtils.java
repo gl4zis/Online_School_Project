@@ -2,11 +2,11 @@ package ru.spring.school.online.utils;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import ru.spring.school.online.dto.response.ErrorResponse;
 import ru.spring.school.online.dto.response.JwtResponse;
 
-@Component
+@Service
 public class ResponseUtils {
 
     public ResponseEntity<ErrorResponse> returnError(HttpStatus status, String message, String path) {

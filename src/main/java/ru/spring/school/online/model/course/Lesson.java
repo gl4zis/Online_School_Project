@@ -25,5 +25,5 @@ public class Lesson {
     @Column(columnDefinition = "TEXT")
     private String attachmentFileBase64;
 
-    private String meetingURL;
+    private String meetingUrl;
 }

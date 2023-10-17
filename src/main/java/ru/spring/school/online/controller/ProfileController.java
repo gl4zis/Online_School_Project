@@ -1,17 +1,15 @@
 package ru.spring.school.online.controller;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 import ru.spring.school.online.dto.response.MessageResponse;
-import ru.spring.school.online.dto.response.ProfileResponse;
+import ru.spring.school.online.dto.transfer.Profile;
 import ru.spring.school.online.service.ProfileService;
 import ru.spring.school.online.service.UserService;
-import ru.spring.school.online.utils.ResponseUtils;
 
 @RestController
 @RequestMapping("/profile")
@@ -20,11 +18,12 @@ public class ProfileController {
 
     private final ProfileService profileService;
     private final UserService userService;
-    private final ResponseUtils responseUtils;
 
+    @JsonView(Profile.class)
     @GetMapping
-    public ResponseEntity<ProfileResponse> getSelfProfile(Authentication auth) {
-        return ResponseEntity.ok(profileService.getProfile(auth.getName()));
+    public ResponseEntity<?> getSelfProfile(HttpServletRequest request,
+                                            Authentication auth) {
+        return profileService.getProfile(request, auth.getName());
     }
 
     @DeleteMapping
@@ -33,18 +32,19 @@ public class ProfileController {
         return ResponseEntity.ok(new MessageResponse("Profile was deleted"));
     }
 
+    @JsonView(Profile.class)
     @GetMapping("/{username}")
     public ResponseEntity<?> getOtherProfile(HttpServletRequest request,
                                              @PathVariable("username") String username
     ) {
-        try {
-            return ResponseEntity.ok(profileService.getProfile(username));
-        } catch (UsernameNotFoundException e) {
-            return responseUtils.returnError(
-                    HttpStatus.BAD_REQUEST,
-                    e.getMessage(),
-                    request.getServletPath()
-            );
-        }
+        return profileService.getProfile(request, username);
     }
+
+/*    @PutMapping
+    public ResponseEntity<?> updateWholeUser(HttpServletRequest request,
+                                             @RequestBody @Valid ProfileUpdate update,
+                                             Errors errors
+    ) {
+
+    }*/
 }
