@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import ru.spring.school.online.dto.request.AdminOrTeacherRegDto;
+import ru.spring.school.online.dto.request.ProfileUpdateDto;
 import ru.spring.school.online.dto.request.StudentRegDto;
 import ru.spring.school.online.dto.response.ProfileInfo;
 import ru.spring.school.online.dto.response.StudentProfileInfo;
@@ -15,7 +16,6 @@ import ru.spring.school.online.model.security.Teacher;
 import ru.spring.school.online.model.security.User;
 import ru.spring.school.online.service.CourseService;
 
-import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -60,10 +60,10 @@ public class DtoMappingUtils {
 
     public ProfileInfo profileFromUser(User user) {
         ProfileInfo info;
-        if (user.getRole() == User.Role.STUDENT)
-            info = setStudentInfo((Student) user);
-        else if (Set.of(User.Role.UNCONFIRMED_TEACHER, User.Role.TEACHER).contains(user.getRole()))
-            info = setTeacherInfo((Teacher) user);
+        if (user instanceof Student student)
+            info = setStudentInfo(student);
+        else if (user instanceof Teacher teacher)
+            info = setTeacherInfo(teacher);
         else
             info = new ProfileInfo();
 
@@ -97,5 +97,36 @@ public class DtoMappingUtils {
         info.setWorkExperience(teacher.getWorkExperience());
         info.setCourses(courseService.getTeacherCourseNames(teacher.getUsername()));
         return info;
+    }
+
+    public void updatedUser(User user, ProfileUpdateDto update) {
+        if (user instanceof Student student)
+            setStudentParams(student, update);
+        else if (user instanceof Teacher teacher)
+            setTeacherParams(teacher, update);
+
+        user.setUsername(update.getUsername());
+        user.setPassword(update.getPassword());
+        user.setEmail(update.getEmail());
+
+        user.setFirstname(update.getFirstname());
+        user.setLastname(update.getLastname());
+        user.setMiddleName(update.getMiddleName());
+
+        user.setBirthdate(update.getBirthdate());
+        user.setPhotoBase64(update.getPhotoBase64());
+    }
+
+    private void setStudentParams(Student student, ProfileUpdateDto update) {
+        student.setGrade(update.getGrade());
+    }
+
+    private void setTeacherParams(Teacher teacher, ProfileUpdateDto update) {
+        teacher.setDescription(update.getDescription());
+        teacher.setEducation(update.getEducation());
+        teacher.setDiplomasBase64(update.getDiplomasBase64());
+        teacher.setWorkExperience(update.getWorkExperience());
+        teacher.setSubjects(update.getSubjects().stream().map(Subject::new).collect(Collectors.toSet()));
+        teacher.setRole(User.Role.TEACHER);
     }
 }

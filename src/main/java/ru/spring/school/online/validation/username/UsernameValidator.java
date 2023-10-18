@@ -9,7 +9,7 @@ public class UsernameValidator implements ConstraintValidator<ValidUsername, Str
     @Override
     public boolean isValid(String value, ConstraintValidatorContext context) {
         Pattern regex = Pattern.compile("^[\\w\\d]+$");
-        return value != null && value.length() >= 3 &&
-                value.length() <= 20 && regex.matcher(value).find();
+        return value == null || (value.length() >= 3 &&
+                value.length() <= 20 && regex.matcher(value).find());
     }
 }

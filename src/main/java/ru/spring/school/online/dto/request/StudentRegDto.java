@@ -13,15 +13,19 @@ import java.util.Date;
 
 @Data
 public class StudentRegDto {
+    @NotNull(message = "{user.username.null}")
     @ValidUsername
     private String username;
 
+    @NotNull(message = "{user.password.null}")
     @ValidPassword
     private String password;
 
+    @NotNull(message = "{user.firstname.null}")
     @ValidName(message = "{user.firstname.invalid}")
     private String firstname;
 
+    @NotNull(message = "{user.lastname.null}")
     @ValidName(message = "{user.lastname.invalid}")
     private String lastname;
 
@@ -30,6 +34,7 @@ public class StudentRegDto {
     @DateTimeFormat(pattern = "yyyy-mm-dd")
     private Date birthdate;
 
+    @NotNull(message = "{student.grade.null}")
     @ValidGrade
     private Byte grade;
 }

@@ -9,7 +9,7 @@ public class PasswordValidator implements ConstraintValidator<ValidPassword, Str
     @Override
     public boolean isValid(String value, ConstraintValidatorContext context) {
         Pattern regex = Pattern.compile("^\\S+$");
-        return value != null && value.length() >= 6 &&
-                value.length() <= 50 && regex.matcher(value).find();
+        return value == null || (value.length() >= 6 &&
+                value.length() <= 50 && regex.matcher(value).find());
     }
 }

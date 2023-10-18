@@ -55,9 +55,15 @@ of frontend app, written on Vue.js
    - Returns (success message | 401)
    - authorized access
 3. PATCH
-   - *In development*
+   - *In development??Maybe not*
 4. PUT
-   - *In development*
+   - BODY ```{username, password, email, firstname,
+   lastname, middleName, birthdate, photoBase64,
+   grade (for student), subjects (for teacher),
+   description (for teacher), diplomasBase64 (for teacher),
+   education (for teacher), workExperience (for teacher)}```
+   - Returns (success message | 400 | 401)
+   - authorized access
 ---
 *URL:* ```/profile/{username}```
 1. GET

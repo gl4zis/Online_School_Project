@@ -6,6 +6,6 @@ import jakarta.validation.ConstraintValidatorContext;
 public class ExperienceValidator implements ConstraintValidator<ValidExperience, Byte> {
     @Override
     public boolean isValid(Byte value, ConstraintValidatorContext context) {
-        return value != null && value >= 0 && value <= 60;
+        return value == null || (value >= 0 && value <= 60);
     }
 }
