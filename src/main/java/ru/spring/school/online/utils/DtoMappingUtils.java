@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import ru.spring.school.online.dto.StudentDto;
+import ru.spring.school.online.dto.TeacherDto;
 import ru.spring.school.online.dto.UserDto;
 import ru.spring.school.online.model.course.Subject;
 import ru.spring.school.online.model.security.Student;
@@ -12,6 +14,7 @@ import ru.spring.school.online.model.security.User;
 import ru.spring.school.online.service.CourseService;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -27,7 +30,7 @@ public class DtoMappingUtils {
     private final CourseService courseService;
 
     public Student userDtoToStudent(UserDto dto) {
-        if (dto.getPassword() == null)
+        if (dto.getPassword() == null || dto.getStudentInfo() == null)
             return null;
 
         Student student = new Student();
@@ -36,7 +39,7 @@ public class DtoMappingUtils {
         student.setFirstname(dto.getFirstname());
         student.setLastname(dto.getLastname());
         student.setDateOfBirth(dto.getDateOfBirth());
-        student.setGrade(dto.getStudentGrade());
+        student.setGrade(dto.getStudentInfo().getGrade());
         student.setLocked(false);
         student.setRole(User.Role.STUDENT);
         return student;
@@ -61,13 +64,11 @@ public class DtoMappingUtils {
     }
 
     public UserDto profileFromUser(User user) {
-        UserDto dto;
+        UserDto dto = new UserDto();
         if (user.getRole() == User.Role.STUDENT)
-            dto = setStudentDto((Student) user);
-        else if (user.getRole() == User.Role.TEACHER)
-            dto = setTeacherDto((Teacher) user);
-        else
-            dto = new UserDto();
+            setStudentDto((Student) user, dto);
+        else if (Set.of(User.Role.TEACHER, User.Role.UNCONFIRMED_TEACHER).contains(user.getRole()))
+            setTeacherDto((Teacher) user, dto);
 
         dto.setUsername(user.getUsername());
         dto.setFirstname(user.getFirstname());
@@ -82,21 +83,23 @@ public class DtoMappingUtils {
         return dto;
     }
 
-    private UserDto setStudentDto(Student student) {
-        UserDto dto = new UserDto();
-        dto.setStudentGrade(student.getGrade());
+    private void setStudentDto(Student student, UserDto dto) {
+        StudentDto studentDto = new StudentDto();
+        studentDto.setGrade(student.getGrade());
+
+        dto.setStudentInfo(studentDto);
         dto.setCourses(courseService.getStudentCourseNames(student.getUsername()));
-        return dto;
     }
 
-    private UserDto setTeacherDto(Teacher teacher) {
-        UserDto dto = new UserDto();
-        dto.setTeacherSubjects(teacher.getSubjects().stream().map(Subject::getName).collect(Collectors.toSet()));
-        dto.setTeacherEducation(teacher.getEducation());
-        dto.setTeacherDiplomasBase64(teacher.getDiplomasBase64());
-        dto.setTeacherDescription(teacher.getDescription());
-        dto.setTeacherWorkExperience(teacher.getWorkExperience());
+    private void setTeacherDto(Teacher teacher, UserDto dto) {
+        TeacherDto teacherDto = new TeacherDto();
+        teacherDto.setSubjects(teacher.getSubjects().stream().map(Subject::getName).collect(Collectors.toSet()));
+        teacherDto.setEducation(teacher.getEducation());
+        teacherDto.setDiplomasBase64(teacher.getDiplomasBase64());
+        teacherDto.setDescription(teacher.getDescription());
+        teacherDto.setWorkExperience(teacher.getWorkExperience());
+
+        dto.setTeacherInfo(teacherDto);
         dto.setCourses(courseService.getTeacherCourseNames(teacher.getUsername()));
-        return dto;
     }
 }

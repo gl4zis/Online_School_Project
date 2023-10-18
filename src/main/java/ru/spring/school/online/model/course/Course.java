@@ -15,15 +15,15 @@ public class Course {
     @EqualsAndHashCode.Include
     private String name;
 
-    @OneToOne
+    @OneToOne(optional = false)
     private Subject subject;
 
     private Long price;
 
-    @Column(columnDefinition = "TEXT")
+    @Column(columnDefinition = "text")
     private String description;
 
-    @Column(columnDefinition = "TEXT")
+    @Column(columnDefinition = "text")
     private String imageBase64;
 
     @Temporal(TemporalType.DATE)

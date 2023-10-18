@@ -15,14 +15,14 @@ public class Lesson {
     @EqualsAndHashCode.Include
     private Long id;
 
-    @ManyToOne(targetEntity = Group.class, optional = false)
+    @ManyToOne(optional = false)
     private Group group;
 
     private Date planedAt;
 
     private String title;
 
-    @Column(columnDefinition = "TEXT")
+    @Column(columnDefinition = "text")
     private String attachmentFileBase64;
 
     private String meetingUrl;

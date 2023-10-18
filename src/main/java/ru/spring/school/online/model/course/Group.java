@@ -18,10 +18,10 @@ public class Group {
     @EqualsAndHashCode.Include
     private Long id;
 
-    @ManyToOne(targetEntity = Teacher.class, optional = false)
+    @ManyToOne(optional = false)
     private Teacher teacher;
 
-    @ManyToOne(targetEntity = Course.class, optional = false)
+    @ManyToOne(optional = false)
     private Course course;
 
     @ManyToMany(mappedBy = "groups")

@@ -31,7 +31,7 @@ public class User implements UserDetails {
     @Enumerated(value = EnumType.STRING)
     protected Role role;  //*
 
-    @Column(columnDefinition = "TEXT")
+    @Column(columnDefinition = "text")
     protected String photoBase64;
     private boolean locked;
 

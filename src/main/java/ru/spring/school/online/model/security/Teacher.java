@@ -25,11 +25,11 @@ public class Teacher extends User {
     private Set<Subject> subjects; //*
     private String education; //*
 
-    @Column(columnDefinition = "TEXT")
-    @ElementCollection(targetClass = String.class)
+    @Column(columnDefinition = "text")
+    @ElementCollection
     private Set<String> diplomasBase64; //*
 
-    @Column(columnDefinition = "TEXT")
+    @Column(columnDefinition = "text")
     private String description;
     private Byte workExperience; //*
 
