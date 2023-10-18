@@ -43,7 +43,7 @@ of frontend app, written on Vue.js
 *URL:* ```/register``` (student registration)
 1. POST
    - Body ```{username, password, firstname, lastname,
-   dateOfBirth, studentGrade}```
+   birthdate, grade}```
    - Returns (JWToken | 400)
    - all access
 ---

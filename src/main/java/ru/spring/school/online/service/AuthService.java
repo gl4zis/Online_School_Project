@@ -11,7 +11,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.Errors;
-import ru.spring.school.online.dto.UserDto;
+import ru.spring.school.online.dto.request.LoginUserDto;
 import ru.spring.school.online.exception.UsernameIsTakenException;
 import ru.spring.school.online.model.security.User;
 import ru.spring.school.online.utils.JwtTokenUtils;
@@ -27,7 +27,7 @@ public class AuthService {
     private final ResponseUtils responseUtils;
     private final ValidationUtils validationUtils;
 
-    public String loginUser(UserDto user) throws BadCredentialsException {
+    public String loginUser(LoginUserDto user) throws BadCredentialsException {
         Authentication auth = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         user.getUsername(),

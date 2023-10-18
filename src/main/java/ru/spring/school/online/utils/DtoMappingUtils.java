@@ -4,16 +4,17 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import ru.spring.school.online.dto.StudentDto;
-import ru.spring.school.online.dto.TeacherDto;
-import ru.spring.school.online.dto.UserDto;
+import ru.spring.school.online.dto.request.AdminOrTeacherRegDto;
+import ru.spring.school.online.dto.request.StudentRegDto;
+import ru.spring.school.online.dto.response.ProfileInfo;
+import ru.spring.school.online.dto.response.StudentProfileInfo;
+import ru.spring.school.online.dto.response.TeacherProfileInfo;
 import ru.spring.school.online.model.course.Subject;
 import ru.spring.school.online.model.security.Student;
 import ru.spring.school.online.model.security.Teacher;
 import ru.spring.school.online.model.security.User;
 import ru.spring.school.online.service.CourseService;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -29,8 +30,8 @@ public class DtoMappingUtils {
     private final PasswordEncoder passwordEncoder;
     private final CourseService courseService;
 
-    public Student userDtoToStudent(UserDto dto) {
-        if (dto.getPassword() == null || dto.getStudentInfo() == null)
+    public Student student(StudentRegDto dto) {
+        if (dto.getPassword() == null)
             return null;
 
         Student student = new Student();
@@ -38,68 +39,63 @@ public class DtoMappingUtils {
         student.setPassword(passwordEncoder.encode(dto.getPassword()));
         student.setFirstname(dto.getFirstname());
         student.setLastname(dto.getLastname());
-        student.setDateOfBirth(dto.getDateOfBirth());
-        student.setGrade(dto.getStudentInfo().getGrade());
+        student.setBirthdate(dto.getBirthdate());
+        student.setGrade(dto.getGrade());
         student.setLocked(false);
         student.setRole(User.Role.STUDENT);
         return student;
     }
 
-    public User userDtoToUser(UserDto dto) {
+    public User user(AdminOrTeacherRegDto dto) {
         if (dto.getPassword() == null)
             return null;
 
-        try {
-            User user = dto.getRole().getUserClass().getConstructor().newInstance();
-            user.setUsername(dto.getUsername());
-            user.setPassword(passwordEncoder.encode(dto.getPassword()));
-            user.setRole(dto.getRole());
-            user.setLocked(false);
-            return user;
-        } catch (NoSuchMethodException | InstantiationException |
-                 IllegalAccessException | InvocationTargetException e) {
-            log.error("Error while creating object: " + e.getMessage());
-            return null;
-        }
+        User user = new User();
+        user.setUsername(dto.getUsername());
+        user.setPassword(passwordEncoder.encode(dto.getPassword()));
+        user.setRole(dto.getRole());
+        user.setLocked(false);
+        return user;
     }
 
-    public UserDto profileFromUser(User user) {
-        UserDto dto = new UserDto();
+    public ProfileInfo profileFromUser(User user) {
+        ProfileInfo info;
         if (user.getRole() == User.Role.STUDENT)
-            setStudentDto((Student) user, dto);
-        else if (Set.of(User.Role.TEACHER, User.Role.UNCONFIRMED_TEACHER).contains(user.getRole()))
-            setTeacherDto((Teacher) user, dto);
+            info = setStudentInfo((Student) user);
+        else if (Set.of(User.Role.UNCONFIRMED_TEACHER, User.Role.TEACHER).contains(user.getRole()))
+            info = setTeacherInfo((Teacher) user);
+        else
+            info = new ProfileInfo();
 
-        dto.setUsername(user.getUsername());
-        dto.setFirstname(user.getFirstname());
-        dto.setLastname(user.getLastname());
-        dto.setMiddleName(user.getMiddleName());
-        dto.setEmail(user.getEmail());
-        dto.setDateOfBirth(user.getDateOfBirth());
-        dto.setPhotoBase64(user.getPhotoBase64());
-        dto.setRole(user.getRole());
-        dto.setLocked(user.isLocked());
+        info.setUsername(user.getUsername());
+        info.setEmail(user.getEmail());
+        info.setLocked(user.isLocked());
+        info.setRole(user.getRole());
 
-        return dto;
+        info.setFirstname(user.getFirstname());
+        info.setLastname(user.getLastname());
+        info.setMiddleName(user.getMiddleName());
+        info.setBirthdate(user.getBirthdate());
+        info.setPhotoBase64(user.getPhotoBase64());
+
+        return info;
     }
 
-    private void setStudentDto(Student student, UserDto dto) {
-        StudentDto studentDto = new StudentDto();
-        studentDto.setGrade(student.getGrade());
-
-        dto.setStudentInfo(studentDto);
-        dto.setCourses(courseService.getStudentCourseNames(student.getUsername()));
+    private StudentProfileInfo setStudentInfo(Student student) {
+        StudentProfileInfo info = new StudentProfileInfo();
+        info.setGrade(student.getGrade());
+        info.setCourses(courseService.getStudentCourseNames(student.getUsername()));
+        return info;
     }
 
-    private void setTeacherDto(Teacher teacher, UserDto dto) {
-        TeacherDto teacherDto = new TeacherDto();
-        teacherDto.setSubjects(teacher.getSubjects().stream().map(Subject::getName).collect(Collectors.toSet()));
-        teacherDto.setEducation(teacher.getEducation());
-        teacherDto.setDiplomasBase64(teacher.getDiplomasBase64());
-        teacherDto.setDescription(teacher.getDescription());
-        teacherDto.setWorkExperience(teacher.getWorkExperience());
-
-        dto.setTeacherInfo(teacherDto);
-        dto.setCourses(courseService.getTeacherCourseNames(teacher.getUsername()));
+    private TeacherProfileInfo setTeacherInfo(Teacher teacher) {
+        TeacherProfileInfo info = new TeacherProfileInfo();
+        info.setSubjects(teacher.getSubjects().stream().map(Subject::getName).collect(Collectors.toSet()));
+        info.setEducation(teacher.getEducation());
+        info.setDescription(teacher.getDescription());
+        info.setDiplomasBase64(teacher.getDiplomasBase64());
+        info.setWorkExperience(teacher.getWorkExperience());
+        info.setCourses(courseService.getTeacherCourseNames(teacher.getUsername()));
+        return info;
     }
 }

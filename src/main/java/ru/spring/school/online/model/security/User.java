@@ -26,7 +26,7 @@ public class User implements UserDetails {
     protected String middleName;
 
     @Temporal(TemporalType.DATE)
-    protected Date dateOfBirth; //Student *
+    protected Date birthdate; //Student *
 
     @Enumerated(value = EnumType.STRING)
     protected Role role;  //*
@@ -64,11 +64,9 @@ public class User implements UserDetails {
     @Getter
     @RequiredArgsConstructor
     public enum Role {
-        ADMIN(User.class),
-        TEACHER(Teacher.class),
-        UNCONFIRMED_TEACHER(Teacher.class),
-        STUDENT(Student.class);
-
-        private final Class<? extends User> userClass;
+        ADMIN,
+        TEACHER,
+        UNCONFIRMED_TEACHER,
+        STUDENT
     }
 }

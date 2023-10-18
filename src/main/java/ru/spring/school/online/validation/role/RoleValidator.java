@@ -1,4 +1,4 @@
-package ru.spring.school.online.validation;
+package ru.spring.school.online.validation.role;
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
