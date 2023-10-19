@@ -27,7 +27,7 @@ public class AdminController {
                                       @RequestBody @Valid AdminOrTeacherRegDto regDto,
                                       Errors errors
     ) {
-        User user = dtoMappingUtils.user(regDto);
+        User user = dtoMappingUtils.newUser(regDto);
         return authService.registerUtil(request, user, errors);
     }
 }

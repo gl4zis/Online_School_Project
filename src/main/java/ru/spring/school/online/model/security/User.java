@@ -1,14 +1,15 @@
 package ru.spring.school.online.model.security;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Date;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Entity(name = "users")
 @Data
@@ -19,6 +20,7 @@ public class User implements UserDetails {
     @Id
     protected String username;  //*
     protected String password;  //*
+    @Column(unique = true)
     protected String email;
 
     protected String firstname; //Student|Teacher *
@@ -28,17 +30,34 @@ public class User implements UserDetails {
     @Temporal(TemporalType.DATE)
     protected Date birthdate; //Student *
 
-    @Enumerated(value = EnumType.STRING)
-    protected Role role;  //*
+    @ElementCollection
+    @Enumerated(EnumType.STRING)
+    protected Set<Role> roles;  //*
 
     @Column(columnDefinition = "text")
     protected String photoBase64;
     private boolean locked;
 
-    // Only one role is possible
+    private boolean confirmed;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.singleton(new SimpleGrantedAuthority("ROLE_" + role.name()));
+        return roles.stream().map(role ->
+                        new SimpleGrantedAuthority("ROLE_" + role.name()))
+                .collect(Collectors.toSet());
+    }
+
+    public boolean hasRole(Role role) {
+        return roles.contains(role);
+    }
+
+    public void setRoles(Set<Role> newRoles) {
+        roles = newRoles;
+    }
+
+    public void setRoles(Role... newRoles) {
+        roles = new HashSet<>();
+        roles.addAll(Arrays.asList(newRoles));
     }
 
     @Override
@@ -61,12 +80,9 @@ public class User implements UserDetails {
         return true;
     }
 
-    @Getter
-    @RequiredArgsConstructor
     public enum Role {
         ADMIN,
         TEACHER,
-        UNCONFIRMED_TEACHER,
         STUDENT
     }
 }

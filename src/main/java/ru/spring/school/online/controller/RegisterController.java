@@ -26,7 +26,7 @@ public class RegisterController {
                                              @RequestBody @Valid StudentRegDto studentDto,
                                              Errors errors
     ) {
-        User user = dtoMappingUtils.student(studentDto);
+        User user = dtoMappingUtils.newStudent(studentDto);
         return authService.registerUtil(request, user, errors);
     }
 }

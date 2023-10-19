@@ -1,8 +1,7 @@
-package ru.spring.school.online.validation.role;
+package ru.spring.school.online.validation.username;
 
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
-import ru.spring.school.online.model.security.User;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
@@ -14,11 +13,9 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Target({METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER, TYPE_USE})
 @Retention(RUNTIME)
 @Documented
-@Constraint(validatedBy = RoleValidator.class)
-public @interface ValidRole {
-    User.Role[] anyOf();
-
-    String message() default "Role ust be any of {anyOf}";
+@Constraint(validatedBy = UsernameOrEmailValidator.class)
+public @interface ValidUsernameOrEmail {
+    String message() default "Invalid username (email)";
 
     Class<?>[] groups() default {};
 

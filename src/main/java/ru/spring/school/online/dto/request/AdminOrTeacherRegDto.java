@@ -1,11 +1,13 @@
 package ru.spring.school.online.dto.request;
 
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 import ru.spring.school.online.model.security.User;
 import ru.spring.school.online.validation.password.ValidPassword;
-import ru.spring.school.online.validation.role.ValidRole;
 import ru.spring.school.online.validation.username.ValidUsername;
+
+import java.util.Set;
 
 @Data
 public class AdminOrTeacherRegDto {
@@ -18,6 +20,6 @@ public class AdminOrTeacherRegDto {
     private String password;
 
     @NotNull(message = "{user.role.null}")
-    @ValidRole(anyOf = {User.Role.ADMIN, User.Role.UNCONFIRMED_TEACHER})
-    private User.Role role;
+    @Size(message = "{user.role.null}", min = 1)
+    private Set<User.Role> roles;
 }

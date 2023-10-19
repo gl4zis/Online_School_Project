@@ -6,6 +6,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import ru.spring.school.online.dto.request.ProfileUpdateDto;
+import ru.spring.school.online.exception.EmailIsTakenException;
 import ru.spring.school.online.exception.UsernameIsTakenException;
 import ru.spring.school.online.model.security.User;
 import ru.spring.school.online.repository.UserRepository;
@@ -20,11 +21,16 @@ public class UserService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return userRepo.findById(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User '" + username + "' not found"));
+                .orElseGet(() -> userRepo.findByEmail(username)
+                        .orElseThrow(() -> new UsernameNotFoundException("User '" + username + "' not found")));
     }
 
     public boolean isUsernameUnique(String username) {
         return !userRepo.existsById(username);
+    }
+
+    public boolean isEmailUnique(String email) {
+        return !userRepo.existsByEmail(email);
     }
 
     public void saveUser(User user) {
@@ -36,9 +42,12 @@ public class UserService implements UserDetailsService {
     }
 
     public void updateProfile(String oldUsername, ProfileUpdateDto update)
-            throws UsernameNotFoundException, UsernameIsTakenException {
+            throws UsernameNotFoundException, UsernameIsTakenException, EmailIsTakenException {
         if (!update.getUsername().equals(oldUsername) && !isUsernameUnique(update.getUsername()))
             throw new UsernameIsTakenException(update.getUsername());
+
+        if (update.getEmail() != null && !isEmailUnique(update.getEmail()))
+            throw new EmailIsTakenException(update.getEmail());
 
         User user = (User) loadUserByUsername(oldUsername);
         dtoMappingUtils.updatedUser(user, update);

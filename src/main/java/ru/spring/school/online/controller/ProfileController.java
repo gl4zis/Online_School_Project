@@ -10,6 +10,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 import ru.spring.school.online.dto.request.ProfileUpdateDto;
 import ru.spring.school.online.dto.response.MessageResponse;
+import ru.spring.school.online.exception.EmailIsTakenException;
 import ru.spring.school.online.exception.UsernameIsTakenException;
 import ru.spring.school.online.service.ProfileService;
 import ru.spring.school.online.service.UserService;
@@ -51,7 +52,7 @@ public class ProfileController {
         try {
             profileService.updateWholeProfile(profileDto, auth.getName());
             return ResponseEntity.ok(new MessageResponse("Profile was updated"));
-        } catch (ValidationException | UsernameIsTakenException | UsernameNotFoundException e) {
+        } catch (ValidationException | UsernameIsTakenException | UsernameNotFoundException | EmailIsTakenException e) {
             return responseUtils.returnError(
                     HttpStatus.BAD_REQUEST,
                     e.getMessage(),

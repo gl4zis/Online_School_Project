@@ -8,13 +8,17 @@ import org.springframework.stereotype.Component;
 import java.util.regex.Pattern;
 
 @Component
-public class UsernameValidator implements ConstraintValidator<ValidUsername, String> {
+public class UsernameOrEmailValidator implements ConstraintValidator<ValidUsernameOrEmail, String> {
     @Value("${regex.username}")
     private String usernamePattern;
 
+    @Value("${regex.email}")
+    private String emailPattern;
+
     @Override
     public boolean isValid(String value, ConstraintValidatorContext context) {
-        Pattern regex = Pattern.compile(usernamePattern);
-        return value == null || regex.matcher(value).find();
+        Pattern usernameRegex = Pattern.compile(usernamePattern);
+        Pattern emailRegex = Pattern.compile(emailPattern);
+        return value == null || usernameRegex.matcher(value).find() || emailRegex.matcher(value).find();
     }
 }

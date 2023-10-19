@@ -30,7 +30,7 @@ public class DtoMappingUtils {
     private final PasswordEncoder passwordEncoder;
     private final CourseService courseService;
 
-    public Student student(StudentRegDto dto) {
+    public Student newStudent(StudentRegDto dto) {
         if (dto.getPassword() == null)
             return null;
 
@@ -41,20 +41,21 @@ public class DtoMappingUtils {
         student.setLastname(dto.getLastname());
         student.setBirthdate(dto.getBirthdate());
         student.setGrade(dto.getGrade());
-        student.setLocked(false);
-        student.setRole(User.Role.STUDENT);
+        student.setRoles(User.Role.STUDENT);
+        student.setConfirmed(true);
         return student;
     }
 
-    public User user(AdminOrTeacherRegDto dto) {
+    public User newUser(AdminOrTeacherRegDto dto) {
         if (dto.getPassword() == null)
             return null;
 
         User user = new User();
         user.setUsername(dto.getUsername());
         user.setPassword(passwordEncoder.encode(dto.getPassword()));
-        user.setRole(dto.getRole());
-        user.setLocked(false);
+        user.setRoles(dto.getRoles());
+        if (user.getRoles().size() == 1 && user.hasRole(User.Role.ADMIN))
+            user.setConfirmed(true);
         return user;
     }
 
@@ -70,7 +71,7 @@ public class DtoMappingUtils {
         info.setUsername(user.getUsername());
         info.setEmail(user.getEmail());
         info.setLocked(user.isLocked());
-        info.setRole(user.getRole());
+        info.setRoles(user.getRoles());
 
         info.setFirstname(user.getFirstname());
         info.setLastname(user.getLastname());
@@ -115,6 +116,7 @@ public class DtoMappingUtils {
 
         user.setBirthdate(update.getBirthdate());
         user.setPhotoBase64(update.getPhotoBase64());
+        user.setConfirmed(true);
     }
 
     private void setStudentParams(Student student, ProfileUpdateDto update) {
@@ -127,6 +129,5 @@ public class DtoMappingUtils {
         teacher.setDiplomasBase64(update.getDiplomasBase64());
         teacher.setWorkExperience(update.getWorkExperience());
         teacher.setSubjects(update.getSubjects().stream().map(Subject::new).collect(Collectors.toSet()));
-        teacher.setRole(User.Role.TEACHER);
     }
 }

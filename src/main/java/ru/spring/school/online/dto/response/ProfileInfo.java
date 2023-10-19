@@ -11,7 +11,7 @@ import java.util.Set;
 public class ProfileInfo {
     protected String username;
     protected String email;
-    protected User.Role role;
+    protected Set<User.Role> roles;
     protected Boolean locked;
 
     protected String firstname;
