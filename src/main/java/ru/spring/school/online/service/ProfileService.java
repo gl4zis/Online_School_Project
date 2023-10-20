@@ -26,7 +26,7 @@ public class ProfileService {
 
     public void updateWholeProfile(ProfileUpdateDto dto, String oldUsername)
             throws UsernameNotFoundException, ValidationException, UsernameIsTakenException, EmailIsTakenException {
-        validationUtils.validateProfileUpdateAndThrowException(dto);
+        validationUtils.validateAndThrowException(dto);
         userService.updateProfile(oldUsername, dto);
     }
 }

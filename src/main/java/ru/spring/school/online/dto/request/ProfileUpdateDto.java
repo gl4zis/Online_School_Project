@@ -10,12 +10,14 @@ import ru.spring.school.online.validation.experience.ValidExperience;
 import ru.spring.school.online.validation.grade.ValidGrade;
 import ru.spring.school.online.validation.name.ValidName;
 import ru.spring.school.online.validation.password.ValidPassword;
+import ru.spring.school.online.validation.profile.ValidProfileUpdate;
 import ru.spring.school.online.validation.username.ValidUsername;
 
 import java.util.Date;
 import java.util.Set;
 
 @Data
+@ValidProfileUpdate
 public class ProfileUpdateDto {
     @NotNull(message = "{user.username.null}")
     @ValidUsername
