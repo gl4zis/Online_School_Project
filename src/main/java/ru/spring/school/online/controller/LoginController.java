@@ -1,52 +1,29 @@
 package ru.spring.school.online.controller;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.validation.Valid;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.spring.school.online.dto.request.LoginUserDto;
+import ru.spring.school.online.dto.response.JwtResponse;
 import ru.spring.school.online.service.AuthService;
-import ru.spring.school.online.utils.ResponseUtils;
-import ru.spring.school.online.utils.ValidationUtils;
 
 @RestController
+@Tag(name = "Controller for authorization", description = "All users should log in through it")
 @RequestMapping("/login")
 @RequiredArgsConstructor
 public class LoginController {
     private final AuthService authService;
-    private final ResponseUtils responseUtils;
-    private final ValidationUtils validationUtils;
 
+    @Operation(summary = "Authorize any accounts through it",
+            description = "Send username, password and take JWT token after authorization. " +
+                    "You can send email instead of  username")
     @PostMapping
-    public ResponseEntity<?> authorize(HttpServletRequest request,
-                                       @RequestBody @Valid LoginUserDto loginDto,
-                                       Errors errors
-    ) {
-        final String path = request.getServletPath();
-        if (errors.hasErrors()) {
-            return responseUtils.returnError(
-                    HttpStatus.BAD_REQUEST,
-                    validationUtils.errorsToString(errors),
-                    path
-            );
-        }
-
-        try {
-            String jwToken = authService.loginUser(loginDto);
-            return responseUtils.returnToken(jwToken);
-        } catch (BadCredentialsException e) {
-            return responseUtils.returnError(
-                    HttpStatus.UNAUTHORIZED,
-                    e.getMessage(),
-                    path
-            );
-        }
+    public ResponseEntity<?> authorize(@RequestBody LoginUserDto loginDto) {
+        return ResponseEntity.ok(new JwtResponse(authService.loginUser(loginDto)));
     }
 }

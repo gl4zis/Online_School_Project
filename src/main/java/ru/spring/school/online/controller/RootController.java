@@ -1,11 +1,13 @@
 package ru.spring.school.online.controller;
 
+import io.swagger.v3.oas.annotations.Hidden;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@Hidden
 public class RootController {
 
     //TODO: Remove on release
