@@ -2,11 +2,7 @@ package ru.spring.school.online.controller;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import ru.spring.school.online.dto.request.StudentRegDto;
 import ru.spring.school.online.dto.response.JwtResponse;
 import ru.spring.school.online.model.security.User;
@@ -24,8 +20,9 @@ public class RegisterController {
     private final DtoMappingUtils dtoMappingUtils;
 
     @PostMapping
-    public ResponseEntity<?> registerStudent(@RequestBody StudentRegDto studentDto) {
+    @ResponseBody
+    public JwtResponse registerStudent(@RequestBody StudentRegDto studentDto) {
         User user = dtoMappingUtils.newStudent(studentDto);
-        return ResponseEntity.ok(new JwtResponse(authService.registerUtil(user)));
+        return new JwtResponse(authService.registerUtil(user));
     }
 }

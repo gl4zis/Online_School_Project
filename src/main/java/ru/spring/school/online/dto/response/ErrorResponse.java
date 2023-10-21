@@ -2,6 +2,7 @@ package ru.spring.school.online.dto.response;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
+import org.springframework.http.HttpStatus;
 
 import java.util.Date;
 
@@ -15,8 +16,8 @@ public class ErrorResponse {
     @Schema(description = "Reason of the error")
     private String reason;
 
-    public ErrorResponse(int status, String reason) {
-        this.status = status;
+    public ErrorResponse(HttpStatus status, String reason) {
+        this.status = status.value();
         this.reason = reason;
         this.timestamp = new Date();
     }
