@@ -20,7 +20,7 @@ public class ProfileService {
     private final DtoMappingUtils dtoMappingUtils;
 
     public ProfileInfo getProfile(String username) throws UsernameNotFoundException {
-        User user = (User) userService.loadUserByUsername(username);
+        User user = userService.getOnlyByUsername(username);
         return dtoMappingUtils.profileFromUser(user);
     }
 

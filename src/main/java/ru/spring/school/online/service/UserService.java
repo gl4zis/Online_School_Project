@@ -1,16 +1,21 @@
 package ru.spring.school.online.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import ru.spring.school.online.dto.request.ProfileUpdateDto;
+import ru.spring.school.online.dto.response.ProfileInfo;
 import ru.spring.school.online.exception.EmailIsTakenException;
 import ru.spring.school.online.exception.UsernameIsTakenException;
 import ru.spring.school.online.model.security.User;
 import ru.spring.school.online.repository.UserRepository;
 import ru.spring.school.online.utils.DtoMappingUtils;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -18,11 +23,23 @@ public class UserService implements UserDetailsService {
     private final UserRepository userRepo;
     private final DtoMappingUtils dtoMappingUtils;
 
+    /**
+     * Loads user by username or email (it is unique)
+     *
+     * @param username the username|email identifying the user whose data is required.
+     * @return User, you can always cast this method result to (User)
+     * @throws UsernameNotFoundException if there are no such user in DB
+     */
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return userRepo.findById(username)
                 .orElseGet(() -> userRepo.findByEmail(username)
                         .orElseThrow(() -> new UsernameNotFoundException("User '" + username + "' not found")));
+    }
+
+    public User getOnlyByUsername(String username) throws UsernameNotFoundException {
+        return userRepo.findById(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User '" + username + "' not found"));
     }
 
     public boolean isUsernameUnique(String username) {
@@ -51,6 +68,22 @@ public class UserService implements UserDetailsService {
 
         User user = (User) loadUserByUsername(oldUsername);
         dtoMappingUtils.updatedUser(user, update);
+        userRepo.save(user);
+    }
+
+    public Set<ProfileInfo> getAll() {
+        Iterable<User> users = userRepo.findAll();
+        Set<ProfileInfo> usersSet = new HashSet<>();
+        users.forEach(user -> usersSet.add(dtoMappingUtils.profileFromUser(user)));
+        return usersSet;
+    }
+
+    public void changeUserLock(String username, boolean lock) throws AccessDeniedException {
+        User user = getOnlyByUsername(username);
+        if (user.hasRole(User.Role.ADMIN))
+            throw new AccessDeniedException("Admin account can't be locked");
+
+        user.setLocked(lock);
         userRepo.save(user);
     }
 }

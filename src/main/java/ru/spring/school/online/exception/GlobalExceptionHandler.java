@@ -3,6 +3,7 @@ package ru.spring.school.online.exception;
 import jakarta.validation.ValidationException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -30,6 +31,15 @@ public class GlobalExceptionHandler {
     public ErrorResponse invalidUserDataHandler(BadCredentialsException e) {
         return new ErrorResponse(
                 HttpStatus.UNAUTHORIZED,
+                e.getMessage());
+    }
+
+    @ResponseStatus(HttpStatus.NOT_ACCEPTABLE)
+    @ResponseBody
+    @ExceptionHandler(AccessDeniedException.class)
+    public ErrorResponse accessDenied(AccessDeniedException e) {
+        return new ErrorResponse(
+                HttpStatus.NOT_ACCEPTABLE,
                 e.getMessage());
     }
 }

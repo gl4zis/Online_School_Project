@@ -72,6 +72,7 @@ public class DtoMappingUtils {
         info.setEmail(user.getEmail());
         info.setLocked(user.isLocked());
         info.setRoles(user.getRoles());
+        info.setConfirmed(user.isConfirmed());
 
         info.setFirstname(user.getFirstname());
         info.setLastname(user.getLastname());
