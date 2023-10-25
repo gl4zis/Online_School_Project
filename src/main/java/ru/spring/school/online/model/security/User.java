@@ -1,56 +1,63 @@
 package ru.spring.school.online.model.security;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.AssertTrue;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.RequiredArgsConstructor;
+import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.Collection;
-import java.util.Collections;
+import java.util.*;
+import java.util.stream.Collectors;
 
-@Entity(name = "usr")
+@Entity(name = "users")
 @Data
-@RequiredArgsConstructor
+@NoArgsConstructor
 @AllArgsConstructor
 @Inheritance(strategy = InheritanceType.JOINED)
 public class User implements UserDetails {
-
     @Id
-    @NotBlank(message = "Username shouldn't be empty")
-    @Size(min = 3, max = 30, message = "Username size must be between 3 and 30 characters")
-    protected String username;
-    @Transient
-    protected String oldUsername;
-    @NotBlank(message = "Password shouldn't be empty")
-    @Size(min = 6, message = "Password should be longer than 5 characters")
-    protected String password;
-    @Transient
-    protected String passwordConfirm;
-    @Enumerated(value = EnumType.STRING)
-    protected Role role;
-    @Column(nullable = false, unique = true)
-    @Email(message = "Input correct email")
+    protected String username;  //*
+    protected String password;  //*
+    @Column(unique = true)
     protected String email;
-    @Transient
-    protected String oldEmail;
 
-    private String photoURL;
+    protected String firstname; //Student|Teacher *
+    protected String lastname; //Student|Teacher *
+    protected String middleName;
 
-    @AssertTrue(message = "Passwords should be equals")
-    public boolean isPasswordsEquals() {
-        return passwordConfirm == null || password.equals(passwordConfirm);
-    }
+    @Temporal(TemporalType.DATE)
+    protected Date birthdate; //Student *
+
+    @ElementCollection
+    @Enumerated(EnumType.STRING)
+    protected Set<Role> roles;  //*
+
+    @Column(columnDefinition = "text")
+    protected String photoBase64;
+    private boolean locked;
+
+    private boolean confirmed;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.singleton(role.authority);
+        return roles.stream().map(role ->
+                        new SimpleGrantedAuthority("ROLE_" + role.name()))
+                .collect(Collectors.toSet());
+    }
+
+    public boolean hasRole(Role role) {
+        return roles.contains(role);
+    }
+
+    public void setRoles(Set<Role> newRoles) {
+        roles = newRoles;
+    }
+
+    public void setRoles(Role... newRoles) {
+        roles = new HashSet<>();
+        roles.addAll(Arrays.asList(newRoles));
     }
 
     @Override
@@ -60,7 +67,7 @@ public class User implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        return true;
+        return !locked;
     }
 
     @Override
@@ -73,22 +80,9 @@ public class User implements UserDetails {
         return true;
     }
 
-    public Student toStudent() {
-        return new Student(this);
-    }
-
-    public Teacher toTeacher() {
-        return new Teacher(this);
-    }
-
-    @RequiredArgsConstructor
     public enum Role {
-        ADMIN(new SimpleGrantedAuthority("ROLE_ADMIN")),
-        TEACHER(new SimpleGrantedAuthority("ROLE_TEACHER")),
-        UNCONFIRMED_TEACHER(new SimpleGrantedAuthority("ROLE_UNCONFIRMED_TEACHER")),
-        STUDENT(new SimpleGrantedAuthority("ROLE_STUDENT"));
-
-
-        private final GrantedAuthority authority;
+        ADMIN,
+        TEACHER,
+        STUDENT
     }
 }

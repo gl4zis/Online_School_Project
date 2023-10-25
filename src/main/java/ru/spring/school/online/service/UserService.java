@@ -1,136 +1,89 @@
 package ru.spring.school.online.service;
 
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.ui.Model;
-import org.springframework.validation.Errors;
+import ru.spring.school.online.dto.request.ProfileUpdateDto;
+import ru.spring.school.online.dto.response.ProfileInfo;
+import ru.spring.school.online.exception.EmailIsTakenException;
+import ru.spring.school.online.exception.UsernameIsTakenException;
 import ru.spring.school.online.model.security.User;
 import ru.spring.school.online.repository.UserRepository;
+import ru.spring.school.online.utils.DtoMappingUtils;
 
-import java.util.Optional;
+import java.util.HashSet;
+import java.util.Set;
 
 @Service
+@RequiredArgsConstructor
 public class UserService implements UserDetailsService {
-    final UserRepository userRepo;
-    final PasswordEncoder passwordEncoder;
+    private final UserRepository userRepo;
+    private final DtoMappingUtils dtoMappingUtils;
 
-    public UserService(UserRepository userRepo, PasswordEncoder passwordEncoder) {
-        this.userRepo = userRepo;
-        this.passwordEncoder = passwordEncoder;
-    }
-
+    /**
+     * Loads user by username or email (it is unique)
+     *
+     * @param username the username|email identifying the user whose data is required.
+     * @return User, you can always cast this method result to (User)
+     * @throws UsernameNotFoundException if there are no such user in DB
+     */
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<User> user = userRepo.findById(username);
-        if (user.isPresent())
-            return user.get();
-        else {
-            Optional<User> userByEmail = userRepo.findUserByEmail(username);
-            if (userByEmail.isPresent())
-                return userByEmail.get();
-            else
-                throw new UsernameNotFoundException("User '" + username + "' not found");
-        }
+        return userRepo.findById(username)
+                .orElseGet(() -> userRepo.findByEmail(username)
+                        .orElseThrow(() -> new UsernameNotFoundException("User '" + username + "' not found")));
     }
 
-    public User findUser(String username) {
-        Optional<User> userOpt = userRepo.findById(username);
-        if (userOpt.isPresent())
-            return userOpt.get();
-        throw new UsernameNotFoundException("User '" + username + "' not found");
+    public User getOnlyByUsername(String username) throws UsernameNotFoundException {
+        return userRepo.findById(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User '" + username + "' not found"));
     }
 
-    public Iterable<User> allUsers() {
-        return userRepo.findAll();
+    public boolean isUsernameUnique(String username) {
+        return !userRepo.existsById(username);
     }
 
-    public Optional<User> findByEmail(String email) {
-        return userRepo.findUserByEmail(email);
+    public boolean isEmailUnique(String email) {
+        return !userRepo.existsByEmail(email);
     }
 
-    public boolean isUsernameUnique(User user) {
-        Optional<User> userFormDB = userRepo.findById(user.getUsername());
-        return userFormDB.isEmpty();
+    public void saveUser(User user) {
+        userRepo.save(user);
     }
 
-    public boolean isEmailUnique(User user) {
-        Optional<User> userFormDB = userRepo.findUserByEmail(user.getEmail());
-        return userFormDB.isEmpty();
+    public void deleteUser(String username) {
+        userRepo.deleteById(username);
     }
 
-    public void saveUser(User user, boolean needsEncoding) {
-        if (needsEncoding) {
-            String password = user.getPassword();
-            user.setPassword(encodePassword(password));
-            userRepo.save(user);
-            user.setPassword(password);
-        } else
-            userRepo.save(user);
+    public void updateProfile(String oldUsername, ProfileUpdateDto update)
+            throws UsernameNotFoundException, UsernameIsTakenException, EmailIsTakenException {
+        if (!update.getUsername().equals(oldUsername) && !isUsernameUnique(update.getUsername()))
+            throw new UsernameIsTakenException(update.getUsername());
+
+        if (update.getEmail() != null && !isEmailUnique(update.getEmail()))
+            throw new EmailIsTakenException(update.getEmail());
+
+        User user = (User) loadUserByUsername(oldUsername);
+        dtoMappingUtils.updatedUser(user, update);
+        userRepo.save(user);
     }
 
-    public void updateUser(User user) {
-        saveUser(user, false);
+    public Set<ProfileInfo> getAll() {
+        Iterable<User> users = userRepo.findAll();
+        Set<ProfileInfo> usersSet = new HashSet<>();
+        users.forEach(user -> usersSet.add(dtoMappingUtils.profileFromUser(user)));
+        return usersSet;
     }
 
-    public boolean deleteUser(String username) {
-        if (userRepo.findById(username).isPresent()) {
-            userRepo.deleteById(username);
-            return true;
-        }
-        return false;
-    }
+    public void changeUserLock(String username, boolean lock) throws AccessDeniedException {
+        User user = getOnlyByUsername(username);
+        if (user.hasRole(User.Role.ADMIN))
+            throw new AccessDeniedException("Admin account can't be locked");
 
-    private String encodePassword(String password) {
-        return passwordEncoder.encode(password);
-    }
-
-    /**
-     * false if there are error!
-     */
-    public boolean setUsernameUnique(User user, Errors errors, Model model) {
-        if (errors.hasErrors())
-            return false;
-        if (!user.getUsername().equals(user.getOldUsername()) && !isUsernameUnique(user)) {
-            model.addAttribute("usernameUnique", "This username is taken");
-            return false;
-        }
-        return true;
-    }
-
-    /**
-     * false if there are error!
-     */
-    public boolean setEmailUnique(User user, Errors errors, Model model) {
-        if (errors.hasErrors())
-            return false;
-        if (!user.getEmail().equals(user.getOldEmail()) && !isEmailUnique(user)) {
-            model.addAttribute("emailUnique", "This email is taken");
-            return false;
-        }
-        return true;
-    }
-
-    /**
-     * false if there are error!
-     */
-    public boolean setNewPassword(String oldPassword, String newPassword, String passwordConfirm,
-                                  User user, Model model
-    ) {
-        if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
-            model.addAttribute("oldPasswordIncorrect", "Wrong password");
-            return false;
-        }
-        if (newPassword == null || newPassword.length() < 6) {
-            model.addAttribute("passwordException", "Password should be longer than 5 characters");
-            return false;
-        }
-        if (!newPassword.equals(passwordConfirm)) {
-            model.addAttribute("passwordEqualsException", "Passwords should be equals");
-            return false;
-        }
-        return true;
+        user.setLocked(lock);
+        userRepo.save(user);
     }
 }

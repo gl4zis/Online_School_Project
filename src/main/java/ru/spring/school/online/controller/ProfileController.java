@@ -1,117 +1,57 @@
 package ru.spring.school.online.controller;
 
-import jakarta.validation.Valid;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.util.StringUtils;
-import org.springframework.validation.Errors;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-import ru.spring.school.online.model.security.Student;
-import ru.spring.school.online.model.security.Subject;
-import ru.spring.school.online.model.security.Teacher;
-import ru.spring.school.online.model.security.User;
-import ru.spring.school.online.service.StorageService;
-import ru.spring.school.online.service.SubjectService;
+import ru.spring.school.online.dto.request.ProfileUpdateDto;
+import ru.spring.school.online.dto.response.MessageResponse;
+import ru.spring.school.online.dto.response.ProfileInfo;
+import ru.spring.school.online.service.ProfileService;
 import ru.spring.school.online.service.UserService;
 
-import java.io.IOException;
-
-@Controller
+@RestController
+@Tag(name = "Controller for interaction with your and other's profile")
 @RequestMapping("/profile")
-@SessionAttributes({"copyUser", "userForm"})
+@RequiredArgsConstructor
 public class ProfileController {
-
+    private final ProfileService profileService;
     private final UserService userService;
-    private final SubjectService subjectService;
-    private final StorageService storageService;
 
-
-    public ProfileController(UserService userService, SubjectService subjectService, StorageService storageService) {
-        this.userService = userService;
-        this.subjectService = subjectService;
-        this.storageService = storageService;
-    }
-
-    @ModelAttribute("userForm")
-    public User user(@AuthenticationPrincipal User user) {
-        user.setOldUsername(user.getUsername());
-        user.setOldEmail(user.getEmail());
-        return switch (user.getRole()) {
-            case STUDENT -> (Student) user;
-            case TEACHER, UNCONFIRMED_TEACHER -> (Teacher) user;
-            default -> user;
-        };
-    }
-
-    @ModelAttribute("subjects")
-    public Iterable<Subject> subjects() {
-        return subjectService.allSubjects();
-    }
-
+    @Operation(summary = "Returns profile of authorized user", description = "Gives all non-security user info")
+    @SecurityRequirement(name = "JWT")
     @GetMapping
-    public String getProfile() {
-        return "profile";
+    @ResponseBody
+    public ProfileInfo getSelfProfile(Authentication auth) {
+        return profileService.getProfile(auth.getName());
     }
 
-    @GetMapping("/edit")
-    public String getProfileSettings() {
-        return "profile_settings";
+    @Operation(summary = "Deletes account of authorized user")
+    @SecurityRequirement(name = "JWT")
+    @DeleteMapping
+    @ResponseBody
+    public MessageResponse deleteProfile(Authentication auth) {
+        userService.deleteUser(auth.getName());
+        return new MessageResponse("Profile was deleted");
     }
 
-    @GetMapping("/edit/login")
-    public String getProfileSettingsLogin() {
-        return "profile_settings_login";
+    @Operation(summary = "Returns profile of given user", description = "Gives all non-security user info")
+    @GetMapping("/{username}")
+    @ResponseBody
+    public ProfileInfo getOtherProfile(@PathVariable("username") String username) {
+        return profileService.getProfile(username);
     }
 
-    @GetMapping("/edit/password")
-    public String getProfileSettingsPassword(Model model) {
-        return "profile_settings_password";
-    }
-
-    @PatchMapping("/edit/password")
-    public String processProfileSettingsPassword(@RequestParam String oldPassword,
-                                                 @RequestParam String newPassword,
-                                                 @RequestParam String passwordConfirm,
-                                                 @AuthenticationPrincipal User user,
-                                                 Model model) {
-        if (!userService.setNewPassword(oldPassword, newPassword, passwordConfirm,
-                user, model))
-            return "profile_settings_password";
-        user.setPassword(newPassword);
-        userService.saveUser(user, true);
-        return "redirect:/logout";
-    }
-
-    @PatchMapping("/edit/login")
-    public String processProfileSettingsLogin(@ModelAttribute("userForm") @Valid User user,
-                                              Errors errors,
-                                              Model model) {
-        if (!userService.setUsernameUnique(user, errors, model))
-            return "profile_settings_login";
-        userService.deleteUser(user.getOldUsername());
-        userService.updateUser(user);
-        return "redirect:/logout";
-    }
-
-    @PatchMapping("/edit")
-    public String processProfileSettings(@ModelAttribute("userForm") @Valid User user,
-                                         Errors errors,
-                                         Model model,
-                                         @RequestParam("profilePic") MultipartFile multipartFile) throws IOException {
-        if (!userService.setEmailUnique(user, errors, model))
-            return "profile_settings";
-        if (user.getRole() == User.Role.UNCONFIRMED_TEACHER) {
-            user.setRole(User.Role.TEACHER);
-        }
-        if (storageService.isFileValid(multipartFile)){
-            String fileName = storageService.getNormalizedFileName(multipartFile);
-            user.setPhotoURL(fileName);
-            String uploadDir = storageService.getImgStorageDir() + user.getUsername();
-            storageService.saveFile(multipartFile, uploadDir, fileName);
-        }
-        userService.updateUser(user);
-        return "redirect:/profile";
+    @Operation(summary = "Updates authorized user account",
+            description = "Requests every necessary (for user role) field to be not null")
+    @SecurityRequirement(name = "JWT")
+    @PutMapping
+    @ResponseBody
+    public MessageResponse updateWholeUser(Authentication auth,
+                                           @RequestBody ProfileUpdateDto profileDto) {
+        profileService.updateWholeProfile(profileDto, auth.getName());
+        return new MessageResponse("Profile was updated");
     }
 }
