@@ -2,17 +2,15 @@ package ru.spring.school.online.model.course;
 
 import jakarta.persistence.*;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
+import ru.spring.school.online.model.UserFile;
 
 import java.util.Date;
 import java.util.Set;
 
 @Entity
 @Data
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Course {
     @Id
-    @EqualsAndHashCode.Include
     private String name;
 
     @OneToOne(optional = false)
@@ -23,8 +21,8 @@ public class Course {
     @Column(columnDefinition = "text")
     private String description;
 
-    @Column(columnDefinition = "text")
-    private String imageBase64;
+    @OneToOne(optional = false)
+    private UserFile image;
 
     @Temporal(TemporalType.DATE)
     private Date startTime;

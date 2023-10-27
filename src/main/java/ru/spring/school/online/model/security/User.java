@@ -1,20 +1,17 @@
 package ru.spring.school.online.model.security;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import ru.spring.school.online.model.UserFile;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
 @Entity(name = "users")
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
 @Inheritance(strategy = InheritanceType.JOINED)
 public class User implements UserDetails {
     @Id
@@ -34,8 +31,8 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     protected Set<Role> roles;  //*
 
-    @Column(columnDefinition = "text")
-    protected String photoBase64;
+    @OneToOne
+    protected UserFile photo;
     private boolean locked;
 
     private boolean confirmed;

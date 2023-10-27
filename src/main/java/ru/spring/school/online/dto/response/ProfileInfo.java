@@ -20,7 +20,7 @@ public class ProfileInfo {
     protected String middleName;
     @DateTimeFormat(pattern = "yyyy-mm-dd")
     protected Date birthdate;
-    protected String photoBase64;
+    protected String photoKey;
 
     protected Set<String> courses;
 }

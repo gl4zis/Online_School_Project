@@ -10,7 +10,7 @@ import java.util.Set;
 public class TeacherProfileInfo extends ProfileInfo {
     private Set<String> subjects;
     private String education;
-    private Set<String> diplomasBase64;
+    private String diplomaKey;
     private String description;
     private Byte workExperience;
 }

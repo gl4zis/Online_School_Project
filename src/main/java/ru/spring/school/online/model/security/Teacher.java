@@ -1,10 +1,10 @@
 package ru.spring.school.online.model.security;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import ru.spring.school.online.model.UserFile;
 import ru.spring.school.online.model.course.Group;
 import ru.spring.school.online.model.course.Subject;
 
@@ -13,8 +13,7 @@ import java.util.Set;
 @Entity
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class Teacher extends User {
 
     @ManyToMany
@@ -25,9 +24,8 @@ public class Teacher extends User {
     private Set<Subject> subjects; //*
     private String education; //*
 
-    @Column(columnDefinition = "text")
-    @ElementCollection
-    private Set<String> diplomasBase64; //*
+    @OneToOne
+    private UserFile diploma; //
 
     @Column(columnDefinition = "text")
     private String description;

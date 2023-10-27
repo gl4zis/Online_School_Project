@@ -14,7 +14,6 @@ import ru.spring.school.online.model.course.Subject;
 import ru.spring.school.online.model.security.Student;
 import ru.spring.school.online.model.security.Teacher;
 import ru.spring.school.online.model.security.User;
-import ru.spring.school.online.service.CourseService;
 
 import java.util.stream.Collectors;
 
@@ -28,7 +27,6 @@ import java.util.stream.Collectors;
 public class DtoMappingUtils {
 
     private final PasswordEncoder passwordEncoder;
-    private final CourseService courseService;
 
     public Student newStudent(StudentRegDto dto) {
         if (dto.getPassword() == null)
@@ -78,7 +76,7 @@ public class DtoMappingUtils {
         info.setLastname(user.getLastname());
         info.setMiddleName(user.getMiddleName());
         info.setBirthdate(user.getBirthdate());
-        info.setPhotoBase64(user.getPhotoBase64());
+        info.setPhotoKey(user.getPhoto().getKey());
 
         return info;
     }
@@ -86,7 +84,10 @@ public class DtoMappingUtils {
     private StudentProfileInfo setStudentInfo(Student student) {
         StudentProfileInfo info = new StudentProfileInfo();
         info.setGrade(student.getGrade());
-        info.setCourses(courseService.getStudentCourseNames(student.getUsername()));
+        info.setCourses(student.getGroups()
+                .stream().map(
+                        group -> group.getCourse().getName()
+                ).collect(Collectors.toSet()));
         return info;
     }
 
@@ -95,9 +96,12 @@ public class DtoMappingUtils {
         info.setSubjects(teacher.getSubjects().stream().map(Subject::getName).collect(Collectors.toSet()));
         info.setEducation(teacher.getEducation());
         info.setDescription(teacher.getDescription());
-        info.setDiplomasBase64(teacher.getDiplomasBase64());
+        info.setDiplomaKey(teacher.getDiploma().getKey());
         info.setWorkExperience(teacher.getWorkExperience());
-        info.setCourses(courseService.getTeacherCourseNames(teacher.getUsername()));
+        info.setCourses(teacher.getGroups()
+                .stream().map(
+                        group -> group.getCourse().getName()
+                ).collect(Collectors.toSet()));
         return info;
     }
 
@@ -114,9 +118,8 @@ public class DtoMappingUtils {
         user.setFirstname(update.getFirstname());
         user.setLastname(update.getLastname());
         user.setMiddleName(update.getMiddleName());
-
         user.setBirthdate(update.getBirthdate());
-        user.setPhotoBase64(update.getPhotoBase64());
+
         user.setConfirmed(true);
     }
 
@@ -127,7 +130,6 @@ public class DtoMappingUtils {
     private void setTeacherParams(Teacher teacher, ProfileUpdateDto update) {
         teacher.setDescription(update.getDescription());
         teacher.setEducation(update.getEducation());
-        teacher.setDiplomasBase64(update.getDiplomasBase64());
         teacher.setWorkExperience(update.getWorkExperience());
         teacher.setSubjects(update.getSubjects().stream().map(Subject::new).collect(Collectors.toSet()));
     }
