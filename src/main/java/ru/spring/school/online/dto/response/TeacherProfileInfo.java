@@ -13,4 +13,5 @@ public class TeacherProfileInfo extends ProfileInfo {
     private String diplomaKey;
     private String description;
     private Byte workExperience;
+    protected Boolean confirmed;
 }

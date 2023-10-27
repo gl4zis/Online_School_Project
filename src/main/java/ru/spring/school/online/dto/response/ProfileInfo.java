@@ -13,7 +13,6 @@ public class ProfileInfo {
     protected String email;
     protected Set<User.Role> roles;
     protected Boolean locked;
-    protected Boolean confirmed;
 
     protected String firstname;
     protected String lastname;

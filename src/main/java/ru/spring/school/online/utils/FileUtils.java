@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Base64;
 
 @Component
 public class FileUtils {
@@ -35,5 +36,10 @@ public class FileUtils {
             stream.read(bytes);
             return bytes;
         }
+    }
+
+    public String formRightBase64File(String contentType, byte[] file) {
+        return String.format("data:%s;base64,%s", contentType,
+                Base64.getEncoder().encodeToString(file));
     }
 }

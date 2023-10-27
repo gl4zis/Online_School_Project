@@ -1,7 +1,6 @@
 package ru.spring.school.online.exception;
 
 import jakarta.validation.ValidationException;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -15,7 +14,6 @@ import ru.spring.school.online.dto.response.ErrorResponse;
 import java.io.IOException;
 
 @RestControllerAdvice
-@RequiredArgsConstructor
 public class GlobalExceptionHandler {
 
     @ResponseStatus(HttpStatus.NOT_FOUND)

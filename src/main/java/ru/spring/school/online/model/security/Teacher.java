@@ -33,4 +33,5 @@ public class Teacher extends User {
 
     @OneToMany(mappedBy = "teacher")
     private Set<Group> groups;
+    private boolean confirmed;
 }

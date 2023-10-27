@@ -35,8 +35,6 @@ public class User implements UserDetails {
     protected UserFile photo;
     private boolean locked;
 
-    private boolean confirmed;
-
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return roles.stream().map(role ->

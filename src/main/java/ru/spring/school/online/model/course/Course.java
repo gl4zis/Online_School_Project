@@ -21,7 +21,7 @@ public class Course {
     @Column(columnDefinition = "text")
     private String description;
 
-    @OneToOne(optional = false)
+    @OneToOne
     private UserFile image;
 
     @Temporal(TemporalType.DATE)

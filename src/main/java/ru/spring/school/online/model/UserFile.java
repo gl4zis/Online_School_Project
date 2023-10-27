@@ -11,4 +11,5 @@ public class UserFile {
     private String key;
     private Long size;
     private String contentType;
+    private String name;
 }

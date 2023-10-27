@@ -40,7 +40,6 @@ public class DtoMappingUtils {
         student.setBirthdate(dto.getBirthdate());
         student.setGrade(dto.getGrade());
         student.setRoles(User.Role.STUDENT);
-        student.setConfirmed(true);
         return student;
     }
 
@@ -52,8 +51,6 @@ public class DtoMappingUtils {
         user.setUsername(dto.getUsername());
         user.setPassword(passwordEncoder.encode(dto.getPassword()));
         user.setRoles(dto.getRoles());
-        if (user.getRoles().size() == 1 && user.hasRole(User.Role.ADMIN))
-            user.setConfirmed(true);
         return user;
     }
 
@@ -70,7 +67,6 @@ public class DtoMappingUtils {
         info.setEmail(user.getEmail());
         info.setLocked(user.isLocked());
         info.setRoles(user.getRoles());
-        info.setConfirmed(user.isConfirmed());
 
         info.setFirstname(user.getFirstname());
         info.setLastname(user.getLastname());
@@ -104,17 +100,18 @@ public class DtoMappingUtils {
                 .stream().map(
                         group -> group.getCourse().getName()
                 ).collect(Collectors.toSet()));
+        info.setConfirmed(teacher.isConfirmed());
         return info;
     }
 
-    public void updatedUser(User user, ProfileUpdateDto update) {
+    public User updateUser(User user, ProfileUpdateDto update) {
         if (user instanceof Student student)
             setStudentParams(student, update);
         else if (user instanceof Teacher teacher)
             setTeacherParams(teacher, update);
 
         user.setUsername(update.getUsername());
-        user.setPassword(update.getPassword());
+        user.setPassword(passwordEncoder.encode(update.getPassword()));
         user.setEmail(update.getEmail());
 
         user.setFirstname(update.getFirstname());
@@ -122,7 +119,7 @@ public class DtoMappingUtils {
         user.setMiddleName(update.getMiddleName());
         user.setBirthdate(update.getBirthdate());
 
-        user.setConfirmed(true);
+        return user;
     }
 
     private void setStudentParams(Student student, ProfileUpdateDto update) {
@@ -134,5 +131,6 @@ public class DtoMappingUtils {
         teacher.setEducation(update.getEducation());
         teacher.setWorkExperience(update.getWorkExperience());
         teacher.setSubjects(update.getSubjects().stream().map(Subject::new).collect(Collectors.toSet()));
+        teacher.setConfirmed(teacher.getPhoto() != null);
     }
 }

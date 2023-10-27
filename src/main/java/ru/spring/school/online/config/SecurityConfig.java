@@ -39,7 +39,8 @@ public class SecurityConfig {
                                 AntPathRequestMatcher.antMatcher("/admin/**")
                         ).hasRole("ADMIN")
                         .requestMatchers(
-                                AntPathRequestMatcher.antMatcher("/teacher/**")
+                                AntPathRequestMatcher.antMatcher("/teacher/**"),
+                                AntPathRequestMatcher.antMatcher("/profile/diploma")
                         ).hasRole("TEACHER")
                         .requestMatchers(
                                 AntPathRequestMatcher.antMatcher("/profile/**"),

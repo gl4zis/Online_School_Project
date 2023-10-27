@@ -11,7 +11,6 @@ import ru.spring.school.online.utils.FileUtils;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.Base64;
 
 @Service
 @RequiredArgsConstructor
@@ -26,11 +25,12 @@ public class FileService {
     }
 
     public UserFile saveNewFile(MultipartFile file) throws IOException {
-        String fileKey = generateKey(file.getName());
+        String fileKey = generateKey(file.getOriginalFilename());
         UserFile userFile = new UserFile();
         userFile.setKey(fileKey);
         userFile.setContentType(file.getContentType());
         userFile.setSize(file.getSize());
+        userFile.setName(file.getOriginalFilename());
         fileRepo.save(userFile);
         fileUtils.saveFile(file.getBytes(), fileKey);
         return userFile;
@@ -39,7 +39,7 @@ public class FileService {
     public String getFileBased64(String fileKey) throws IOException, FileNotFoundException {
         String type = fileRepo.findById(fileKey)
                 .orElseThrow(() -> new FileNotFoundException(fileKey)).getContentType();
-        return "data:" + type + ";base64," + Base64.getEncoder().encodeToString(fileUtils.getBytesFromFile(fileKey));
+        return fileUtils.formRightBase64File(type, fileUtils.getBytesFromFile(fileKey));
     }
 
     private String generateKey(String name) {

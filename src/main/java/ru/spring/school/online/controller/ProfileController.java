@@ -23,35 +23,27 @@ import java.io.IOException;
 @RequestMapping("/profile")
 @RequiredArgsConstructor
 @ResponseBody
+@SecurityRequirement(name = "JWT")
 public class ProfileController {
     private final ProfileService profileService;
     private final UserService userService;
     private final FileService fileService;
 
     @Operation(summary = "Returns profile of authorized user", description = "Gives all non-security user info")
-    @SecurityRequirement(name = "JWT")
     @GetMapping
     public ProfileInfo getSelfProfile(Authentication auth) {
         return profileService.getProfile(auth.getName());
     }
 
     @Operation(summary = "Deletes account of authorized user")
-    @SecurityRequirement(name = "JWT")
     @DeleteMapping
     public MessageResponse deleteProfile(Authentication auth) {
         userService.deleteUser(auth.getName());
         return new MessageResponse("Profile was deleted");
     }
 
-    @Operation(summary = "Returns profile of given user", description = "Gives all non-security user info")
-    @GetMapping("/{username}")
-    public ProfileInfo getOtherProfile(@PathVariable String username) {
-        return profileService.getProfile(username);
-    }
-
     @Operation(summary = "Updates authorized user account",
             description = "Requests every necessary (for user role) field to be not null")
-    @SecurityRequirement(name = "JWT")
     @PutMapping
     public MessageResponse updateWholeUser(Authentication auth,
                                            @RequestBody ProfileUpdateDto profileDto) {
@@ -66,5 +58,26 @@ public class ProfileController {
         UserFile userFile = fileService.saveNewFile(photo);
         userService.updatePhoto(auth.getName(), userFile);
         return userFile;
+    }
+
+    @DeleteMapping("/photo")
+    public MessageResponse removeUserPhoto(Authentication auth) {
+        userService.updatePhoto(auth.getName(), null);
+        return new MessageResponse("Photo was deleted");
+    }
+
+    @PatchMapping("/diploma")
+    @ResponseStatus(HttpStatus.CREATED)
+    public UserFile setDiploma(Authentication auth,
+                               @RequestParam MultipartFile file) throws IOException {
+        UserFile userFile = fileService.saveNewFile(file);
+        userService.updateDiploma(auth.getName(), userFile);
+        return userFile;
+    }
+
+    @DeleteMapping("/diploma")
+    public MessageResponse deleteDiploma(Authentication auth) {
+        userService.updateDiploma(auth.getName(), null);
+        return new MessageResponse("Diploma was deleted");
     }
 }
