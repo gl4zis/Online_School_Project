@@ -10,6 +10,7 @@ import ru.spring.school.online.dto.request.ProfileUpdateDto;
 import ru.spring.school.online.dto.response.ProfileInfo;
 import ru.spring.school.online.exception.EmailIsTakenException;
 import ru.spring.school.online.exception.UsernameIsTakenException;
+import ru.spring.school.online.model.UserFile;
 import ru.spring.school.online.model.security.User;
 import ru.spring.school.online.repository.UserRepository;
 import ru.spring.school.online.utils.DtoMappingUtils;
@@ -22,6 +23,7 @@ import java.util.Set;
 public class UserService implements UserDetailsService {
     private final UserRepository userRepo;
     private final DtoMappingUtils dtoMappingUtils;
+    private final FileService fileService;
 
     /**
      * Loads user by username or email (it is unique)
@@ -85,5 +87,14 @@ public class UserService implements UserDetailsService {
 
         user.setLocked(lock);
         userRepo.save(user);
+    }
+
+    public void updatePhoto(String username, UserFile photo) throws UsernameNotFoundException {
+        User user = (User) loadUserByUsername(username);
+        UserFile oldPhoto = user.getPhoto();
+        user.setPhoto(photo);
+        userRepo.save(user);
+        if (oldPhoto != null)
+            fileService.removeFile(oldPhoto);
     }
 }

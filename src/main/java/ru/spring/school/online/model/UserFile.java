@@ -10,5 +10,5 @@ public class UserFile {
     @Id
     private String key;
     private Long size;
-    private String name;
+    private String contentType;
 }

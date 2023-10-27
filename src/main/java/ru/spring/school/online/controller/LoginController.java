@@ -12,6 +12,7 @@ import ru.spring.school.online.service.AuthService;
 @Tag(name = "Controller for authorization", description = "All users should log in through it")
 @RequestMapping("/login")
 @RequiredArgsConstructor
+@ResponseBody
 public class LoginController {
     private final AuthService authService;
 
@@ -19,7 +20,6 @@ public class LoginController {
             description = "Send username, password and take JWT token after authorization. " +
                     "You can send email instead of  username")
     @PostMapping
-    @ResponseBody
     public JwtResponse authorize(@RequestBody LoginUserDto loginDto) {
         return new JwtResponse(authService.loginUser(loginDto));
     }

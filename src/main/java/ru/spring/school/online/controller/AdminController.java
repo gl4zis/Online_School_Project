@@ -17,6 +17,7 @@ import ru.spring.school.online.utils.DtoMappingUtils;
 @SecurityRequirement(name = "JWT")
 @RequiredArgsConstructor
 @RequestMapping("/admin")
+@ResponseBody
 public class AdminController {
 
     private final DtoMappingUtils dtoMappingUtils;
@@ -26,7 +27,6 @@ public class AdminController {
     @Operation(summary = "Register any user",
             description = "Admin can register new user, set any roles for this account through it")
     @PostMapping("/register")
-    @ResponseBody
     public MessageResponse regAdmin(@RequestBody AdminOrTeacherRegDto regDto) {
         authService.registerUtil(dtoMappingUtils.newUser(regDto));
         return new MessageResponse("User was successfully registered");
@@ -34,14 +34,12 @@ public class AdminController {
 
     @Operation(summary = "Returns all registered accounts")
     @GetMapping("/users")
-    @ResponseBody
     public Iterable<ProfileInfo> getAllUsers() {
         return userService.getAll();
     }
 
     @Operation(summary = "Lock/Unlock user by username")
     @PatchMapping("/users/{username}")
-    @ResponseBody
     public MessageResponse lockUnlockUser(@PathVariable("username") String username,
                                           @RequestParam("lock") Boolean lock) {
         userService.changeUserLock(username, lock);

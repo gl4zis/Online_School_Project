@@ -76,7 +76,8 @@ public class DtoMappingUtils {
         info.setLastname(user.getLastname());
         info.setMiddleName(user.getMiddleName());
         info.setBirthdate(user.getBirthdate());
-        info.setPhotoKey(user.getPhoto().getKey());
+        if (user.getPhoto() != null)
+            info.setPhotoKey(user.getPhoto().getKey());
 
         return info;
     }
@@ -96,7 +97,8 @@ public class DtoMappingUtils {
         info.setSubjects(teacher.getSubjects().stream().map(Subject::getName).collect(Collectors.toSet()));
         info.setEducation(teacher.getEducation());
         info.setDescription(teacher.getDescription());
-        info.setDiplomaKey(teacher.getDiploma().getKey());
+        if (teacher.getDiploma() != null)
+            info.setDiplomaKey(teacher.getDiploma().getKey());
         info.setWorkExperience(teacher.getWorkExperience());
         info.setCourses(teacher.getGroups()
                 .stream().map(

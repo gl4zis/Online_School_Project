@@ -9,17 +9,16 @@ import ru.spring.school.online.dto.response.MessageResponse;
 
 @RestController
 @Hidden
+@ResponseBody
 public class RootController {
 
     //TODO: Remove on release
     @GetMapping
-    @ResponseBody
     public MessageResponse getHello() {
         return new MessageResponse("Hello From Spring App!");
     }
 
     @GetMapping("/info")
-    @ResponseBody
     public MessageResponse info(Authentication auth) {
         return new MessageResponse(auth.toString());
     }
