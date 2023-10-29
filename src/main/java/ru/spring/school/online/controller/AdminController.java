@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.spring.school.online.dto.request.AdminOrTeacherRegDto;
 import ru.spring.school.online.dto.response.MessageResponse;
@@ -27,6 +28,7 @@ public class AdminController {
     @Operation(summary = "Register any user",
             description = "Admin can register new user, set any roles for this account through it")
     @PostMapping("/register")
+    @ResponseStatus(HttpStatus.CREATED)
     public MessageResponse regAdmin(@RequestBody AdminOrTeacherRegDto regDto) {
         authService.registerUtil(dtoMappingUtils.newUser(regDto));
         return new MessageResponse("User was successfully registered");

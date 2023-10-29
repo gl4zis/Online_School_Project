@@ -25,7 +25,7 @@ public class Teacher extends User {
     private String education; //*
 
     @OneToOne
-    private UserFile diploma; //
+    private UserFile diploma;
 
     @Column(columnDefinition = "text")
     private String description;

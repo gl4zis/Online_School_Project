@@ -20,10 +20,10 @@ import java.io.IOException;
 
 @RestController
 @Tag(name = "Controller for interaction with your and other's profile")
+@SecurityRequirement(name = "JWT")
 @RequestMapping("/profile")
 @RequiredArgsConstructor
 @ResponseBody
-@SecurityRequirement(name = "JWT")
 public class ProfileController {
     private final ProfileService profileService;
     private final UserService userService;
@@ -51,6 +51,7 @@ public class ProfileController {
         return new MessageResponse("Profile was updated");
     }
 
+    @Operation(summary = "Sets other account photo to authorized user")
     @PatchMapping("/photo")
     @ResponseStatus(HttpStatus.CREATED)
     public UserFile setUserPhoto(Authentication auth,
@@ -60,24 +61,10 @@ public class ProfileController {
         return userFile;
     }
 
+    @Operation(summary = "Deletes photo from authorized account")
     @DeleteMapping("/photo")
     public MessageResponse removeUserPhoto(Authentication auth) {
         userService.updatePhoto(auth.getName(), null);
         return new MessageResponse("Photo was deleted");
-    }
-
-    @PatchMapping("/diploma")
-    @ResponseStatus(HttpStatus.CREATED)
-    public UserFile setDiploma(Authentication auth,
-                               @RequestParam MultipartFile file) throws IOException {
-        UserFile userFile = fileService.saveNewFile(file);
-        userService.updateDiploma(auth.getName(), userFile);
-        return userFile;
-    }
-
-    @DeleteMapping("/diploma")
-    public MessageResponse deleteDiploma(Authentication auth) {
-        userService.updateDiploma(auth.getName(), null);
-        return new MessageResponse("Diploma was deleted");
     }
 }
