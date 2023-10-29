@@ -18,14 +18,18 @@ public class UpdateProfileValidator implements ConstraintValidator<ValidProfileU
     @Override
     public boolean isValid(ProfileUpdateDto dto, ConstraintValidatorContext context) {
         User user = (User) userService.loadUserByUsername(dto.getUsername());
-        if (user.hasRole(User.Role.STUDENT) && (dto.getFirstname() == null ||
-                dto.getLastname() == null || dto.getBirthdate() == null || dto.getGrade() == null))
-            return false;
 
-        return !user.hasRole(User.Role.TEACHER) || (dto.getFirstname() != null && dto.getLastname() != null &&
-                dto.getPhotoBase64() != null && dto.getSubjects() != null &&
+        boolean validStudentFields = dto.getFirstname() != null &&
+                dto.getLastname() != null && dto.getBirthdate() != null &&
+                dto.getGrade() != null;
+
+        boolean validTeacherFields = dto.getFirstname() != null &&
+                dto.getLastname() != null && dto.getSubjects() != null &&
                 subjectService.allSubjectsExists(dto.getSubjects()) &&
-                dto.getEducation() != null && dto.getDiplomasBase64() != null &&
-                dto.getWorkExperience() != null);
+                dto.getEducation() != null && dto.getWorkExperience() != null;
+
+        if (user.hasRole(User.Role.STUDENT) && !validStudentFields)
+            return false;
+        return !user.hasRole(User.Role.TEACHER) || validTeacherFields;
     }
 }

@@ -39,7 +39,6 @@ public class ProfileUpdateDto {
     @Past(message = "{user.birthdate.in-future}")
     @DateTimeFormat(pattern = "yyyy-mm-dd")
     private Date birthdate; //Student *
-    private String photoBase64; //Teacher *
 
     @ValidGrade
     private Byte grade; //Student-only *
@@ -47,7 +46,6 @@ public class ProfileUpdateDto {
     @Size(message = "{teacher.subjects.wrong-size}", min = 1, max = 3)
     private Set<String> subjects; // Teacher-only *
     private String education; // Teacher-only *
-    private Set<String> diplomasBase64; // Teacher-only *
     private String description; //Teacher-only
     @ValidExperience
     private Byte workExperience; // Teacher-only *

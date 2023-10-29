@@ -10,6 +10,8 @@ import ru.spring.school.online.dto.request.ProfileUpdateDto;
 import ru.spring.school.online.dto.response.ProfileInfo;
 import ru.spring.school.online.exception.EmailIsTakenException;
 import ru.spring.school.online.exception.UsernameIsTakenException;
+import ru.spring.school.online.model.UserFile;
+import ru.spring.school.online.model.security.Teacher;
 import ru.spring.school.online.model.security.User;
 import ru.spring.school.online.repository.UserRepository;
 import ru.spring.school.online.utils.DtoMappingUtils;
@@ -22,6 +24,7 @@ import java.util.Set;
 public class UserService implements UserDetailsService {
     private final UserRepository userRepo;
     private final DtoMappingUtils dtoMappingUtils;
+    private final FileService fileService;
 
     /**
      * Loads user by username or email (it is unique)
@@ -60,14 +63,17 @@ public class UserService implements UserDetailsService {
 
     public void updateProfile(String oldUsername, ProfileUpdateDto update)
             throws UsernameNotFoundException, UsernameIsTakenException, EmailIsTakenException {
+        User user = (User) loadUserByUsername(oldUsername);
         if (!update.getUsername().equals(oldUsername) && !isUsernameUnique(update.getUsername()))
             throw new UsernameIsTakenException(update.getUsername());
 
-        if (update.getEmail() != null && !isEmailUnique(update.getEmail()))
+        if (update.getEmail() != null &&
+                !update.getEmail().equals(user.getEmail()) &&
+                !isEmailUnique(update.getEmail())) {
             throw new EmailIsTakenException(update.getEmail());
+        }
 
-        User user = (User) loadUserByUsername(oldUsername);
-        dtoMappingUtils.updatedUser(user, update);
+        user = dtoMappingUtils.updateUser(user, update);
         userRepo.save(user);
     }
 
@@ -85,5 +91,36 @@ public class UserService implements UserDetailsService {
 
         user.setLocked(lock);
         userRepo.save(user);
+    }
+
+    public void updatePhoto(String username, UserFile photo) throws UsernameNotFoundException, AccessDeniedException {
+        User user = (User) loadUserByUsername(username);
+
+        if (user instanceof Teacher teacher) {
+            if (photo == null)
+                throw new AccessDeniedException("Teacher have to has photo");
+            else
+                teacher.setConfirmed(true);
+        }
+
+        UserFile oldPhoto = user.getPhoto();
+        user.setPhoto(photo);
+        userRepo.save(user);
+        if (oldPhoto != null)
+            fileService.removeFile(oldPhoto);
+    }
+
+    public void updateDiploma(String username, UserFile file) throws UsernameNotFoundException {
+        User user = (User) loadUserByUsername(username);
+
+        if (user instanceof Teacher teacher) {
+
+            if (teacher.getDiploma() != null)
+                fileService.removeFile(teacher.getDiploma());
+
+            teacher.setDiploma(file);
+            userRepo.save(teacher);
+        } else
+            throw new AccessDeniedException("Only for teachers");
     }
 }

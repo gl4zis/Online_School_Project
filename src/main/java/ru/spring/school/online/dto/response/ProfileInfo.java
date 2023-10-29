@@ -13,14 +13,13 @@ public class ProfileInfo {
     protected String email;
     protected Set<User.Role> roles;
     protected Boolean locked;
-    protected Boolean confirmed;
 
     protected String firstname;
     protected String lastname;
     protected String middleName;
     @DateTimeFormat(pattern = "yyyy-mm-dd")
     protected Date birthdate;
-    protected String photoBase64;
+    protected String photoKey;
 
     protected Set<String> courses;
 }

@@ -14,7 +14,6 @@ import ru.spring.school.online.model.course.Subject;
 import ru.spring.school.online.model.security.Student;
 import ru.spring.school.online.model.security.Teacher;
 import ru.spring.school.online.model.security.User;
-import ru.spring.school.online.service.CourseService;
 
 import java.util.stream.Collectors;
 
@@ -28,7 +27,6 @@ import java.util.stream.Collectors;
 public class DtoMappingUtils {
 
     private final PasswordEncoder passwordEncoder;
-    private final CourseService courseService;
 
     public Student newStudent(StudentRegDto dto) {
         if (dto.getPassword() == null)
@@ -42,7 +40,6 @@ public class DtoMappingUtils {
         student.setBirthdate(dto.getBirthdate());
         student.setGrade(dto.getGrade());
         student.setRoles(User.Role.STUDENT);
-        student.setConfirmed(true);
         return student;
     }
 
@@ -54,8 +51,6 @@ public class DtoMappingUtils {
         user.setUsername(dto.getUsername());
         user.setPassword(passwordEncoder.encode(dto.getPassword()));
         user.setRoles(dto.getRoles());
-        if (user.getRoles().size() == 1 && user.hasRole(User.Role.ADMIN))
-            user.setConfirmed(true);
         return user;
     }
 
@@ -72,13 +67,13 @@ public class DtoMappingUtils {
         info.setEmail(user.getEmail());
         info.setLocked(user.isLocked());
         info.setRoles(user.getRoles());
-        info.setConfirmed(user.isConfirmed());
 
         info.setFirstname(user.getFirstname());
         info.setLastname(user.getLastname());
         info.setMiddleName(user.getMiddleName());
         info.setBirthdate(user.getBirthdate());
-        info.setPhotoBase64(user.getPhotoBase64());
+        if (user.getPhoto() != null)
+            info.setPhotoKey(user.getPhoto().getKey());
 
         return info;
     }
@@ -86,7 +81,10 @@ public class DtoMappingUtils {
     private StudentProfileInfo setStudentInfo(Student student) {
         StudentProfileInfo info = new StudentProfileInfo();
         info.setGrade(student.getGrade());
-        info.setCourses(courseService.getStudentCourseNames(student.getUsername()));
+        info.setCourses(student.getGroups()
+                .stream().map(
+                        group -> group.getCourse().getName()
+                ).collect(Collectors.toSet()));
         return info;
     }
 
@@ -95,29 +93,33 @@ public class DtoMappingUtils {
         info.setSubjects(teacher.getSubjects().stream().map(Subject::getName).collect(Collectors.toSet()));
         info.setEducation(teacher.getEducation());
         info.setDescription(teacher.getDescription());
-        info.setDiplomasBase64(teacher.getDiplomasBase64());
+        if (teacher.getDiploma() != null)
+            info.setDiplomaKey(teacher.getDiploma().getKey());
         info.setWorkExperience(teacher.getWorkExperience());
-        info.setCourses(courseService.getTeacherCourseNames(teacher.getUsername()));
+        info.setCourses(teacher.getGroups()
+                .stream().map(
+                        group -> group.getCourse().getName()
+                ).collect(Collectors.toSet()));
+        info.setConfirmed(teacher.isConfirmed());
         return info;
     }
 
-    public void updatedUser(User user, ProfileUpdateDto update) {
+    public User updateUser(User user, ProfileUpdateDto update) {
         if (user instanceof Student student)
             setStudentParams(student, update);
         else if (user instanceof Teacher teacher)
             setTeacherParams(teacher, update);
 
         user.setUsername(update.getUsername());
-        user.setPassword(update.getPassword());
+        user.setPassword(passwordEncoder.encode(update.getPassword()));
         user.setEmail(update.getEmail());
 
         user.setFirstname(update.getFirstname());
         user.setLastname(update.getLastname());
         user.setMiddleName(update.getMiddleName());
-
         user.setBirthdate(update.getBirthdate());
-        user.setPhotoBase64(update.getPhotoBase64());
-        user.setConfirmed(true);
+
+        return user;
     }
 
     private void setStudentParams(Student student, ProfileUpdateDto update) {
@@ -127,8 +129,8 @@ public class DtoMappingUtils {
     private void setTeacherParams(Teacher teacher, ProfileUpdateDto update) {
         teacher.setDescription(update.getDescription());
         teacher.setEducation(update.getEducation());
-        teacher.setDiplomasBase64(update.getDiplomasBase64());
         teacher.setWorkExperience(update.getWorkExperience());
         teacher.setSubjects(update.getSubjects().stream().map(Subject::new).collect(Collectors.toSet()));
+        teacher.setConfirmed(teacher.getPhoto() != null);
     }
 }
