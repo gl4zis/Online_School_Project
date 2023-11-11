@@ -19,7 +19,7 @@ import ru.spring.school.online.service.UserService;
 import java.io.IOException;
 
 @RestController
-@Tag(name = "Controller for interaction with your and other's profile")
+@Tag(name = "Controller for interaction with your profile")
 @SecurityRequirement(name = "JWT")
 @RequestMapping("/profile")
 @RequiredArgsConstructor
@@ -31,7 +31,7 @@ public class ProfileController {
 
     @Operation(summary = "Returns profile of authorized user", description = "Gives all non-security user info")
     @GetMapping
-    public ProfileInfo getSelfProfile(Authentication auth) {
+    public ProfileInfo getProfile(Authentication auth) {
         return profileService.getProfile(auth.getName());
     }
 
@@ -49,6 +49,12 @@ public class ProfileController {
                                            @RequestBody ProfileUpdateDto profileDto) {
         profileService.updateWholeProfile(profileDto, auth.getName());
         return new MessageResponse("Profile was updated");
+    }
+
+    @Operation(summary = "Returns your profile photo")
+    @GetMapping("/photo")
+    public String getPhoto(Authentication auth) throws IOException {
+        return userService.getPhotoBase64(auth.getName());
     }
 
     @Operation(summary = "Sets other account photo to authorized user")

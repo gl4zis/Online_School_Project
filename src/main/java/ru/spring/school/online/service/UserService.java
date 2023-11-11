@@ -16,6 +16,8 @@ import ru.spring.school.online.model.security.User;
 import ru.spring.school.online.repository.UserRepository;
 import ru.spring.school.online.utils.DtoMappingUtils;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -91,6 +93,13 @@ public class UserService implements UserDetailsService {
 
         user.setLocked(lock);
         userRepo.save(user);
+    }
+
+    public String getPhotoBase64(String username) throws IOException {
+        UserFile photo = getOnlyByUsername(username).getPhoto();
+        if (photo == null)
+            throw new FileNotFoundException("photo");
+        return fileService.getFileBased64(photo.getKey());
     }
 
     public void updatePhoto(String username, UserFile photo) throws UsernameNotFoundException, AccessDeniedException {
