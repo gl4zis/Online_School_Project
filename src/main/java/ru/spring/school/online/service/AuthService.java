@@ -42,6 +42,9 @@ public class AuthService {
     }
 
     public JwtResponse updateTokens(String oldRefresh) throws AuthException {
+        if (!jwtTokenUtils.validateRefresh(oldRefresh))
+            throw new AuthException("Invalid refresh token");
+
         User user = userService.getByToken(oldRefresh);
         return setUserTokens(user);
     }

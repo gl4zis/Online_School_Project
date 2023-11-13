@@ -97,4 +97,8 @@ public class JwtTokenUtils {
     public boolean validateAccess(String token) {
         return validateToken(token, accesSecret);
     }
+
+    public boolean validateRefresh(String token) {
+        return validateToken(token, accesSecret);
+    }
 }
