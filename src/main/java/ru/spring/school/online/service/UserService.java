@@ -8,6 +8,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import ru.spring.school.online.dto.request.ProfileUpdateDto;
 import ru.spring.school.online.dto.response.ProfileInfo;
+import ru.spring.school.online.exception.AuthException;
 import ru.spring.school.online.exception.EmailIsTakenException;
 import ru.spring.school.online.exception.UsernameIsTakenException;
 import ru.spring.school.online.model.UserFile;
@@ -45,6 +46,11 @@ public class UserService implements UserDetailsService {
     public User getOnlyByUsername(String username) throws UsernameNotFoundException {
         return userRepo.findById(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User '" + username + "' not found"));
+    }
+
+    public User getByToken(String refreshToken) throws AuthException {
+        return userRepo.findByRefreshToken(refreshToken)
+                .orElseThrow(() -> new AuthException("Invalid refresh token"));
     }
 
     public boolean isUsernameUnique(String username) {

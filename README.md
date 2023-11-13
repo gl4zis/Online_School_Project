@@ -1,5 +1,5 @@
 # Online School
-### (Can't think of a name)
+### SmartExam
 
 ---
 

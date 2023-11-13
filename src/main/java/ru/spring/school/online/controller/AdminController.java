@@ -11,7 +11,6 @@ import ru.spring.school.online.dto.response.MessageResponse;
 import ru.spring.school.online.dto.response.ProfileInfo;
 import ru.spring.school.online.service.AuthService;
 import ru.spring.school.online.service.UserService;
-import ru.spring.school.online.utils.DtoMappingUtils;
 
 @RestController
 @Tag(name = "Controller for admins tools", description = "All admins functionality works through it")
@@ -20,8 +19,6 @@ import ru.spring.school.online.utils.DtoMappingUtils;
 @RequestMapping("/admin")
 @ResponseBody
 public class AdminController {
-
-    private final DtoMappingUtils dtoMappingUtils;
     private final AuthService authService;
     private final UserService userService;
 
@@ -30,7 +27,7 @@ public class AdminController {
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
     public MessageResponse regAdmin(@RequestBody AdminOrTeacherRegDto regDto) {
-        authService.registerUtil(dtoMappingUtils.newUser(regDto));
+        authService.registerUser(regDto);
         return new MessageResponse("User was successfully registered");
     }
 

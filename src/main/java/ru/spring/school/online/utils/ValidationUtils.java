@@ -13,7 +13,7 @@ import java.util.Set;
 public class ValidationUtils {
     private final Validator validator;
 
-    public void validateAndThrowException(Object o) throws ValidationException {
+    public void validateOrThrowException(Object o) throws ValidationException {
         Set<ConstraintViolation<Object>> errors = validator.validate(o);
         if (!errors.isEmpty())
             throw new ValidationException(errorsToString(errors));

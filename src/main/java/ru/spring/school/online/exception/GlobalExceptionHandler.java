@@ -38,18 +38,18 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     @ResponseBody
     @ExceptionHandler(BadCredentialsException.class)
-    public ErrorResponse invalidUserDataHandler(BadCredentialsException e) {
+    public ErrorResponse invalidUserDataHandler(Exception e) {
         return new ErrorResponse(
                 HttpStatus.UNAUTHORIZED,
                 e.getMessage());
     }
 
-    @ResponseStatus(HttpStatus.NOT_ACCEPTABLE)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
     @ResponseBody
-    @ExceptionHandler(AccessDeniedException.class)
-    public ErrorResponse accessDenied(AccessDeniedException e) {
+    @ExceptionHandler({AccessDeniedException.class, AuthException.class})
+    public ErrorResponse forbidden(Exception e) {
         return new ErrorResponse(
-                HttpStatus.NOT_ACCEPTABLE,
+                HttpStatus.FORBIDDEN,
                 e.getMessage());
     }
 }

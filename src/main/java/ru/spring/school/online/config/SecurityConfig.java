@@ -45,12 +45,10 @@ public class SecurityConfig implements WebMvcConfigurer {
                                 AntPathRequestMatcher.antMatcher("/admin/**")
                         ).hasRole("ADMIN")
                         .requestMatchers(
-                                AntPathRequestMatcher.antMatcher("/teacher/**"),
-                                AntPathRequestMatcher.antMatcher("/profile/diploma")
+                                AntPathRequestMatcher.antMatcher("/teacher/**")
                         ).hasRole("TEACHER")
                         .requestMatchers(
-                                AntPathRequestMatcher.antMatcher("/profile/**"),
-                                AntPathRequestMatcher.antMatcher("/info")
+                                AntPathRequestMatcher.antMatcher("/profile/**")
                         ).authenticated()
                         .anyRequest().permitAll()
                 ).sessionManagement(session -> session

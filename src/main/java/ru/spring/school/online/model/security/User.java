@@ -34,6 +34,8 @@ public class User implements UserDetails {
     @OneToOne
     protected UserFile photo;
     private boolean locked;
+    @Column(unique = true)
+    private String refreshToken;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

@@ -36,7 +36,7 @@ public class TeacherController {
     }
 
     @Operation(summary = "Deletes diploma file from authorized teacher account")
-    @DeleteMapping("/profile//diploma")
+    @DeleteMapping("/profile/diploma")
     public MessageResponse deleteDiploma(Authentication auth) {
         userService.updateDiploma(auth.getName(), null);
         return new MessageResponse("Diploma was deleted");

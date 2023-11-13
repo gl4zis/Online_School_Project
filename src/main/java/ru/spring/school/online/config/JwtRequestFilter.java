@@ -1,7 +1,5 @@
 package ru.spring.school.online.config;
 
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.security.SignatureException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -24,34 +22,28 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     private final JwtTokenUtils jwtTokenUtils;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request,
+    protected void doFilterInternal(@NonNull HttpServletRequest request,
                                     @NonNull HttpServletResponse response,
-                                    @NonNull FilterChain filterChain)
-            throws ServletException, IOException {
-        String authHeader = request.getHeader("Authorization");
-        String jwtToken = null;
-        String username = null;
+                                    @NonNull FilterChain filterChain
+    ) throws ServletException, IOException {
+        String accessToken = getAccessToken(request);
 
-        if (authHeader != null && authHeader.startsWith("Bearer ")) {
-            jwtToken = authHeader.substring(7);
-            try {
-                username = jwtTokenUtils.getUsername(jwtToken);
-            } catch (ExpiredJwtException e) {
-                log.debug("Expired date");
-            } catch (SignatureException e) {
-                log.debug("Signature is wrong");
-            }
-        }
-
-        if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+        if (accessToken != null && jwtTokenUtils.validateAccess(accessToken)) {
             UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(
-                    username,
+                    jwtTokenUtils.getUsernameFromAccess(accessToken),
                     null,
-                    jwtTokenUtils.getRoles(jwtToken)
+                    jwtTokenUtils.getRolesFromAccess(accessToken)
             );
             SecurityContextHolder.getContext().setAuthentication(token);
         }
 
         filterChain.doFilter(request, response);
+    }
+
+    private String getAccessToken(HttpServletRequest request) {
+        String token = request.getHeader("Authorization");
+        if (token != null && token.startsWith("Bearer "))
+            return token.substring(7);
+        return null;
     }
 }
