@@ -2,11 +2,11 @@ package ru.spring.school.online.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.spring.school.online.dto.request.LoginUserDto;
+import ru.spring.school.online.dto.request.RefreshToken;
 import ru.spring.school.online.dto.request.StudentRegDto;
 import ru.spring.school.online.dto.response.JwtResponse;
 import ru.spring.school.online.exception.AuthException;
@@ -29,14 +29,16 @@ public class AuthController {
         return authService.loginUser(loginDto);
     }
 
+    @Operation(summary = "Regitration only for students")
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
     public JwtResponse registerStudent(@RequestBody StudentRegDto studentDto) {
         return authService.registerStudent(studentDto);
     }
 
-    @GetMapping("/tokens")
-    public JwtResponse updateTokens(HttpServletRequest request) throws AuthException {
-        return authService.updateTokens(request.getHeader("Refresh"));
+    @Operation(summary = "Update token pair. Need to send refresh token in body")
+    @PostMapping("/tokens")
+    public JwtResponse updateTokens(@RequestBody RefreshToken token) throws AuthException {
+        return authService.updateTokens(token.getRefresh());
     }
 }
