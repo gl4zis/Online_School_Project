@@ -1,36 +1,43 @@
 plugins {
-    id 'java'
-    id 'org.springframework.boot' version '3.1.2'
-    id 'io.spring.dependency-management' version '1.1.2'
+    id 'org.springframework.boot' version '3.1.2' apply false
+    id 'io.spring.dependency-management' version '1.1.2' apply false
 }
 
-group = 'ru.spring.school.online'
-version = '0.0.1'
+allprojects {
+    apply plugin: 'java'
 
-java {
-    sourceCompatibility = '17'
+    java {
+        sourceCompatibility = '17'
+    }
+
+    repositories {
+        mavenCentral()
+    }
 }
 
-repositories {
-    mavenCentral()
-}
+project(':monolith') {
+    apply plugin: 'org.springframework.boot'
+    apply plugin: 'io.spring.dependency-management'
 
-dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter-actuator'
-    implementation 'org.springframework.boot:spring-boot-starter-security'
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    group = 'ru.spring.school.online'
 
-    developmentOnly 'org.springframework.boot:spring-boot-devtools'
-    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0'
-    implementation 'io.jsonwebtoken:jjwt:0.12.3'
-    implementation 'commons-codec:commons-codec:1.16.0'
+    dependencies {
+        implementation 'org.springframework.boot:spring-boot-starter-actuator'
+        implementation 'org.springframework.boot:spring-boot-starter-security'
+        implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+        implementation 'org.springframework.boot:spring-boot-starter-web'
+        implementation 'org.springframework.boot:spring-boot-starter-validation'
 
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+        developmentOnly 'org.springframework.boot:spring-boot-devtools'
+        implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0'
 
-    compileOnly "org.projectlombok:lombok"
-    annotationProcessor "org.projectlombok:lombok"
+        implementation 'io.jsonwebtoken:jjwt:0.12.3'
+        implementation 'commons-codec:commons-codec:1.16.0'
 
-    runtimeOnly 'org.postgresql:postgresql'
+        compileOnly "org.projectlombok:lombok"
+        annotationProcessor "org.projectlombok:lombok"
+
+        runtimeOnly 'org.postgresql:postgresql'
+    }
+
 }
