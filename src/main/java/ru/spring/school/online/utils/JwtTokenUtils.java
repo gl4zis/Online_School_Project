@@ -99,6 +99,6 @@ public class JwtTokenUtils {
     }
 
     public boolean validateRefresh(String token) {
-        return validateToken(token, accesSecret);
+        return validateToken(token, refreshSecret);
     }
 }
