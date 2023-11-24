@@ -8,10 +8,10 @@ import java.util.Set;
 @Getter
 @Setter
 public class TeacherProfileInfo extends ProfileInfo {
+    protected Boolean confirmed;
     private Set<String> subjects;
     private String education;
     private String diplomaKey;
     private String description;
     private Byte workExperience;
-    protected Boolean confirmed;
 }

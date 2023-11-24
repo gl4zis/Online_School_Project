@@ -3,26 +3,18 @@ plugins {
     id 'io.spring.dependency-management' version '1.1.2' apply false
 }
 
-allprojects {
-    apply plugin: 'java'
-
-    java {
-        sourceCompatibility = '17'
-    }
-
-    repositories {
-        mavenCentral()
-    }
-}
-
 project(':monolith') {
+    apply plugin: 'java'
     apply plugin: 'org.springframework.boot'
     apply plugin: 'io.spring.dependency-management'
 
     group = 'ru.spring.school.online'
 
+    repositories {
+        mavenCentral()
+    }
+
     dependencies {
-        implementation 'org.springframework.boot:spring-boot-starter-actuator'
         implementation 'org.springframework.boot:spring-boot-starter-security'
         implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
         implementation 'org.springframework.boot:spring-boot-starter-web'
@@ -39,5 +31,4 @@ project(':monolith') {
 
         runtimeOnly 'org.postgresql:postgresql'
     }
-
 }

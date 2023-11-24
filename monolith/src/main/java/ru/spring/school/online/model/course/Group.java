@@ -11,19 +11,15 @@ import java.util.Set;
 @Entity(name = "groups")
 @Data
 public class Group {
+    @ManyToMany(mappedBy = "groups")
+    public Set<Student> students;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     @ManyToOne(optional = false)
     private Teacher teacher;
-
     @ManyToOne(optional = false)
     private Course course;
-
-    @ManyToMany(mappedBy = "groups")
-    public Set<Student> students;
-
     @OneToMany(mappedBy = "group")
     private Set<Lesson> lessons;
 }

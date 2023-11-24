@@ -1,0 +1,16 @@
+plugins {
+    id 'java'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation project(':grpc-interface')
+    implementation 'org.springframework.boot:spring-boot-starter-web:3.2.0'
+    implementation 'net.devh:grpc-client-spring-boot-starter:2.15.0.RELEASE'
+
+    compileOnly 'org.projectlombok:lombok:1.18.30'
+    annotationProcessor 'org.projectlombok:lombok:1.18.30'
+}
