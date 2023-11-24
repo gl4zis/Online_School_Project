@@ -1,11 +1,14 @@
 package ru.school.online.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.BadRequestException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import ru.school.online.dto.MessageResponse;
 import ru.school.online.service.FileService;
 
-import java.io.IOException;
+import javax.naming.ServiceUnavailableException;
+import java.io.FileNotFoundException;
 
 @RestController
 @RequestMapping("/file")
@@ -15,18 +18,24 @@ public class FileController {
     private final FileService fileService;
 
     @GetMapping("/{fileKey}")
-    public String getFile(@PathVariable("fileKey") String fileKey) {
-        return fileService.getFileBase64(Long.parseLong(fileKey));   // TODO Check types
+    public MessageResponse getFile(@PathVariable("fileKey") String fileKey)
+            throws ServiceUnavailableException, FileNotFoundException, BadRequestException
+    {
+        return new MessageResponse(fileService.getFileBase64(fileKey));
     }
 
     @PostMapping
-    public String createFile(@RequestParam("file") MultipartFile file) throws IOException {
-        return fileService.saveNewFile(file).toString();
+    public MessageResponse createFile(@RequestParam("file") MultipartFile file)
+            throws BadRequestException, ServiceUnavailableException
+    {
+        return new MessageResponse(fileService.saveNewFile(file).toString());
     }
 
-    // TODO return some message ?
     @DeleteMapping("/{fileKey}")
-    public void removeFile(@PathVariable("fileKey") String fileKey) {
-        fileService.removeFile(Long.parseLong(fileKey));
+    public MessageResponse removeFile(@PathVariable("fileKey") String fileKey)
+            throws NumberFormatException, ServiceUnavailableException, BadRequestException
+    {
+        fileService.removeFile(fileKey);
+        return new MessageResponse("File was removed");
     }
 }

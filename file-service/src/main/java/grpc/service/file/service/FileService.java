@@ -5,9 +5,12 @@ import grpc.service.file.*;
 import grpc.service.file.model.UserFile;
 import grpc.service.file.repository.FileRepository;
 import grpc.service.file.utils.FileUtils;
+import io.grpc.Status;
 import io.grpc.stub.StreamObserver;
 import lombok.RequiredArgsConstructor;
 import net.devh.boot.grpc.server.service.GrpcService;
+
+import java.util.Optional;
 
 @GrpcService
 @RequiredArgsConstructor
@@ -15,16 +18,18 @@ public class FileService extends FileServiceGrpc.FileServiceImplBase {
     private final FileRepository fileRepository;
     private final FileUtils fileUtils;
 
-    // TODO return errors
     @Override
     public void getFileBase64(FileKey key, StreamObserver<FileBase64> responseObserver) {
-        UserFile file = fileRepository
-                .findById(key.getKey())
-                .orElseThrow(() -> new RuntimeException("No such file"));
+        Optional<UserFile> fileOptional = fileRepository.findById(key.getKey());
+
+        if (fileOptional.isEmpty()) {
+            responseObserver.onError(Status.NOT_FOUND.asException());
+            return;
+        }
 
         FileBase64 response = FileBase64
                 .newBuilder()
-                .setFile(fileUtils.getFileBase64(file))
+                .setFile(fileUtils.getFileBase64(fileOptional.get()))
                 .build();
 
         responseObserver.onNext(response);
