@@ -1,6 +1,6 @@
 rootProject.name = 'online_school'
 include 'monolith'
-include 'file-service'
-include 'grpc-interface'
-include 'gateway'
 
+includeBuild 'eureka-server'
+includeBuild 'gateway'
+includeBuild 'file-service'

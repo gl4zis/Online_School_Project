@@ -1,8 +1,17 @@
 server:
-  port: 3030
+  port: 8765
 
-grpc:
+spring:
+  application:
+    name: gateway
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
+
+eureka:
   client:
-    file:
-      address: static://localhost:9001
-      negotiation-type: plaintext
+    service-url:
+      defaultZone: http://localhost:8761/eureka
