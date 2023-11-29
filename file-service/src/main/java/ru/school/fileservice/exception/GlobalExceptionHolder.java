@@ -29,4 +29,13 @@ public class GlobalExceptionHolder {
                 HttpStatus.BAD_REQUEST,
                 e.getMessage());
     }
+
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    @ResponseBody
+    @ExceptionHandler(InvalidTokenException.class)
+    public ErrorResponse noAccess(Exception e) {
+        return new ErrorResponse(
+                HttpStatus.FORBIDDEN,
+                e.getMessage());
+    }
 }

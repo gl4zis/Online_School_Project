@@ -1,1 +1,4 @@
 rootProject.name = 'file-service'
+
+include ":security-jwt-spring-boot-starter"
+project(":security-jwt-spring-boot-starter").projectDir = file("../security-jwt-spring-boot-starter")

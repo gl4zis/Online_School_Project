@@ -10,7 +10,7 @@ import java.util.Base64;
 
 @Component
 public class DtoMapper {
-    public UserFile fileFromMultipart(MultipartFile input) throws IOException {
+    public UserFile fileFromMultipart(MultipartFile input, String owner) throws IOException {
         if (input == null)
             throw new FileNotFoundException("No file in request");
 
@@ -20,6 +20,7 @@ public class DtoMapper {
                 .size(input.getSize())
                 .contentType(input.getContentType())
                 .content(input.getBytes())
+                .owner(owner)
                 .build();
     }
 
