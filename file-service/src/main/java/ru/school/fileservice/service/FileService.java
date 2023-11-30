@@ -12,8 +12,8 @@ import ru.school.fileservice.utils.JwtTokenUtils;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.Optional;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -58,7 +58,7 @@ public class FileService {
         String username = jwtTokenUtils.getUsernameFromAccess(token.substring(7));
 
         if (roles.contains("ROLE_ADMIN") ||
-            username.equals(fileOpt.get().getOwner()))
+                username.equals(fileOpt.get().getOwner()))
             fileRepository.deleteById(key);
     }
 }

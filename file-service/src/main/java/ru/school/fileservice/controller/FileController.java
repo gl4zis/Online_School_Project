@@ -29,7 +29,7 @@ public class FileController {
 
     @DeleteMapping("/{id}")
     public void removeFile(@PathVariable("id") Long id, HttpServletRequest request)
-        throws InvalidTokenException {
+            throws InvalidTokenException {
         fileService.removeFile(id, request.getHeader("Authorization"));
     }
 }

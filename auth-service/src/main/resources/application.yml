@@ -19,10 +19,16 @@ eureka:
     service-url:
       defaultZone: http://localhost:8761/eureka
 
-jwt:
-  secret:
-    access: aa7sr4lm21fr5fq0y0qyhjv8221r8ro3ee1iwj6sj4i1qppjin
-
   # For map several instances (also set server.port: 0)
   #instance:
   #  instance-id: ${spring.application.name}:${random.uuid}
+
+jwt:
+  secret:
+    access: aa7sr4lm21fr5fq0y0qyhjv8221r8ro3ee1iwj6sj4i1qppjin
+    refresh: 6i1wl4vx0n76y42gekx9uzbwpfmfsfnynu71iwy1wmjti28v4o
+
+
+regex:
+  username: ^\w{3,20}$
+  email: ^\w+@\w+\.\w{2,5}$  # TODO Valid email uniqueness
