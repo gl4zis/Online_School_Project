@@ -1,21 +1,21 @@
 package ru.school.authservice.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
-import ru.school.authservice.dto.request.AuthRequest;
-import ru.school.authservice.dto.request.RefreshToken;
-import ru.school.authservice.dto.response.JwtResponse;
+import org.springframework.web.bind.annotation.*;
+import ru.school.authservice.dto.AuthRequest;
+import ru.school.authservice.dto.JwtResponse;
+import ru.school.authservice.dto.RefreshToken;
+import ru.school.authservice.service.AccountService;
 import ru.school.authservice.service.AuthService;
 import ru.school.exception.InvalidTokenException;
+import ru.school.response.MessageResponse;
 
 @RestController
 @ResponseBody
 @RequiredArgsConstructor
 public class AuthController {
     private final AuthService authService;
+    private final AccountService accountService;
 
     // 400 (Validation), 401 (BadCredentials)
     @PostMapping("/login")
@@ -33,5 +33,10 @@ public class AuthController {
     @PostMapping("/tokens")
     public JwtResponse updateTokens(@RequestBody RefreshToken token) throws InvalidTokenException {
         return authService.updateTokens(token.getRefresh());
+    }
+
+    @GetMapping("/unique/{username}")
+    public MessageResponse isUsernameUnique(@PathVariable("username") String username) {
+        return new MessageResponse(Boolean.toString(accountService.isUsernameUnique(username)));
     }
 }

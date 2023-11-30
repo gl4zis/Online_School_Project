@@ -1,4 +1,4 @@
-package ru.school.authservice.dto.request;
+package ru.school.authservice.dto;
 
 import lombok.Data;
 

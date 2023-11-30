@@ -9,9 +9,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -41,19 +39,6 @@ public class Account implements UserDetails {
         return roles.stream().map(role ->
                         new SimpleGrantedAuthority("ROLE_" + role.name()))
                 .collect(Collectors.toSet());
-    }
-
-    public boolean hasRole(Role role) {
-        return roles.contains(role);
-    }
-
-    public void setRoles(Set<Role> newRoles) {
-        roles = newRoles;
-    }
-
-    public void setRoles(Role... newRoles) {
-        roles = new HashSet<>();
-        roles.addAll(Arrays.asList(newRoles));
     }
 
     @Override

@@ -6,8 +6,9 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import ru.school.ValidationUtils;
-import ru.school.authservice.dto.request.AuthRequest;
-import ru.school.authservice.dto.response.JwtResponse;
+import ru.school.authservice.dto.AuthRequest;
+import ru.school.authservice.dto.AuthWithRoleRequest;
+import ru.school.authservice.dto.JwtResponse;
 import ru.school.authservice.exception.UsernameIsTakenException;
 import ru.school.authservice.model.Account;
 import ru.school.authservice.security.JwtGenerator;
@@ -55,11 +56,21 @@ public class AuthService {
         return setUserTokens(account);
     }
 
+    public void adminSignUp(AuthWithRoleRequest request) {
+        validationUtils.validateOrThrowException(request);
+
+        if (!accountService.isUsernameUnique(request.getUsername()))
+            throw new UsernameIsTakenException(request.getUsername());
+
+        accountService.saveAccount(mapper.createNewAccount(request));
+    }
+
     private JwtResponse setUserTokens(Account account) {
+        String access = jwtGenerator.generateAccessToken(account);
         String refresh = jwtGenerator.generateRefreshToken(account);
         account.setRefreshToken(refresh);
+
         accountService.saveAccount(account);
-        String access = jwtGenerator.generateAccessToken(account);
         return new JwtResponse(access, refresh);
     }
 }
