@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
@@ -23,13 +24,13 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                                     @NonNull HttpServletResponse response,
                                     @NonNull FilterChain filterChain
     ) throws ServletException, IOException {
-        String accessToken = jwtTokenUtils.getAccessToken(request);
+        Optional<String> accessToken = jwtTokenUtils.getAccessToken(request);
 
-        if (accessToken != null && jwtTokenUtils.validateAccess(accessToken)) {
+        if (accessToken.isPresent() && jwtTokenUtils.validateAccess(accessToken.get())) {
             UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(
-                    jwtTokenUtils.getUsernameFromAccess(accessToken),
+                    jwtTokenUtils.getUsernameFromAccess(accessToken.get()),
                     null,
-                    jwtTokenUtils.getRolesFromAccess(accessToken)
+                    jwtTokenUtils.getRolesFromAccess(accessToken.get())
             );
             SecurityContextHolder.getContext().setAuthentication(token);
         }

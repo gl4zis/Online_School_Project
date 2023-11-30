@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.Optional;
 
 @Component
 public class JwtTokenUtils {
@@ -67,10 +68,10 @@ public class JwtTokenUtils {
         return validateToken(token, accessSecret);
     }
 
-    public String getAccessToken(HttpServletRequest request) {
+    public Optional<String> getAccessToken(HttpServletRequest request) {
         String token = request.getHeader("Authorization");
         if (token != null && token.startsWith("Bearer "))
-            return token.substring(7);
-        return null;
+            return Optional.of(token.substring(7));
+        return Optional.empty();
     }
 }

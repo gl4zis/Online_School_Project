@@ -9,8 +9,8 @@ import lombok.NoArgsConstructor;
 @Entity
 @Builder
 @Getter
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 public class UserFile {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

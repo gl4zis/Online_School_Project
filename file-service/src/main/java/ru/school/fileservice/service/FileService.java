@@ -1,5 +1,6 @@
 package ru.school.fileservice.service;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -21,13 +22,14 @@ public class FileService {
     private final FileRepository fileRepository;
     private final DtoMapper mapper;
 
-    public Long saveNewFile(MultipartFile input, String token) throws InvalidFileException {
+    public Long saveNewFile(MultipartFile input, HttpServletRequest request) throws InvalidFileException {
+        if (input.getSize() == 0)
+            throw new InvalidFileException();
+
         String owner = null;
-        if (token != null && token.startsWith("Bearer ")) {
-            token = token.substring(7);
-            if (jwtTokenUtils.validateAccess(token))
-                owner = jwtTokenUtils.getUsernameFromAccess(token);
-        }
+        Optional<String> token = jwtTokenUtils.getAccessToken(request);
+        if (token.isPresent() && jwtTokenUtils.validateAccess(token.get()))
+            owner = jwtTokenUtils.getUsernameFromAccess(token.get());
 
         try {
             UserFile file = mapper.fileFromMultipart(input, owner);
@@ -44,19 +46,17 @@ public class FileService {
         return mapper.base64FromFile(file);
     }
 
-    public void removeFile(Long key, String token) throws InvalidTokenException {
-        if (token == null || !token.startsWith("Bearer ") ||
-                !jwtTokenUtils.validateAccess(token.substring(7)))
+    public void removeFile(Long key, HttpServletRequest request) throws InvalidTokenException {
+        Optional<String> token = jwtTokenUtils.getAccessToken(request);
+        if (token.isEmpty() || !jwtTokenUtils.validateAccess(token.get()))
             throw new InvalidTokenException();
 
-        Optional<UserFile> fileOpt = fileRepository.findById(key);
-        if (fileOpt.isEmpty())
-            return;
-
-        String username = jwtTokenUtils.getUsernameFromAccess(token.substring(7));
-
-        if (jwtTokenUtils.accessHasRole(token.substring(7), "ROLE_ADMIN") ||
-                username.equals(fileOpt.get().getOwner()))
+        String username = jwtTokenUtils.getUsernameFromAccess(token.get());
+        Optional<UserFile> file = fileRepository.findById(key);
+        if (file.isPresent() && (username.equals(file.get().getOwner()) ||
+                jwtTokenUtils.accessHasRole(token.get(), "ROLE_ADMIN"))
+        ) {
             fileRepository.deleteById(key);
+        }
     }
 }
