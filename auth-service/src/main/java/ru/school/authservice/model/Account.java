@@ -20,15 +20,15 @@ import java.util.stream.Collectors;
 @Entity
 public class Account implements UserDetails {
     @Id
-    protected String username;  //*
+    protected String username;
     @Column(nullable = false)
-    protected String password;  //*
+    protected String password;
     @Column(unique = true)
     protected String email;
     @ElementCollection
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    protected Set<Role> roles;  //*
+    protected Set<Role> roles;
     @Column(nullable = false)
     private boolean locked;
     @Column(unique = true)
