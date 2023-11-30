@@ -1,4 +1,7 @@
 rootProject.name = 'file-service'
 
-include ":security-jwt-spring-boot-starter"
-project(":security-jwt-spring-boot-starter").projectDir = file("../security-jwt-spring-boot-starter")
+include ':jwt-common'
+project(':jwt-common').projectDir = file('../jwt-common')
+
+include ':data-common'
+project(':data-common').projectDir = file('../data-common')

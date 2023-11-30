@@ -1,4 +1,4 @@
-package ru.school.authservice.config;
+package ru.school;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -10,7 +10,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-import ru.school.authservice.utils.JwtTokenUtils;
 
 import java.io.IOException;
 
@@ -24,7 +23,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                                     @NonNull HttpServletResponse response,
                                     @NonNull FilterChain filterChain
     ) throws ServletException, IOException {
-        String accessToken = getAccessToken(request);
+        String accessToken = jwtTokenUtils.getAccessToken(request);
 
         if (accessToken != null && jwtTokenUtils.validateAccess(accessToken)) {
             UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(
@@ -36,12 +35,5 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         }
 
         filterChain.doFilter(request, response);
-    }
-
-    private String getAccessToken(HttpServletRequest request) {
-        String token = request.getHeader("Authorization");
-        if (token != null && token.startsWith("Bearer "))
-            return token.substring(7);
-        return null;
     }
 }

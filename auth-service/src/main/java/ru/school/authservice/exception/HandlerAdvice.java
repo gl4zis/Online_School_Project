@@ -1,38 +1,37 @@
-package ru.school.fileservice.exception;
+package ru.school.authservice.exception;
 
+import jakarta.validation.ValidationException;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import ru.school.fileservice.dto.ErrorResponse;
-
-import java.io.FileNotFoundException;
+import ru.school.response.ErrorResponse;
 
 @RestControllerAdvice
-public class GlobalExceptionHolder {
-
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    @ResponseBody
-    @ExceptionHandler(FileNotFoundException.class)
-    public ErrorResponse resourceNotFound(Exception e) {
-        return new ErrorResponse(
-                HttpStatus.NOT_FOUND,
-                e.getMessage());
-    }
-
+public class HandlerAdvice {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
-    @ExceptionHandler({InvalidFileException.class, IllegalArgumentException.class})
+    @ExceptionHandler({UsernameIsTakenException.class, ValidationException.class})
     public ErrorResponse badRequest(Exception e) {
         return new ErrorResponse(
                 HttpStatus.BAD_REQUEST,
                 e.getMessage());
     }
 
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    @ResponseBody
+    @ExceptionHandler(BadCredentialsException.class)
+    public ErrorResponse badCredentials(Exception e) {
+        return new ErrorResponse(
+                HttpStatus.UNAUTHORIZED,
+                e.getMessage());
+    }
+
     @ResponseStatus(HttpStatus.FORBIDDEN)
     @ResponseBody
-    @ExceptionHandler(InvalidTokenException.class)
+    @ExceptionHandler(AuthException.class)
     public ErrorResponse noAccess(Exception e) {
         return new ErrorResponse(
                 HttpStatus.FORBIDDEN,

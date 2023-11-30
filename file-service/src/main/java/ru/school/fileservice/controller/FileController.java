@@ -4,8 +4,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import ru.school.exception.InvalidTokenException;
 import ru.school.fileservice.exception.InvalidFileException;
-import ru.school.fileservice.exception.InvalidTokenException;
 import ru.school.fileservice.service.FileService;
 
 import java.io.FileNotFoundException;

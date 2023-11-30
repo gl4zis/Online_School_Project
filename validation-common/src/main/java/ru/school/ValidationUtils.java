@@ -1,4 +1,4 @@
-package ru.school.authservice.utils;
+package ru.school;
 
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ValidationException;

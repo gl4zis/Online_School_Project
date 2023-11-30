@@ -1,4 +1,4 @@
-package ru.school.fileservice;
+package ru.school.authservice.config;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -8,12 +8,12 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @EnableDiscoveryClient
 @SpringBootApplication(scanBasePackages = "ru.school")
-@EntityScan("ru.school.fileservice.model")
-@EnableJpaRepositories("ru.school.fileservice.repository")
-public class FileServiceApplication {
+@EntityScan("ru.school.authservice.model")
+@EnableJpaRepositories("ru.school.authservice.repository")
+public class AuthServiceApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(FileServiceApplication.class, args);
+        SpringApplication.run(AuthServiceApplication.class, args);
     }
 
 }

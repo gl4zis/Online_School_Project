@@ -1,12 +1,11 @@
-package ru.school.authservice.utils;
+package ru.school.authservice.security;
 
-import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
+import ru.school.JwtTokenUtils;
 import ru.school.authservice.model.Account;
 
 import javax.crypto.SecretKey;
@@ -18,15 +17,15 @@ import java.util.Date;
 import java.util.List;
 
 @Component
-public class JwtTokenUtils {
-
+public class JwtGenerator {
     private final SecretKey accessSecret;
     private final SecretKey refreshSecret;
+    private final JwtTokenUtils jwtTokenUtils;
 
-    public JwtTokenUtils(@Value("${jwt.secret.access}") String access,
-                         @Value("${jwt.secret.refresh}") String refresh
-    ) {
-        accessSecret = Keys.hmacShaKeyFor(access.getBytes(StandardCharsets.UTF_8));
+    public JwtGenerator(@Value("${jwt.secret.refresh}") String refresh,
+                        JwtTokenUtils jwtTokenUtils) {
+        this.jwtTokenUtils = jwtTokenUtils;
+        accessSecret = jwtTokenUtils.getAccess();
         refreshSecret = Keys.hmacShaKeyFor(refresh.getBytes(StandardCharsets.UTF_8));
     }
 
@@ -54,40 +53,8 @@ public class JwtTokenUtils {
                 .compact();
     }
 
-    public String getUsernameFromAccess(String token) {
-        return getClaims(token, accessSecret).getSubject();
-    }
-
-    public List<SimpleGrantedAuthority> getRolesFromAccess(String token) {
-        List<?> roles = getClaims(token, accessSecret).get("roles", List.class);
-        return roles.stream().map(role -> new SimpleGrantedAuthority(role.toString())).toList();
-    }
-
-    private Claims getClaims(String token, SecretKey key) {
-        return Jwts.parser()
-                .verifyWith(key)
-                .build()
-                .parseSignedClaims(token)
-                .getPayload();
-    }
-
-    private boolean validateToken(String token, SecretKey secret) {
-        try {
-            Jwts.parser()
-                    .verifyWith(secret)
-                    .build()
-                    .parseSignedClaims(token);
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
-    }
-
-    public boolean validateAccess(String token) {
-        return validateToken(token, accessSecret);
-    }
-
     public boolean validateRefresh(String token) {
-        return validateToken(token, refreshSecret);
+        return jwtTokenUtils.validateToken(token, refreshSecret);
+
     }
 }

@@ -1,4 +1,4 @@
-package ru.school.fileservice.exception;
+package ru.school.exception;
 
 public class InvalidTokenException extends Exception {
     public InvalidTokenException() {

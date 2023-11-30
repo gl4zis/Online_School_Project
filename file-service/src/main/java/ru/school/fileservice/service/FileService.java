@@ -3,16 +3,15 @@ package ru.school.fileservice.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import ru.school.JwtTokenUtils;
+import ru.school.exception.InvalidTokenException;
 import ru.school.fileservice.exception.InvalidFileException;
-import ru.school.fileservice.exception.InvalidTokenException;
 import ru.school.fileservice.model.UserFile;
 import ru.school.fileservice.repository.FileRepository;
 import ru.school.fileservice.utils.DtoMapper;
-import ru.school.fileservice.utils.JwtTokenUtils;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -26,7 +25,7 @@ public class FileService {
         String owner = null;
         if (token != null && token.startsWith("Bearer ")) {
             token = token.substring(7);
-            if (jwtTokenUtils.validateAccessToken(token))
+            if (jwtTokenUtils.validateAccess(token))
                 owner = jwtTokenUtils.getUsernameFromAccess(token);
         }
 
@@ -47,17 +46,16 @@ public class FileService {
 
     public void removeFile(Long key, String token) throws InvalidTokenException {
         if (token == null || !token.startsWith("Bearer ") ||
-                !jwtTokenUtils.validateAccessToken(token.substring(7)))
+                !jwtTokenUtils.validateAccess(token.substring(7)))
             throw new InvalidTokenException();
 
         Optional<UserFile> fileOpt = fileRepository.findById(key);
         if (fileOpt.isEmpty())
             return;
 
-        List<String> roles = jwtTokenUtils.getRolesFromAccess(token.substring(7));
         String username = jwtTokenUtils.getUsernameFromAccess(token.substring(7));
 
-        if (roles.contains("ROLE_ADMIN") ||
+        if (jwtTokenUtils.accessHasRole(token.substring(7), "ROLE_ADMIN") ||
                 username.equals(fileOpt.get().getOwner()))
             fileRepository.deleteById(key);
     }

@@ -1,4 +1,4 @@
-package ru.school.authservice.dto.response;
+package ru.school.response;
 
 import lombok.Data;
 import org.springframework.http.HttpStatus;

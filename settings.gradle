@@ -5,3 +5,7 @@ include 'eureka-server'
 include 'gateway'
 include 'file-service'
 include 'auth-service'
+include 'jwt-common'
+include 'validation-common'
+include 'data-common'
+

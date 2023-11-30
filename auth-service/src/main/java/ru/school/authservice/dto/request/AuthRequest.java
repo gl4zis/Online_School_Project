@@ -6,7 +6,7 @@ import ru.school.authservice.validation.password.ValidPassword;
 import ru.school.authservice.validation.username.ValidUsernameOrEmail;
 
 @Data
-public class LoginRequest {
+public class AuthRequest {
     @NotNull(message = "{user.username.null}")
     @ValidUsernameOrEmail
     private String username;

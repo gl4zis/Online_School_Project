@@ -9,4 +9,6 @@ import java.util.Optional;
 @Repository
 public interface AccountRepository extends CrudRepository<Account, String> {
     Optional<Account> getByEmail(String email);
+
+    Optional<Account> getByRefreshToken(String token);
 }
