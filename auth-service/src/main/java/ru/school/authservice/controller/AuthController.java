@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.school.authservice.dto.request.AuthRequest;
 import ru.school.authservice.dto.request.RefreshToken;
 import ru.school.authservice.dto.response.JwtResponse;
-import ru.school.authservice.exception.AuthException;
 import ru.school.authservice.service.AuthService;
+import ru.school.exception.InvalidTokenException;
 
 @RestController
 @ResponseBody
@@ -31,7 +31,7 @@ public class AuthController {
 
     // 403 (InvalidToken)
     @PostMapping("/tokens")
-    public JwtResponse updateTokens(@RequestBody RefreshToken token) throws AuthException {
+    public JwtResponse updateTokens(@RequestBody RefreshToken token) throws InvalidTokenException {
         return authService.updateTokens(token.getRefresh());
     }
 }

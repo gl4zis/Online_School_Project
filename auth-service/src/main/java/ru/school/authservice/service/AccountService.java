@@ -5,9 +5,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import ru.school.authservice.exception.AuthException;
 import ru.school.authservice.model.Account;
 import ru.school.authservice.repository.AccountRepository;
+import ru.school.exception.InvalidTokenException;
 
 @Service
 @RequiredArgsConstructor
@@ -29,8 +29,8 @@ public class AccountService implements UserDetailsService {
         return !accountRepository.existsById(username);
     }
 
-    public Account getByRefresh(String refresh) throws AuthException {
+    public Account getByRefresh(String refresh) throws InvalidTokenException {
         return accountRepository.getByRefreshToken(refresh)
-                .orElseThrow(() -> new AuthException("No such refresh token"));
+                .orElseThrow(InvalidTokenException::new);
     }
 }

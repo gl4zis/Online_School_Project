@@ -8,10 +8,11 @@ import org.springframework.stereotype.Service;
 import ru.school.ValidationUtils;
 import ru.school.authservice.dto.request.AuthRequest;
 import ru.school.authservice.dto.response.JwtResponse;
-import ru.school.authservice.exception.AuthException;
 import ru.school.authservice.exception.UsernameIsTakenException;
 import ru.school.authservice.model.Account;
 import ru.school.authservice.security.JwtGenerator;
+import ru.school.authservice.utils.DtoMapper;
+import ru.school.exception.InvalidTokenException;
 
 @Service
 @RequiredArgsConstructor
@@ -20,6 +21,7 @@ public class AuthService {
     private final ValidationUtils validationUtils;
     private final AuthenticationManager authenticationManager;
     private final JwtGenerator jwtGenerator;
+    private final DtoMapper mapper;
 
     public JwtResponse login(AuthRequest request) {
         validationUtils.validateOrThrowException(request);
@@ -40,17 +42,14 @@ public class AuthService {
 
         if (!accountService.isUsernameUnique(request.getUsername()))
             throw new UsernameIsTakenException(request.getUsername());
-        Account newStudent = new Account();
-        newStudent.setUsername(request.getUsername());
-        newStudent.setPassword(request.getPassword());
-        newStudent.setLocked(false);
-        newStudent.setRoles(Account.Role.STUDENT);
+
+        Account newStudent = mapper.createNewStudent(request);
         return setUserTokens(newStudent);
     }
 
-    public JwtResponse updateTokens(String oldRefresh) throws AuthException {
+    public JwtResponse updateTokens(String oldRefresh) throws InvalidTokenException {
         if (!jwtGenerator.validateRefresh(oldRefresh))
-            throw new AuthException("Invalid refresh token");
+            throw new InvalidTokenException();
 
         Account account = accountService.getByRefresh(oldRefresh);
         return setUserTokens(account);

@@ -28,13 +28,4 @@ public class HandlerAdvice {
                 HttpStatus.UNAUTHORIZED,
                 e.getMessage());
     }
-
-    @ResponseStatus(HttpStatus.FORBIDDEN)
-    @ResponseBody
-    @ExceptionHandler(AuthException.class)
-    public ErrorResponse noAccess(Exception e) {
-        return new ErrorResponse(
-                HttpStatus.FORBIDDEN,
-                e.getMessage());
-    }
 }

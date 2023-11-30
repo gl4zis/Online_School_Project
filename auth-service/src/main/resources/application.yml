@@ -30,4 +30,4 @@ jwt:
 
 regex:
   username: ^\w{3,20}$
-  email: ^\w+@\w+\.\w{2,5}$  # TODO Valid email uniqueness
+  email: ^\w+@\w+\.\w{2,5}$
