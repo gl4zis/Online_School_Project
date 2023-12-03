@@ -26,8 +26,8 @@ public class JwtTokenUtils {
         return accessSecret;
     }
 
-    public String getUsernameFromAccess(String token) {
-        return getClaims(token, accessSecret).getSubject();
+    public Long getIdFromAccess(String token) {
+        return Long.parseLong(getClaims(token, accessSecret).getSubject());
     }
 
     public List<SimpleGrantedAuthority> getRolesFromAccess(String token) {

@@ -10,9 +10,9 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import ru.school.response.ErrorResponse;
 
 @RestControllerAdvice
+@ResponseBody
 public class HandlerAdvice {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ResponseBody
     @ExceptionHandler({UsernameIsTakenException.class, ValidationException.class})
     public ErrorResponse badRequest(Exception e) {
         return new ErrorResponse(
@@ -21,7 +21,6 @@ public class HandlerAdvice {
     }
 
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    @ResponseBody
     @ExceptionHandler(BadCredentialsException.class)
     public ErrorResponse badCredentials(Exception e) {
         return new ErrorResponse(

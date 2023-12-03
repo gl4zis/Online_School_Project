@@ -8,10 +8,10 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import ru.school.response.ErrorResponse;
 
 @RestControllerAdvice
+@ResponseBody
 public class GlobalExceptionHandler {
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ResponseBody
     @ExceptionHandler(IllegalArgumentException.class)
     public ErrorResponse badRequest(Exception e) {
         return new ErrorResponse(
@@ -20,7 +20,6 @@ public class GlobalExceptionHandler {
     }
 
     @ResponseStatus(HttpStatus.FORBIDDEN)
-    @ResponseBody
     @ExceptionHandler(InvalidTokenException.class)
     public ErrorResponse noAccess(Exception e) {
         return new ErrorResponse(

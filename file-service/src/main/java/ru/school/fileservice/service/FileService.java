@@ -26,10 +26,10 @@ public class FileService {
         if (input.getSize() == 0)
             throw new InvalidFileException();
 
-        String owner = null;
+        Long owner = null;
         Optional<String> token = jwtTokenUtils.getAccessToken(request);
         if (token.isPresent() && jwtTokenUtils.validateAccess(token.get()))
-            owner = jwtTokenUtils.getUsernameFromAccess(token.get());
+            owner = jwtTokenUtils.getIdFromAccess(token.get());
 
         try {
             UserFile file = mapper.fileFromMultipart(input, owner);
@@ -51,9 +51,9 @@ public class FileService {
         if (token.isEmpty() || !jwtTokenUtils.validateAccess(token.get()))
             throw new InvalidTokenException();
 
-        String username = jwtTokenUtils.getUsernameFromAccess(token.get());
+        Long userId = jwtTokenUtils.getIdFromAccess(token.get());
         Optional<UserFile> file = fileRepository.findById(key);
-        if (file.isPresent() && (username.equals(file.get().getOwner()) ||
+        if (file.isPresent() && (userId.equals(file.get().getOwnerId()) ||
                 jwtTokenUtils.accessHasRole(token.get(), "ROLE_ADMIN"))
         ) {
             fileRepository.deleteById(key);

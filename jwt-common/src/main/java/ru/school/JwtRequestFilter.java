@@ -28,7 +28,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
         if (accessToken.isPresent() && jwtTokenUtils.validateAccess(accessToken.get())) {
             UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(
-                    jwtTokenUtils.getUsernameFromAccess(accessToken.get()),
+                    jwtTokenUtils.getIdFromAccess(accessToken.get()),
                     null,
                     jwtTokenUtils.getRolesFromAccess(accessToken.get())
             );

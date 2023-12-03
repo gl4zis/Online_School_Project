@@ -23,5 +23,5 @@ public class UserFile {
     private String contentType;
     @Column(nullable = false)
     private byte[] content;
-    private String owner;
+    private Long ownerId;
 }

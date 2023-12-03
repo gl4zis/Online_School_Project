@@ -10,10 +10,10 @@ import ru.school.response.ErrorResponse;
 import java.io.FileNotFoundException;
 
 @RestControllerAdvice
+@ResponseBody
 public class HandlerAdvice {
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    @ResponseBody
     @ExceptionHandler(FileNotFoundException.class)
     public ErrorResponse resourceNotFound(Exception e) {
         return new ErrorResponse(
@@ -22,7 +22,6 @@ public class HandlerAdvice {
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ResponseBody
     @ExceptionHandler(InvalidFileException.class)
     public ErrorResponse badRequest(Exception e) {
         return new ErrorResponse(

@@ -37,7 +37,7 @@ public class JwtGenerator {
         Instant expiredDate = issuedDate.plusMinutes(10).atZone(ZoneId.systemDefault()).toInstant();
         return Jwts.builder()
                 .claim("roles", roles)
-                .subject(account.getUsername())
+                .subject(account.getId().toString())
                 .expiration(Date.from(expiredDate))
                 .signWith(accessSecret)
                 .compact();
@@ -47,7 +47,7 @@ public class JwtGenerator {
         LocalDateTime issuedDate = LocalDateTime.now();
         Instant expiredDate = issuedDate.plusDays(30).atZone(ZoneId.systemDefault()).toInstant();
         return Jwts.builder()
-                .subject(account.getUsername())
+                .subject(account.getId().toString())
                 .expiration(Date.from(expiredDate))
                 .signWith(refreshSecret)
                 .compact();
@@ -55,6 +55,5 @@ public class JwtGenerator {
 
     public boolean validateRefresh(String token) {
         return jwtTokenUtils.validateToken(token, refreshSecret);
-
     }
 }

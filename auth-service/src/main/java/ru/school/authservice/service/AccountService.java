@@ -16,9 +16,8 @@ public class AccountService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return accountRepository.findById(username)
-                .orElseGet(() -> accountRepository.getByEmail(username)
-                        .orElseThrow(() -> new UsernameNotFoundException("User '" + username + "' not found")));
+        return accountRepository.getByUsernameOrEmail(username, username)
+                .orElseThrow(() -> new UsernameNotFoundException("User '" + username + "' not found"));
     }
 
     public void saveAccount(Account account) {
@@ -26,7 +25,7 @@ public class AccountService implements UserDetailsService {
     }
 
     public boolean isUsernameUnique(String username) {
-        return !accountRepository.existsById(username);
+        return !accountRepository.existsByUsername(username);
     }
 
     public Account getByRefresh(String refresh) throws InvalidTokenException {
