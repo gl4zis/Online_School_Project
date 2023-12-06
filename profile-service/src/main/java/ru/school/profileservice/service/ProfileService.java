@@ -1,11 +1,11 @@
 package ru.school.profileservice.service;
 
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.ws.rs.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.school.JwtTokenUtils;
 import ru.school.exception.InvalidTokenException;
+import ru.school.profileservice.exception.ProfileNotFoundException;
 import ru.school.profileservice.model.Profile;
 import ru.school.profileservice.repository.ProfileRepository;
 
@@ -19,7 +19,7 @@ public class ProfileService {
 
     public void updateProfile(HttpServletRequest req, Profile profile) throws InvalidTokenException {
         Optional<String> access = jwtTokenUtils.getAccessToken(req);
-        if (access.isEmpty())
+        if (access.isEmpty() || !jwtTokenUtils.validateAccess(access.get()))
             throw new InvalidTokenException();
 
         Long accountId = jwtTokenUtils.getIdFromAccess(access.get());
@@ -27,19 +27,19 @@ public class ProfileService {
         profileRepository.save(profile);
     }
 
-    public Profile getSelfProfile(HttpServletRequest req) throws InvalidTokenException {
+    public Profile getSelfProfile(HttpServletRequest req) throws InvalidTokenException, ProfileNotFoundException {
         Optional<String> access = jwtTokenUtils.getAccessToken(req);
-        if (access.isEmpty())
+        if (access.isEmpty() || !jwtTokenUtils.validateAccess(access.get()))
             throw new InvalidTokenException();
 
         Long accountId = jwtTokenUtils.getIdFromAccess(access.get());
         return getProfile(accountId);
     }
 
-    public Profile getProfile(Long accountId) {
+    public Profile getProfile(Long accountId) throws ProfileNotFoundException {
         Optional<Profile> profile = profileRepository.findById(accountId);
         if (profile.isEmpty())
-            throw new NotFoundException("Profile with this id not found");
+            throw new ProfileNotFoundException();
 
         return profile.get();
     }
