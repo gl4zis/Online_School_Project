@@ -1,0 +1,17 @@
+plugins {
+    id 'java'
+}
+
+group = 'ru.school'
+version = 'unspecified'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.springframework:spring-web:6.1.1'
+
+    compileOnly 'org.projectlombok:lombok:1.18.30'
+    annotationProcessor 'org.projectlombok:lombok:1.18.30'
+}
