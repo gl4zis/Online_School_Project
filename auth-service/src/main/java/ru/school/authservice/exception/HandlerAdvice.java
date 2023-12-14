@@ -3,6 +3,7 @@ package ru.school.authservice.exception;
 import jakarta.validation.ValidationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -25,6 +26,14 @@ public class HandlerAdvice {
     public ErrorResponse badCredentials(Exception e) {
         return new ErrorResponse(
                 HttpStatus.UNAUTHORIZED,
+                e.getMessage());
+    }
+
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(UsernameNotFoundException.class)
+    public ErrorResponse notFound(Exception e) {
+        return new ErrorResponse(
+                HttpStatus.NOT_FOUND,
                 e.getMessage());
     }
 }

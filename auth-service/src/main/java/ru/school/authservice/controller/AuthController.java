@@ -2,10 +2,12 @@ package ru.school.authservice.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import ru.school.authservice.dto.AuthRequest;
 import ru.school.authservice.dto.JwtResponse;
+import ru.school.authservice.dto.PublicAccountInfo;
 import ru.school.authservice.dto.RefreshToken;
 import ru.school.authservice.service.AccountService;
 import ru.school.authservice.service.AuthService;
@@ -19,6 +21,19 @@ import ru.school.response.MessageResponse;
 public class AuthController {
     private final AuthService authService;
     private final AccountService accountService;
+
+    @Operation(summary = "Removes account of authorized user", description = "Throws 403 (InvalidToken")
+    @DeleteMapping
+    public void removeSelfAccount(HttpServletRequest req) throws InvalidTokenException {
+        authService.removeAccount(req);
+    }
+
+    @Operation(summary = "Returns unsecure account info of authorized user", description = "Throws " +
+            "403 (InvalidToken), 404 (AccountNotFound)")
+    @GetMapping
+    public PublicAccountInfo getSelfInfo(HttpServletRequest req) throws InvalidTokenException {
+        return authService.getAccountInfo(req);
+    }
 
     @Operation(summary = "Sign in endpoint (for everybody)", description = "Requests login and password, " +
             "returns token pair. Throws 400 (Validation), 401 (BadCredentials)")

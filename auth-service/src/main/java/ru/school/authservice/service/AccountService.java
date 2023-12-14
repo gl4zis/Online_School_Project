@@ -32,4 +32,13 @@ public class AccountService implements UserDetailsService {
         return accountRepository.getByRefreshToken(refresh)
                 .orElseThrow(InvalidTokenException::new);
     }
+
+    public void removeAccount(Long accountId) {
+        accountRepository.deleteById(accountId);
+    }
+
+    public Account getById(Long accountId) {
+        return accountRepository.findById(accountId)
+                .orElseThrow(() -> new UsernameNotFoundException("User with id '" + accountId + "' not found"));
+    }
 }

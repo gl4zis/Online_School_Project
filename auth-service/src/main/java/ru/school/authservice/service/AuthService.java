@@ -1,19 +1,24 @@
 package ru.school.authservice.service;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+import ru.school.JwtTokenUtils;
 import ru.school.ValidationUtils;
 import ru.school.authservice.dto.AuthRequest;
 import ru.school.authservice.dto.AuthWithRoleRequest;
 import ru.school.authservice.dto.JwtResponse;
+import ru.school.authservice.dto.PublicAccountInfo;
 import ru.school.authservice.exception.UsernameIsTakenException;
 import ru.school.authservice.model.Account;
 import ru.school.authservice.security.JwtGenerator;
 import ru.school.authservice.utils.DtoMapper;
 import ru.school.exception.InvalidTokenException;
+
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -22,6 +27,7 @@ public class AuthService {
     private final ValidationUtils validationUtils;
     private final AuthenticationManager authenticationManager;
     private final JwtGenerator jwtGenerator;
+    private final JwtTokenUtils jwtTokenUtils;
     private final DtoMapper mapper;
 
     public JwtResponse login(AuthRequest request) {
@@ -72,5 +78,22 @@ public class AuthService {
 
         accountService.saveAccount(account);
         return new JwtResponse(access, refresh);
+    }
+
+    public void removeAccount(HttpServletRequest req) throws InvalidTokenException {
+        Optional<String> token = jwtTokenUtils.getAccessToken(req);
+        if (token.isEmpty() || !jwtTokenUtils.validateAccess(token.get()))
+            throw new InvalidTokenException();
+
+        accountService.removeAccount(jwtTokenUtils.getIdFromAccess(token.get()));
+    }
+
+    public PublicAccountInfo getAccountInfo(HttpServletRequest req) throws InvalidTokenException {
+        Optional<String> token = jwtTokenUtils.getAccessToken(req);
+        if (token.isEmpty() || !jwtTokenUtils.validateAccess(token.get()))
+            throw new InvalidTokenException();
+
+        Account account = accountService.getById(jwtTokenUtils.getIdFromAccess(token.get()));
+        return mapper.getAccountInfo(account);
     }
 }

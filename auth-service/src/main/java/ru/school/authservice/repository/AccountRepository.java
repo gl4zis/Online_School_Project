@@ -7,7 +7,7 @@ import ru.school.authservice.model.Account;
 import java.util.Optional;
 
 @Repository
-public interface AccountRepository extends CrudRepository<Account, String> {
+public interface AccountRepository extends CrudRepository<Account, Long> {
     Optional<Account> getByUsernameOrEmail(String username, String email);
 
     boolean existsByUsername(String username);
