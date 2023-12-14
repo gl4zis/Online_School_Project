@@ -74,4 +74,8 @@ public class JwtTokenUtils {
             return Optional.of(token.substring(7));
         return Optional.empty();
     }
+
+    public Long getAccessExpiredTime(String token) {
+        return getClaims(token, accessSecret).getExpiration().getTime();
+    }
 }

@@ -8,6 +8,7 @@ import java.util.Set;
 @Data
 @Builder
 public class PublicAccountInfo {
+    private Long id;
     private String username;
     private String email;
     private Set<String> roles;

@@ -77,7 +77,7 @@ public class AuthService {
         account.setRefreshToken(refresh);
 
         accountService.saveAccount(account);
-        return new JwtResponse(access, refresh);
+        return new JwtResponse(access, refresh, jwtTokenUtils.getAccessExpiredTime(access));
     }
 
     public void removeAccount(HttpServletRequest req) throws InvalidTokenException {

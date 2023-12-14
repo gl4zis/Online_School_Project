@@ -38,6 +38,7 @@ public class DtoMapper {
 
     public PublicAccountInfo getAccountInfo(Account account) {
         return PublicAccountInfo.builder()
+                .id(account.getId())
                 .username(account.getUsername())
                 .email(account.getEmail())
                 .roles(account.getRoles().stream().map(Object::toString).collect(Collectors.toSet()))
