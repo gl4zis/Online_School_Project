@@ -51,6 +51,7 @@ public class AuthService {
             throw new UsernameIsTakenException(request.getUsername());
 
         Account newStudent = mapper.createNewStudent(request);
+        accountService.saveAccount(newStudent);
         return setUserTokens(newStudent);
     }
 

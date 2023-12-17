@@ -1,0 +1,80 @@
+version: "3.8"
+
+services:
+  server:
+    build: eureka-server
+    ports:
+      - "8761:8761"
+
+  gateway:
+    build: gateway
+    ports:
+      - "8765:8765"
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://server:8761/eureka
+    depends_on:
+      - server
+
+  auth-db:
+    image: postgres
+    environment:
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=school
+
+  auth:
+    build: auth-service
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://auth-db:5432/school
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://server:8761/eureka
+    depends_on:
+      - server
+      - auth-db
+
+  file-db:
+    image: postgres
+    environment:
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=school
+
+  file:
+    build: file-service
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://file-db:5432/school
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://server:8761/eureka
+    depends_on:
+      - server
+      - file-db
+
+  profile-db:
+    image: postgres
+    environment:
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=school
+
+  profile:
+    build: profile-service
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://profile-db:5432/school
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://server:8761/eureka
+    depends_on:
+      - server
+      - profile-db
+
+  course-db:
+    image: postgres
+    environment:
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=school
+
+  course:
+    build: course-service
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://course-db:5432/school
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://server:8761/eureka
+    depends_on:
+      - server
+      - course-db

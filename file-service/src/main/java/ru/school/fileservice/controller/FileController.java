@@ -9,6 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 import ru.school.exception.InvalidTokenException;
 import ru.school.fileservice.exception.InvalidFileException;
 import ru.school.fileservice.service.FileService;
+import ru.school.response.MessageResponse;
 
 import java.io.FileNotFoundException;
 
@@ -22,8 +23,8 @@ public class FileController {
     @Operation(summary = "Get file", description = "Returns file base64 by id (long). " +
             "Throws 404 (NotFound), 400 (InvalidId)")
     @GetMapping("/{id}")
-    public String getFile(@PathVariable("id") Long id) throws FileNotFoundException {
-        return fileService.getFileBase64(id);
+    public MessageResponse getFile(@PathVariable("id") Long id) throws FileNotFoundException {
+        return new MessageResponse(fileService.getFileBase64(id));
     }
 
     @Operation(summary = "Save new file", description = "Creates new file in DB. " +

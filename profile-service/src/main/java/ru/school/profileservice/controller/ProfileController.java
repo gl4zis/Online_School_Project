@@ -34,7 +34,6 @@ public class ProfileController {
         return profileService.getSelfProfile(req);
     }
 
-    // 400 (Invalid id), 404 (No profile)
     @Operation(summary = "Returns another user's profile", description = "Access for everybody by account id (long). " +
             "No security info. Throws 400 (InvalidId), 404 (NoProfile)")
     @GetMapping("/{id}")

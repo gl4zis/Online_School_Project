@@ -8,6 +8,7 @@ import ru.school.authservice.dto.AuthWithRoleRequest;
 import ru.school.authservice.dto.PublicAccountInfo;
 import ru.school.authservice.model.Account;
 
+import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -17,12 +18,14 @@ public class DtoMapper {
     private final PasswordEncoder encoder;
 
     public Account createNewStudent(AuthRequest request) {
+        Set<Account.Role> roles = new HashSet<>();
+        roles.add(Account.Role.STUDENT);
         return Account
                 .builder()
                 .username(request.getUsername())
                 .password(encoder.encode(request.getPassword()))
                 .locked(false)
-                .roles(Set.of(Account.Role.STUDENT))
+                .roles(roles)
                 .build();
     }
 

@@ -15,6 +15,7 @@ All used technologies:
     - MVC
     - Data JPA
     - Security
+    - Cloud
 - JSON Web Token
 - PostgreSQL
 - REST API
