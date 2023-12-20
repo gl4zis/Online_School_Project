@@ -1,0 +1,28 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: user
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/school_user_service
+    username: postgres
+    password: password
+  jpa:
+    hibernate:
+      ddl-auto: update
+    generate-ddl: true
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+
+jwt:
+  secret:
+    refresh: 6i1wl4vx0n76y42gekx9uzbwpfmfsfnynu71iwy1wmjti28v4o
+
+regex:
+  username: ^\w{3,20}$
+  email: ^\w+@\w+\.\w{2,5}$
