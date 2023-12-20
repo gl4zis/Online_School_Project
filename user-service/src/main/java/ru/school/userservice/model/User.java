@@ -52,7 +52,6 @@ public class User implements UserDetails {
     @ElementCollection
     @Enumerated(EnumType.STRING)
     private Set<String> subjects;
-
     @Column(columnDefinition = "text")
     private String description;
 

@@ -3,9 +3,9 @@ package ru.school.fileservice.service;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 import ru.school.JwtTokenUtils;
 import ru.school.exception.InvalidTokenException;
+import ru.school.fileservice.dto.FileRequest;
 import ru.school.fileservice.exception.InvalidFileException;
 import ru.school.fileservice.model.UserFile;
 import ru.school.fileservice.repository.FileRepository;
@@ -22,8 +22,9 @@ public class FileService {
     private final FileRepository fileRepository;
     private final DtoMapper mapper;
 
-    public Long saveNewFile(MultipartFile input, HttpServletRequest request) throws InvalidFileException {
-        if (input.getSize() == 0)
+    public Long saveNewFile(FileRequest input, HttpServletRequest request) throws InvalidFileException {
+        if (input.getSize() == null || input.getContentType() == null ||
+                input.getBase64() == null)
             throw new InvalidFileException();
 
         Long owner = null;
@@ -32,7 +33,7 @@ public class FileService {
             owner = jwtTokenUtils.getIdFromAccess(token.get());
 
         try {
-            UserFile file = mapper.fileFromMultipart(input, owner);
+            UserFile file = mapper.fileFromRequest(input, owner);
             file = fileRepository.save(file);
             return file.getId();
         } catch (IOException e) {
@@ -43,7 +44,7 @@ public class FileService {
     public String getFileBase64(Long key) throws FileNotFoundException {
         UserFile file = fileRepository.findById(key)
                 .orElseThrow(() -> new FileNotFoundException("No such file in db"));
-        return mapper.base64FromFile(file);
+        return file.getBase64();
     }
 
     public void removeFile(Long key, HttpServletRequest request) throws InvalidTokenException {

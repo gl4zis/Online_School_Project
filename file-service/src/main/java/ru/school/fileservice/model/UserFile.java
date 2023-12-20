@@ -21,7 +21,7 @@ public class UserFile {
     private Long size;
     @Column(nullable = false)
     private String contentType;
-    @Column(nullable = false)
-    private byte[] content;
+    @Column(nullable = false, columnDefinition = "text")
+    private String base64;
     private Long ownerId;
 }
