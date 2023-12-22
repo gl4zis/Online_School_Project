@@ -10,7 +10,8 @@ import ru.school.JwtTokenUtils;
 import ru.school.ValidationUtils;
 import ru.school.exception.InvalidTokenException;
 import ru.school.userservice.dto.request.AuthRequest;
-import ru.school.userservice.dto.request.AuthWithRoleRequest;
+import ru.school.userservice.dto.request.RegWithRoleRequest;
+import ru.school.userservice.dto.request.RegRequest;
 import ru.school.userservice.dto.response.JwtResponse;
 import ru.school.userservice.exception.UsernameIsTakenException;
 import ru.school.userservice.model.User;
@@ -43,7 +44,7 @@ public class AuthService {
         return setUserTokens(user);
     }
 
-    public JwtResponse signupStudent(AuthRequest request) {
+    public JwtResponse signupStudent(RegRequest request) {
         validationUtils.validateOrThrowException(request);
 
         if (!userService.isUsernameUnique(request.getUsername()))
@@ -62,7 +63,7 @@ public class AuthService {
         return setUserTokens(user);
     }
 
-    public void adminSignUp(AuthWithRoleRequest request) {
+    public void adminSignUp(RegWithRoleRequest request) {
         validationUtils.validateOrThrowException(request);
 
         if (!userService.isUsernameUnique(request.getUsername()))

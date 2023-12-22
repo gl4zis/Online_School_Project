@@ -10,7 +10,7 @@ import ru.school.userservice.model.User;
 @NoArgsConstructor
 @Getter
 @Setter
-public class AuthWithRoleRequest extends AuthRequest {
+public class RegWithRoleRequest extends RegRequest {
     @NotNull(message = "{user.role.null}")
     @Size(message = "{user.role.null}", min = 1)
     private User.Role role;

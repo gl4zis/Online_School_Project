@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import ru.school.userservice.dto.ProfileData;
-import ru.school.userservice.dto.request.AuthRequest;
+import ru.school.userservice.dto.request.RegRequest;
 import ru.school.userservice.model.User;
 
 @Component
@@ -12,10 +12,12 @@ import ru.school.userservice.model.User;
 public class DtoMapper {
     private final PasswordEncoder encoder;
 
-    public User createNewUser(AuthRequest request, User.Role role) {
+    public User createNewUser(RegRequest request, User.Role role) {
         return User.builder()
                 .username(request.getUsername())
                 .password(encoder.encode(request.getPassword()))
+                .firstname(request.getFirstname())
+                .lastname(request.getLastname())
                 .locked(false)
                 .role(role)
                 .build();

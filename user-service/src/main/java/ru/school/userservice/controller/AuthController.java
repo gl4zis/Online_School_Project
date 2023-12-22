@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.school.exception.InvalidTokenException;
 import ru.school.response.MessageResponse;
 import ru.school.userservice.dto.request.AuthRequest;
+import ru.school.userservice.dto.request.RegRequest;
 import ru.school.userservice.dto.response.JwtResponse;
 import ru.school.userservice.dto.response.RefreshToken;
 import ru.school.userservice.service.AuthService;
@@ -37,7 +38,7 @@ public class AuthController {
     @Operation(summary = "Sign up endpoint for students", description = "Requests only login and password, " +
             "returns token pair. Throws 400 (Validation, UsernameIsTaken)")
     @PostMapping("/signup")
-    public JwtResponse signup(@RequestBody AuthRequest request) {
+    public JwtResponse signup(@RequestBody RegRequest request) {
         return authService.signupStudent(request);
     }
 
