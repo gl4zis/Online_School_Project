@@ -31,9 +31,9 @@ public class FileController {
             "If client has valid access token, file will has this client as an owner (can be null). " +
             "Throws 400 (InvalidFile)")
     @PostMapping
-    public Long createFile(@RequestBody FileRequest fileRequest, HttpServletRequest request)
+    public MessageResponse createFile(@RequestBody FileRequest fileRequest, HttpServletRequest request)
             throws InvalidFileException {
-        return fileService.saveNewFile(fileRequest, request);
+        return new MessageResponse(fileService.saveNewFile(fileRequest, request).toString());
     }
 
     @Operation(summary = "Removes file from DB", description = "Access only for admins or owner. " +

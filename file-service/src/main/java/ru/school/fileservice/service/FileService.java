@@ -23,7 +23,7 @@ public class FileService {
     private final DtoMapper mapper;
 
     public Long saveNewFile(FileRequest input, HttpServletRequest request) throws InvalidFileException {
-        if (input.getSize() == null || input.getContentType() == null ||
+        if (input.getName() == null || input.getContentType() == null ||
                 input.getBase64() == null)
             throw new InvalidFileException();
 

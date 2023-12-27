@@ -18,8 +18,6 @@ public class UserFile {
     @Column(nullable = false)
     private String name;
     @Column(nullable = false)
-    private Long size;
-    @Column(nullable = false)
     private String contentType;
     @Column(nullable = false, columnDefinition = "text")
     private String base64;

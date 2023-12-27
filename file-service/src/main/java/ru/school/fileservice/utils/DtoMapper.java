@@ -16,7 +16,6 @@ public class DtoMapper {
         return UserFile
                 .builder()
                 .name(input.getName())
-                .size(input.getSize())
                 .contentType(input.getContentType())
                 .base64(input.getBase64())
                 .ownerId(owner)
