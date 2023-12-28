@@ -93,19 +93,6 @@ public class AuthService {
         userService.removeUser(jwtTokenUtils.getIdFromAccess(token.get()));
     }
 
-    public boolean isUsernameUnique(String username, HttpServletRequest req) {
-        Optional<String> token = jwtTokenUtils.getAccessToken(req);
-        if (token.isPresent() && jwtTokenUtils.validateAccess(token.get())) {
-            Long currUserId = jwtTokenUtils.getIdFromAccess(token.get());
-            User currUser = userService.getById(currUserId);
-
-            if (currUser.getUsername().equals(username))
-                return true;
-        }
-
-        return userService.isUsernameUnique(username);
-    }
-
     public void changePassword(HttpServletRequest req, PasswordsDto passwords)
             throws InvalidTokenException, InvalidPasswordException {
         Optional<String> token = jwtTokenUtils.getAccessToken(req);

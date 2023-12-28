@@ -15,6 +15,7 @@ import ru.school.userservice.dto.response.JwtResponse;
 import ru.school.userservice.dto.response.RefreshToken;
 import ru.school.userservice.exception.InvalidPasswordException;
 import ru.school.userservice.service.AuthService;
+import ru.school.userservice.service.UserService;
 
 @RestController
 @ResponseBody
@@ -22,6 +23,7 @@ import ru.school.userservice.service.AuthService;
 @Tag(name = "Authorization controller")
 public class AuthController {
     private final AuthService authService;
+    private final UserService userService;
 
     @Operation(summary = "Removes account of authorized user", description = "Throws 403 (InvalidToken")
     @DeleteMapping
@@ -52,9 +54,8 @@ public class AuthController {
 
     @Operation(summary = "Check username uniqueness", description = "Throws 400 (Invalid username)")
     @GetMapping("/unique/{username}")
-    public MessageResponse isUsernameUnique(@PathVariable("username") String username,
-                                            HttpServletRequest req) {
-        return new MessageResponse(Boolean.toString(authService.isUsernameUnique(username, req)));
+    public MessageResponse isUsernameUnique(@PathVariable("username") String username) {
+        return new MessageResponse(Boolean.toString(userService.isUsernameUnique(username)));
     }
 
     @Operation(summary = "Endpoint for changing account password", description = "Throws 400 " +
