@@ -3,8 +3,6 @@ version: "3.8"
 services:
   server:
     build: eureka-server
-    ports:
-      - "8761:8761"
 
   gateway:
     build: gateway
@@ -15,21 +13,21 @@ services:
     depends_on:
       - server
 
-  auth-db:
+  user-db:
     image: postgres
     environment:
       - POSTGRES_PASSWORD=password
       - POSTGRES_USER=postgres
       - POSTGRES_DB=school
 
-  auth:
-    build: auth-service
+  user:
+    build: user-service
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://auth-db:5432/school
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://user-db:5432/school
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://server:8761/eureka
     depends_on:
       - server
-      - auth-db
+      - user-db
 
   file-db:
     image: postgres
@@ -46,22 +44,6 @@ services:
     depends_on:
       - server
       - file-db
-
-  profile-db:
-    image: postgres
-    environment:
-      - POSTGRES_PASSWORD=password
-      - POSTGRES_USER=postgres
-      - POSTGRES_DB=school
-
-  profile:
-    build: profile-service
-    environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://profile-db:5432/school
-      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://server:8761/eureka
-    depends_on:
-      - server
-      - profile-db
 
   course-db:
     image: postgres

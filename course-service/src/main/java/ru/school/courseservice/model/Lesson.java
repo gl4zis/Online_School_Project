@@ -12,7 +12,7 @@ public class Lesson {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @ManyToOne(optional = false)
-    private Group group;
+    private Course course;
     @Column(nullable = false)
     private Date planedAt;
     @Column(nullable = false)

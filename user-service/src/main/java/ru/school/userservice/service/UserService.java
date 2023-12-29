@@ -41,4 +41,8 @@ public class UserService implements UserDetailsService {
         return userRepository.findById(accountId)
                 .orElseThrow(() -> new UsernameNotFoundException("User with id '" + accountId + "' not found"));
     }
+
+    public Iterable<User> getTeachersAccounts() {
+        return userRepository.getAllByRole(User.Role.TEACHER);
+    }
 }

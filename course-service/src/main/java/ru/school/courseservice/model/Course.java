@@ -1,9 +1,6 @@
 package ru.school.courseservice.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
 import lombok.Data;
 
 import java.util.Set;
@@ -17,11 +14,16 @@ public class Course {
     private String subject;
     @Column(nullable = false)
     private Long price;
-
     @Column(nullable = false)
+    private String summary;
+    @Column(nullable = false, columnDefinition = "text")
     private String description;
     private Long imageId;
 
+    @ElementCollection
+    public Set<Long> studentIds;
+    @Column(nullable = false)
+    private Long teacherId;
     @OneToMany(mappedBy = "course")
-    private Set<Group> groups;
+    private Set<Lesson> lessons;
 }

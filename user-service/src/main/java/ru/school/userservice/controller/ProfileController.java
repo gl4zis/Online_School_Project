@@ -10,6 +10,8 @@ import ru.school.exception.InvalidTokenException;
 import ru.school.userservice.dto.ProfileData;
 import ru.school.userservice.service.ProfileService;
 
+import java.util.Set;
+
 @RestController
 @RequestMapping("/profile")
 @ResponseBody
@@ -39,5 +41,11 @@ public class ProfileController {
     @GetMapping("/{id}")
     public ProfileData getOtherProfile(@PathVariable("id") Long id) {
         return profileService.getProfile(id);
+    }
+
+    @Operation(summary = "Returns all teachers profiles")
+    @GetMapping("/teachers")
+    public Set<ProfileData> getAllTeachers() {
+        return profileService.getTeachers();
     }
 }

@@ -1,0 +1,20 @@
+package ru.school.courseservice.service;
+
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import ru.school.courseservice.model.Course;
+import ru.school.courseservice.repository.CourseRepository;
+
+@Service
+@RequiredArgsConstructor
+public class CourseService {
+    private final CourseRepository courseRepository;
+
+    public Iterable<Course> getAllCourses() {
+        return courseRepository.findAll();
+    }
+
+    public Iterable<Course> getTeacherCourses(Long teacherId) {
+        return courseRepository.getAllByTeacherId(teacherId);
+    }
+}

@@ -9,7 +9,9 @@ import ru.school.userservice.dto.ProfileData;
 import ru.school.userservice.model.User;
 import ru.school.userservice.utils.DtoMapper;
 
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -42,4 +44,15 @@ public class ProfileService {
         User user = userService.getById(accountId);
         return dtoMapper.getUserProfileData(user);
     }
+
+    public Set<ProfileData> getTeachers() {
+        Iterable<User> teachers = userService.getTeachersAccounts();
+        Set<ProfileData> teacherProfiles = new HashSet<>();
+        for (User user : teachers) {
+            teacherProfiles.add(dtoMapper.getUserProfileData(user));
+        }
+
+        return teacherProfiles;
+    }
+
 }
