@@ -9,6 +9,7 @@ public interface UserRepository extends CrudRepository<User, Long> {
     Optional<User> getByUsernameOrEmail(String username, String email);
 
     Boolean existsByUsername(String username);
+    Boolean existsByEmail(String email);
 
     Optional<User> getByRefreshToken(String refreshToken);
     Iterable<User> getAllByRole(User.Role role);

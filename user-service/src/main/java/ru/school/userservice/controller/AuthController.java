@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
+import jakarta.validation.ValidationException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import ru.school.exception.InvalidTokenException;
@@ -52,10 +53,16 @@ public class AuthController {
         return authService.updateTokens(token.getRefresh());
     }
 
-    @Operation(summary = "Check username uniqueness", description = "Throws 400 (Invalid username)")
-    @GetMapping("/unique/{username}")
-    public MessageResponse isUsernameUnique(@PathVariable("username") String username) {
-        return new MessageResponse(Boolean.toString(userService.isUsernameUnique(username)));
+    @Operation(summary = "Check username uniqueness", description = "Throws 400 (Invalid username or email)")
+    @GetMapping("/unique")
+    public MessageResponse isUnique(@RequestParam(required = false) String username,
+                                    @RequestParam(required = false) String email) {
+        if (username != null)
+            return new MessageResponse(Boolean.toString(userService.isUsernameUnique(username)));
+        else if (email != null)
+            return new MessageResponse(Boolean.toString(userService.isEmailUnique(email)));
+        else
+            throw new ValidationException("No param");
     }
 
     @Operation(summary = "Endpoint for changing account password", description = "Throws 400 " +

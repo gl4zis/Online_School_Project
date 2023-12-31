@@ -28,6 +28,10 @@ public class UserService implements UserDetailsService {
         return !userRepository.existsByUsername(username);
     }
 
+    public boolean isEmailUnique(String email) {
+        return !userRepository.existsByEmail(email);
+    }
+
     public User getByRefresh(String refresh) throws InvalidTokenException {
         return userRepository.getByRefreshToken(refresh)
                 .orElseThrow(InvalidTokenException::new);
