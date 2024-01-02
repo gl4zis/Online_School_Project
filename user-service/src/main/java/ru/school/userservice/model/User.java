@@ -46,7 +46,7 @@ public class User implements UserDetails {
     @Temporal(TemporalType.DATE)
     @DateTimeFormat(pattern = "yyy-mm-dd")
     private Date birthdate;
-    private Long photoId;
+    private String photoId;
 
     // Only teacher
     @ElementCollection

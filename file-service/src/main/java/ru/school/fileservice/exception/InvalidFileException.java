@@ -1,9 +1,7 @@
 package ru.school.fileservice.exception;
 
-import java.io.IOException;
-
-public class InvalidFileException extends IOException {
+public class InvalidFileException extends Exception {
     public InvalidFileException() {
-        super("Invalid file in request");
+        super("Invalid file request");
     }
 }

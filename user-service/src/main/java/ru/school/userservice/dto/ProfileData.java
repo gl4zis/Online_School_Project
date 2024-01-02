@@ -31,7 +31,7 @@ public class ProfileData {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Europe/Moscow")
     @Past
     private Date birthdate;
-    private Long photoId;
+    private String photoId;
 
     // Only teacher
     private Set<String> subjects;

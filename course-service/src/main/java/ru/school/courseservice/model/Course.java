@@ -18,7 +18,7 @@ public class Course {
     private String summary;
     @Column(nullable = false, columnDefinition = "text")
     private String description;
-    private Long imageId;
+    private String imageId;
 
     @ElementCollection
     public Set<Long> studentIds;
