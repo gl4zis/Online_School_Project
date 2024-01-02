@@ -4,7 +4,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.BadRequestException;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import ru.school.exception.InvalidTokenException;
@@ -26,12 +25,7 @@ public class FileController {
             "Throws 404 (NotFound), 400 (InvalidId)")
     @GetMapping(path = "/{id}", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     public byte[] getFile(@PathVariable String id, @RequestParam(required = false) Integer size) throws IOException {
-        if (size == null)
-            return fileService.getFile(id);
-        else if (size > 0 && size <= 4000)
-            return fileService.getScaledImage(id, size);
-        else
-            throw new BadRequestException("Invalid image size");
+        return fileService.getFile(id, size);
     }
 
     @Operation(summary = "Save new file", description = "Creates new file and info about it in DB " +
@@ -40,7 +34,7 @@ public class FileController {
     @PostMapping
     public MessageResponse upload(@RequestBody FileRequest file, HttpServletRequest request)
             throws InvalidFileException {
-        return new MessageResponse(fileService.upload(file, request));
+        return new MessageResponse(fileService.upload(file.data(), request));
     }
 
     @Operation(summary = "Removes file", description = "Access only for admins or owner. " +
