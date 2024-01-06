@@ -9,6 +9,8 @@ import ru.school.exception.InvalidTokenException;
 import ru.school.userservice.model.User;
 import ru.school.userservice.repository.UserRepository;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class UserService implements UserDetailsService {
@@ -48,5 +50,21 @@ public class UserService implements UserDetailsService {
 
     public Iterable<User> getTeachersAccounts() {
         return userRepository.getAllByRole(User.Role.TEACHER);
+    }
+
+    public Iterable<User> getAll() {
+        return userRepository.findAll();
+    }
+
+    public void setLock(Long userId, boolean lock) {
+        Optional<User> user = userRepository.findById(userId);
+        if (user.isEmpty())
+            throw new UsernameNotFoundException("User with id '" + userId + "' not found");
+
+        user.get().setLocked(lock);
+        if (lock)
+            user.get().setRefreshToken(null);
+
+        userRepository.save(user.get());
     }
 }

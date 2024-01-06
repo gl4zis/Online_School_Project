@@ -60,4 +60,14 @@ public class ProfileService {
         return teacherProfiles;
     }
 
+    public Iterable<ProfileData> getAllProfiles() {
+        Iterable<User> users = userService.getAll();
+        Set<ProfileData> profiles = new HashSet<>();
+        for (User user : users) {
+            profiles.add(dtoMapper.getUserProfileData(user));
+        }
+
+        return profiles;
+    }
+
 }

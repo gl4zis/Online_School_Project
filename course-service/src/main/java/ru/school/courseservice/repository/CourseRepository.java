@@ -7,4 +7,5 @@ import ru.school.courseservice.model.Course;
 @Repository
 public interface CourseRepository extends CrudRepository<Course, String> {
     Iterable<Course> getAllByTeacherId(Long teacherId);
+    Iterable<Course> getAllByStudentIdsContains(Long studentId);
 }

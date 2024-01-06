@@ -17,4 +17,8 @@ public class CourseService {
     public Iterable<Course> getTeacherCourses(Long teacherId) {
         return courseRepository.getAllByTeacherId(teacherId);
     }
+
+    public Iterable<Course> getStudentCourses(Long studentId) {
+        return courseRepository.getAllByStudentIdsContains(studentId);
+    }
 }
