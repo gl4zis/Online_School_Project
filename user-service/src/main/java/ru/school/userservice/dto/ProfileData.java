@@ -36,4 +36,5 @@ public class ProfileData {
     // Only teacher
     private Set<String> subjects;
     private String description;
+    private Boolean confirmed;
 }

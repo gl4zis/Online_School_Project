@@ -54,6 +54,7 @@ public class User implements UserDetails {
     private Set<String> subjects;
     @Column(columnDefinition = "text")
     private String description;
+    private Boolean confirmed;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

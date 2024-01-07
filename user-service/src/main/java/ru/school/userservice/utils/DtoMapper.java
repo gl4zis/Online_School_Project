@@ -20,18 +20,20 @@ public class DtoMapper {
                 .lastname(request.getLastname())
                 .locked(false)
                 .role(role)
+                .confirmed(role.equals(User.Role.TEACHER) ? true : null)
                 .build();
     }
 
     public User updateUser(User oldUser, ProfileData updateData) {
         return User.builder()
                 .id(oldUser.getId())
-                .username(updateData.getUsername())
                 .password(oldUser.getPassword())
-                .email(updateData.getEmail())
                 .role(oldUser.getRole())
                 .locked(oldUser.isLocked())
                 .refreshToken(oldUser.getRefreshToken())
+                .confirmed(oldUser.getConfirmed())
+                .username(updateData.getUsername())
+                .email(updateData.getEmail())
                 .firstname(updateData.getFirstname())
                 .lastname(updateData.getLastname())
                 .middleName(updateData.getMiddleName())
@@ -56,6 +58,7 @@ public class DtoMapper {
                 .photoId(user.getPhotoId())
                 .subjects(user.getSubjects())
                 .description(user.getDescription())
+                .confirmed(user.getConfirmed())
                 .build();
     }
 }

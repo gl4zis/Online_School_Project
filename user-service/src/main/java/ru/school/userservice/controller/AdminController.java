@@ -38,4 +38,9 @@ public class AdminController {
     public void lockOrUnlockUser(@PathVariable Long user, @RequestParam boolean lock) {
         userService.setLock(user, lock);
     }
+
+    @PutMapping("/confirm/{user}")
+    public void updateTeacherConfirm(@PathVariable Long user, @RequestParam boolean confirm) {
+        userService.setConfirm(user, confirm);
+    }
 }

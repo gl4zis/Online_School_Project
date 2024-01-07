@@ -67,4 +67,13 @@ public class UserService implements UserDetailsService {
 
         userRepository.save(user.get());
     }
+
+    public void setConfirm(Long userId, boolean confirm) {
+        Optional<User> user = userRepository.findById(userId);
+        if (user.isEmpty())
+            throw new UsernameNotFoundException("User with id '" + userId + "' not found");
+
+        user.get().setConfirmed(confirm);
+        userRepository.save(user.get());
+    }
 }
