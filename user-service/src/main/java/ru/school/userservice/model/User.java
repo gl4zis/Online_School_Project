@@ -48,13 +48,15 @@ public class User implements UserDetails {
     private Date birthdate;
     private String photoId;
 
+    // Teacher + Admin
+    private Boolean published;
+    @Column(columnDefinition = "text")
+    private String description;
+
     // Only teacher
     @ElementCollection
     @Enumerated(EnumType.STRING)
     private Set<String> subjects;
-    @Column(columnDefinition = "text")
-    private String description;
-    private Boolean confirmed;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

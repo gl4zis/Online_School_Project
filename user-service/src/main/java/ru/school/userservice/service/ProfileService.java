@@ -60,6 +60,16 @@ public class ProfileService {
         return teacherProfiles;
     }
 
+    public Set<ProfileData> getAdmins() {
+        Iterable<User> admins = userService.getAdminsAccounts();
+        Set<ProfileData> adminProfiles = new HashSet<>();
+        for (User user : admins) {
+            adminProfiles.add(dtoMapper.getUserProfileData(user));
+        }
+
+        return adminProfiles;
+    }
+
     public Iterable<ProfileData> getAllProfiles() {
         Iterable<User> users = userService.getAll();
         Set<ProfileData> profiles = new HashSet<>();

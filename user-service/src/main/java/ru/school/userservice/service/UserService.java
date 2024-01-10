@@ -52,6 +52,10 @@ public class UserService implements UserDetailsService {
         return userRepository.getAllByRole(User.Role.TEACHER);
     }
 
+    public Iterable<User> getAdminsAccounts() {
+        return userRepository.getAllByRole(User.Role.ADMIN);
+    }
+
     public Iterable<User> getAll() {
         return userRepository.findAll();
     }
@@ -68,12 +72,12 @@ public class UserService implements UserDetailsService {
         userRepository.save(user.get());
     }
 
-    public void setConfirm(Long userId, boolean confirm) {
+    public void setPublic(Long userId, boolean published) {
         Optional<User> user = userRepository.findById(userId);
         if (user.isEmpty())
             throw new UsernameNotFoundException("User with id '" + userId + "' not found");
 
-        user.get().setConfirmed(confirm);
+        user.get().setPublished(published);
         userRepository.save(user.get());
     }
 }

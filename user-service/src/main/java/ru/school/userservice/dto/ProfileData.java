@@ -32,9 +32,9 @@ public class ProfileData {
     @Past
     private Date birthdate;
     private String photoId;
+    private Boolean published;
 
     // Only teacher
     private Set<String> subjects;
     private String description;
-    private Boolean confirmed;
 }

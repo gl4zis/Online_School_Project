@@ -48,4 +48,10 @@ public class ProfileController {
     public Set<ProfileData> getAllTeachers() {
         return profileService.getTeachers();
     }
+
+    @Operation(summary = "Returns all admins profiles")
+    @GetMapping("/admins")
+    public Set<ProfileData> getAllAdmins() {
+        return profileService.getAdmins();
+    }
 }

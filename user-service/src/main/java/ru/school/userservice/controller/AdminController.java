@@ -39,8 +39,10 @@ public class AdminController {
         userService.setLock(user, lock);
     }
 
-    @PutMapping("/confirm/{user}")
-    public void updateTeacherConfirm(@PathVariable Long user, @RequestParam boolean confirm) {
-        userService.setConfirm(user, confirm);
+    @Operation(summary = "Set profile published flag", description = "If published is true, this profile will " +
+            "be published in free access. In teacher carousel, or in contact details if it is admin")
+    @PutMapping("/publish/{user}")
+    public void updateProfilePublish(@PathVariable Long user, @RequestParam boolean publish) {
+        userService.setPublic(user, publish);
     }
 }
