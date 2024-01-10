@@ -2,7 +2,6 @@ package ru.school.fileservice.service;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.BadRequestException;
 import org.springframework.stereotype.Service;
 import ru.school.JwtTokenUtils;
 import ru.school.exception.InvalidTokenException;
@@ -36,16 +35,9 @@ public class FileService {
         }
     }
 
-    public byte[] getFile(String key, Integer size) throws IOException {
-        if (size == null)
-            return fileManager.getFile(key);
-        else if (size > 0 && size <= 4000)
-            return fileManager.getImage(key, size);
-        else
-            throw new BadRequestException("Invalid image size");
-    }
-
-    public void removeFile(String key, HttpServletRequest request) throws InvalidTokenException {
+    public void removeFile(String key, HttpServletRequest request)
+            throws InvalidTokenException, InvalidFileException
+    {
         Optional<String> token = jwtTokenUtils.getAccessToken(request);
         if (token.isEmpty() || !jwtTokenUtils.validateAccess(token.get()))
             throw new InvalidTokenException();
