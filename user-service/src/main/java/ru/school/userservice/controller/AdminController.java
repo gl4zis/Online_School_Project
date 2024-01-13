@@ -27,12 +27,6 @@ public class AdminController {
         authService.adminSignUp(request);
     }
 
-    @Operation(summary = "Returns all registered user profiles", description = "Admin access")
-    @GetMapping("/users")
-    public Iterable<ProfileData> allUsers() {
-        return profileService.getAllProfiles();
-    }
-
     @Operation(summary = "Block or unblock user account", description = "Admin access")
     @PutMapping("/block/{user}")
     public void lockOrUnlockUser(@PathVariable Long user, @RequestParam boolean lock) {
@@ -44,5 +38,11 @@ public class AdminController {
     @PutMapping("/publish/{user}")
     public void updateProfilePublish(@PathVariable Long user, @RequestParam boolean publish) {
         userService.setPublic(user, publish);
+    }
+
+    @Operation(summary = "Returns all registered user profiles", description = "Admin access")
+    @GetMapping("/users")
+    public Iterable<ProfileData> allUsers() {
+        return profileService.getAllProfiles();
     }
 }

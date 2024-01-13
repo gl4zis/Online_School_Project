@@ -8,9 +8,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import ru.school.exception.InvalidTokenException;
 import ru.school.userservice.dto.ProfileData;
+import ru.school.userservice.model.User;
 import ru.school.userservice.service.ProfileService;
-
-import java.util.Set;
 
 @RestController
 @RequestMapping("/profile")
@@ -43,15 +42,15 @@ public class ProfileController {
         return profileService.getProfile(id);
     }
 
-    @Operation(summary = "Returns all teachers profiles")
+    @Operation(summary = "Returns all teacher's profiles in public access")
     @GetMapping("/teachers")
-    public Set<ProfileData> getAllTeachers() {
-        return profileService.getTeachers();
+    public Iterable<ProfileData> publishedTeachers() {
+        return profileService.publishedProfilesByRole(User.Role.TEACHER);
     }
 
-    @Operation(summary = "Returns all admins profiles")
+    @Operation(summary = "Returns all admin's profiles in public access")
     @GetMapping("/admins")
-    public Set<ProfileData> getAllAdmins() {
-        return profileService.getAdmins();
+    public Iterable<ProfileData> publishedAdmins() {
+        return profileService.publishedProfilesByRole(User.Role.ADMIN);
     }
 }

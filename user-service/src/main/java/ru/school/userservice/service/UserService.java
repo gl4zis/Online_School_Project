@@ -1,6 +1,7 @@
 package ru.school.userservice.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.LockedException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -48,12 +49,8 @@ public class UserService implements UserDetailsService {
                 .orElseThrow(() -> new UsernameNotFoundException("User with id '" + accountId + "' not found"));
     }
 
-    public Iterable<User> getTeachersAccounts() {
-        return userRepository.getAllByRole(User.Role.TEACHER);
-    }
-
-    public Iterable<User> getAdminsAccounts() {
-        return userRepository.getAllByRole(User.Role.ADMIN);
+    public Iterable<User> getByRole(User.Role role) {
+        return userRepository.getAllByRole(role);
     }
 
     public Iterable<User> getAll() {
@@ -66,8 +63,10 @@ public class UserService implements UserDetailsService {
             throw new UsernameNotFoundException("User with id '" + userId + "' not found");
 
         user.get().setLocked(lock);
-        if (lock)
+        if (lock) {
             user.get().setRefreshToken(null);
+            user.get().setPublished(false);
+        }
 
         userRepository.save(user.get());
     }
@@ -76,6 +75,9 @@ public class UserService implements UserDetailsService {
         Optional<User> user = userRepository.findById(userId);
         if (user.isEmpty())
             throw new UsernameNotFoundException("User with id '" + userId + "' not found");
+
+        if (user.get().isLocked())
+            throw new LockedException("Locked user can't be published");
 
         user.get().setPublished(published);
         userRepository.save(user.get());

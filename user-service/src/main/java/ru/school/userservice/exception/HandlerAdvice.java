@@ -3,6 +3,7 @@ package ru.school.userservice.exception;
 import jakarta.validation.ValidationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.LockedException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -15,7 +16,7 @@ import ru.school.response.ErrorResponse;
 public class HandlerAdvice {
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler({UsernameIsTakenException.class, ValidationException.class, InvalidPasswordException.class})
+    @ExceptionHandler({UsernameIsTakenException.class, ValidationException.class, InvalidPasswordException.class, LockedException.class})
     public ErrorResponse badRequest(Exception e) {
         return new ErrorResponse(
                 HttpStatus.BAD_REQUEST,

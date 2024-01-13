@@ -50,34 +50,23 @@ public class ProfileService {
         return dtoMapper.getUserProfileData(user);
     }
 
-    public Set<ProfileData> getTeachers() {
-        Iterable<User> teachers = userService.getTeachersAccounts();
-        Set<ProfileData> teacherProfiles = new HashSet<>();
-        for (User user : teachers) {
-            teacherProfiles.add(dtoMapper.getUserProfileData(user));
-        }
-
-        return teacherProfiles;
-    }
-
-    public Set<ProfileData> getAdmins() {
-        Iterable<User> admins = userService.getAdminsAccounts();
-        Set<ProfileData> adminProfiles = new HashSet<>();
-        for (User user : admins) {
-            adminProfiles.add(dtoMapper.getUserProfileData(user));
-        }
-
-        return adminProfiles;
-    }
-
     public Iterable<ProfileData> getAllProfiles() {
         Iterable<User> users = userService.getAll();
         Set<ProfileData> profiles = new HashSet<>();
-        for (User user : users) {
+        for (User user : users)
             profiles.add(dtoMapper.getUserProfileData(user));
-        }
 
         return profiles;
     }
 
+    public Iterable<ProfileData> publishedProfilesByRole(User.Role role) {
+        Iterable<User> users = userService.getByRole(role);
+        Set<ProfileData> profiles = new HashSet<>();
+        for (User user : users) {
+            if (user.getPublished())
+                profiles.add(dtoMapper.getUserProfileData(user));
+        }
+
+        return profiles;
+    }
 }
