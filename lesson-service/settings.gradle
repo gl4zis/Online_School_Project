@@ -1,0 +1,10 @@
+rootProject.name = 'lesson-service'
+
+include ':jwt-common'
+project(':jwt-common').projectDir = file('../jwt-common')
+
+include ':data-common'
+project(':data-common').projectDir = file('../data-common')
+
+include ':validation-common'
+project(':validation-common').projectDir = file('../validation-common')

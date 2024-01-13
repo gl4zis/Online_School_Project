@@ -1,4 +1,4 @@
-package ru.school.courseservice;
+package ru.school.lessonservice;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -8,12 +8,12 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @EnableDiscoveryClient
 @SpringBootApplication(scanBasePackages = "ru.school")
-@EntityScan("ru.school.courseservice.model")
-@EnableJpaRepositories("ru.school.courseservice.repository")
-public class CourseServiceApplication {
+@EntityScan("ru.school.lessonservice.model")
+@EnableJpaRepositories("ru.school.lessonservice.repository")
+public class LessonServiceApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(CourseServiceApplication.class, args);
+        SpringApplication.run(LessonServiceApplication.class, args);
     }
 
 }

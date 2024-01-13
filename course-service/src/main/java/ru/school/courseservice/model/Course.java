@@ -9,6 +9,9 @@ import java.util.Set;
 @Data
 public class Course {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    @Column(nullable = false, unique = true)
     private String name;
     @Column(nullable = false)
     private String subject;
@@ -24,6 +27,6 @@ public class Course {
     public Set<Long> studentIds;
     @Column(nullable = false)
     private Long teacherId;
-    @OneToMany(mappedBy = "course")
-    private Set<Lesson> lessons;
+    @ElementCollection
+    private Set<Long> lessonIds;
 }
