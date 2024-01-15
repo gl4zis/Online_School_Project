@@ -5,7 +5,7 @@ import org.springframework.stereotype.Repository;
 import ru.school.courseservice.model.Course;
 
 @Repository
-public interface CourseRepository extends CrudRepository<Course, String> {
+public interface CourseRepository extends CrudRepository<Course, Long> {
     Iterable<Course> getAllByTeacherId(Long teacherId);
     Iterable<Course> getAllByStudentIdsContains(Long studentId);
 }

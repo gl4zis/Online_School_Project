@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.ValidationException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import ru.school.courseservice.exception.CourseNotExists;
 import ru.school.courseservice.model.Course;
 import ru.school.courseservice.service.CourseService;
 
@@ -22,7 +23,7 @@ public class CourseController {
     }
 
     @Operation(summary = "Returns all courses, that this teacher teach or on that this student registered")
-    @GetMapping("/{userId}")
+    @GetMapping("/by-user/{userId}")
     public Iterable<Course> getAllUserCourses(@PathVariable Long userId, @RequestParam String role) {
         if (role.equals("TEACHER"))
             return courseService.getTeacherCourses(userId);
@@ -30,5 +31,10 @@ public class CourseController {
             return courseService.getStudentCourses(userId);
         else
             throw new ValidationException("Invalid param");
+    }
+
+    @GetMapping("/{id}")
+    public Course getById(@PathVariable Long id) throws CourseNotExists {
+        return courseService.getById(id);
     }
 }

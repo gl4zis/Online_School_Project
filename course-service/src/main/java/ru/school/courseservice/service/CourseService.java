@@ -2,6 +2,7 @@ package ru.school.courseservice.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import ru.school.courseservice.exception.CourseNotExists;
 import ru.school.courseservice.model.Course;
 import ru.school.courseservice.repository.CourseRepository;
 
@@ -20,5 +21,9 @@ public class CourseService {
 
     public Iterable<Course> getStudentCourses(Long studentId) {
         return courseRepository.getAllByStudentIdsContains(studentId);
+    }
+
+    public Course getById(Long id) throws CourseNotExists {
+        return courseRepository.findById(id).orElseThrow(CourseNotExists::new);
     }
 }
