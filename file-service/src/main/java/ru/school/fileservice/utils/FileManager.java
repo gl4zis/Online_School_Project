@@ -1,6 +1,6 @@
 package ru.school.fileservice.utils;
 
-import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import ru.school.fileservice.exception.InvalidFileException;
@@ -14,7 +14,7 @@ public class FileManager {
     private String ROOT;
 
     public boolean fileNotExists(String key) {
-        return !Paths.get(ROOT, key).toFile().exists();
+        return !filePath(key).exists();
     }
 
     private File filePath(String key) {
@@ -35,9 +35,9 @@ public class FileManager {
         }
     }
 
-    public String generateKey(byte[] data, Long owner) {
-        return owner == null ? DigestUtils.md5Hex(data) :
-                DigestUtils.md5Hex(data) + owner;
+    public String generateKey(Long owner) {
+        String key = RandomStringUtils.random(16, true, true);
+        return owner == null ? key : key + "_" + owner;
     }
 
     public void remove(String key) throws InvalidFileException {

@@ -9,6 +9,7 @@ import ru.school.fileservice.exception.InvalidFileException;
 import ru.school.fileservice.utils.FileManager;
 
 import java.io.IOException;
+import java.util.Base64;
 import java.util.Optional;
 
 @Service
@@ -17,15 +18,18 @@ public class FileService {
     private final JwtTokenUtils jwtTokenUtils;
     private final FileManager fileManager;
 
-    public String upload(byte[] data, HttpServletRequest request) throws InvalidFileException {
+    public String upload(String base64, HttpServletRequest request) throws InvalidFileException {
         Long owner = null;
         Optional<String> token = jwtTokenUtils.getAccessToken(request);
         if (token.isPresent() && jwtTokenUtils.validateAccess(token.get()))
             owner = jwtTokenUtils.getIdFromAccess(token.get());
 
-        try {
-            String key = fileManager.generateKey(data, owner);
+        String content = base64.substring(base64.indexOf(',') + 1);
 
+        byte[] data = Base64.getMimeDecoder().decode(content);
+        String key = fileManager.generateKey(owner);
+
+        try {
             if (fileManager.fileNotExists(key))
                 fileManager.save(data, key);
 

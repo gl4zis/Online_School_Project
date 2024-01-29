@@ -37,7 +37,7 @@ public class FileController {
     public MessageResponse upload(@RequestBody FileRequest file, HttpServletRequest request)
             throws InvalidFileException
     {
-        return new MessageResponse(fileService.upload(file.data(), request));
+        return new MessageResponse(fileService.upload(file.base64(), request));
     }
 
     @Operation(summary = "Remove file", description = "Access only for admins or owner. " +

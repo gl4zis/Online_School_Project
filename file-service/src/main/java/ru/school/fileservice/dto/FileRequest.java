@@ -1,4 +1,4 @@
 package ru.school.fileservice.dto;
 
-public record FileRequest(byte[] data) {
+public record FileRequest(String base64) {
 }
