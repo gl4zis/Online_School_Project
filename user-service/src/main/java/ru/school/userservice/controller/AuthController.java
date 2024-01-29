@@ -40,7 +40,7 @@ public class AuthController {
     }
 
     @Operation(summary = "Sign up endpoint for students", description = "Requests only login and password, " +
-            "returns token pair. Throws 400 (Validation, UsernameIsTaken)")
+            "returns token pair. Throws 400 (Validation, EmailIsTaken)")
     @PostMapping("/signup")
     public JwtResponse signup(@RequestBody RegRequest request) {
         return authService.signupStudent(request);
@@ -53,13 +53,10 @@ public class AuthController {
         return authService.updateTokens(token.getRefresh());
     }
 
-    @Operation(summary = "Check username uniqueness", description = "Throws 400 (Invalid username or email)")
+    @Operation(summary = "Check (email) uniqueness", description = "Throws 400 (Invalid email)")
     @GetMapping("/unique")
-    public MessageResponse isUnique(@RequestParam(required = false) String username,
-                                    @RequestParam(required = false) String email) {
-        if (username != null)
-            return new MessageResponse(Boolean.toString(userService.isUsernameUnique(username)));
-        else if (email != null)
+    public MessageResponse isUnique(@RequestParam(required = false) String email) {
+        if (email != null)
             return new MessageResponse(Boolean.toString(userService.isEmailUnique(email)));
         else
             throw new ValidationException("No param");

@@ -6,7 +6,6 @@ import lombok.Builder;
 import lombok.Data;
 import ru.school.userservice.validation.email.ValidEmail;
 import ru.school.userservice.validation.name.ValidName;
-import ru.school.userservice.validation.username.ValidUsername;
 
 import java.util.Date;
 import java.util.Set;
@@ -15,8 +14,6 @@ import java.util.Set;
 @Builder
 public class ProfileData {
     private Long id;
-    @ValidUsername
-    private String username;
     @ValidEmail
     private String email;
     private String role;

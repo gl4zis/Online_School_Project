@@ -18,17 +18,13 @@ public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return userRepository.getByUsernameOrEmail(username, username)
-                .orElseThrow(() -> new UsernameNotFoundException("User '" + username + "' not found"));
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        return userRepository.getByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("User '" + email + "' not found"));
     }
 
     public void saveUser(User user) {
         userRepository.save(user);
-    }
-
-    public boolean isUsernameUnique(String username) {
-        return !userRepository.existsByUsername(username);
     }
 
     public boolean isEmailUnique(String email) {

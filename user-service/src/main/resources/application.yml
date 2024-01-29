@@ -24,5 +24,4 @@ jwt:
     refresh: 6i1wl4vx0n76y42gekx9uzbwpfmfsfnynu71iwy1wmjti28v4o
 
 regex:
-  username: ^\w{3,20}$
   email: ^\w+@\w+\.\w{2,5}$

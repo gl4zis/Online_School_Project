@@ -14,7 +14,7 @@ public class DtoMapper {
 
     public User createNewUser(RegRequest request, User.Role role) {
         return User.builder()
-                .username(request.getUsername())
+                .email(request.getEmail())
                 .password(encoder.encode(request.getPassword()))
                 .firstname(request.getFirstname())
                 .lastname(request.getLastname())
@@ -32,7 +32,6 @@ public class DtoMapper {
                 .locked(oldUser.isLocked())
                 .refreshToken(oldUser.getRefreshToken())
                 .published(oldUser.getPublished())
-                .username(updateData.getUsername())
                 .email(updateData.getEmail())
                 .firstname(updateData.getFirstname())
                 .lastname(updateData.getLastname())
@@ -47,7 +46,6 @@ public class DtoMapper {
     public ProfileData getUserProfileData(User user) {
         return ProfileData.builder()
                 .id(user.getId())
-                .username(user.getUsername())
                 .email(user.getEmail())
                 .role(user.getRole().name())
                 .locked(user.isLocked())

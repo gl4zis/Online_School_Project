@@ -6,7 +6,6 @@ import org.springframework.stereotype.Service;
 import ru.school.JwtTokenUtils;
 import ru.school.exception.InvalidTokenException;
 import ru.school.userservice.dto.ProfileData;
-import ru.school.userservice.exception.UsernameIsTakenException;
 import ru.school.userservice.model.User;
 import ru.school.userservice.utils.DtoMapper;
 
@@ -28,10 +27,6 @@ public class ProfileService {
 
         Long accountId = jwtTokenUtils.getIdFromAccess(access.get());
         User oldUser = userService.getById(accountId);
-
-        if (!oldUser.getUsername().equals(profile.getUsername()) &
-            !userService.isUsernameUnique(profile.getUsername()))
-            throw new UsernameIsTakenException(profile.getUsername());
 
         userService.saveUser(dtoMapper.updateUser(oldUser, profile));
     }

@@ -16,7 +16,7 @@ import ru.school.response.ErrorResponse;
 public class HandlerAdvice {
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler({UsernameIsTakenException.class, ValidationException.class, InvalidPasswordException.class, LockedException.class})
+    @ExceptionHandler({EmailIsTakenException.class, ValidationException.class, InvalidPasswordException.class, LockedException.class})
     public ErrorResponse badRequest(Exception e) {
         return new ErrorResponse(
                 HttpStatus.BAD_REQUEST,

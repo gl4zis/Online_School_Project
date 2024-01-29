@@ -15,8 +15,8 @@ import ru.school.userservice.dto.request.PasswordsDto;
 import ru.school.userservice.dto.request.RegWithRoleRequest;
 import ru.school.userservice.dto.request.RegRequest;
 import ru.school.userservice.dto.response.JwtResponse;
+import ru.school.userservice.exception.EmailIsTakenException;
 import ru.school.userservice.exception.InvalidPasswordException;
-import ru.school.userservice.exception.UsernameIsTakenException;
 import ru.school.userservice.model.User;
 import ru.school.userservice.security.JwtGenerator;
 import ru.school.userservice.utils.DtoMapper;
@@ -39,7 +39,7 @@ public class AuthService {
 
         Authentication auth = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
-                        request.getUsername(),
+                        request.getEmail(),
                         request.getPassword()
                 )
         );
@@ -51,8 +51,8 @@ public class AuthService {
     public JwtResponse signupStudent(RegRequest request) {
         validationUtils.validateOrThrowException(request);
 
-        if (!userService.isUsernameUnique(request.getUsername()))
-            throw new UsernameIsTakenException(request.getUsername());
+        if (!userService.isEmailUnique(request.getEmail()))
+            throw new EmailIsTakenException(request.getEmail());
 
         User newStudent = mapper.createNewUser(request, User.Role.STUDENT);
         userService.saveUser(newStudent);
@@ -70,8 +70,8 @@ public class AuthService {
     public void adminSignUp(RegWithRoleRequest request) {
         validationUtils.validateOrThrowException(request);
 
-        if (!userService.isUsernameUnique(request.getUsername()))
-            throw new UsernameIsTakenException(request.getUsername());
+        if (!userService.isEmailUnique(request.getEmail()))
+            throw new EmailIsTakenException(request.getEmail());
 
         userService.saveUser(mapper.createNewUser(request, request.getRole()));
     }

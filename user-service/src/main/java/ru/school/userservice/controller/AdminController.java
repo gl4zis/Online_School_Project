@@ -23,7 +23,7 @@ public class AdminController {
     private final UserService userService;
 
     @Operation(summary = "Registration by admins", description = "Register admins and teachers throw this. " +
-            "Access only for admins. Throws 400 (Validation, UsernameTaken) or 403 (No access)")
+            "Access only for admins. Throws 400 (Validation, EmailTaken) or 403 (No access)")
     @PostMapping("/signup")
     public void signup(@RequestBody RegWithRoleRequest request) {
         authService.adminSignUp(request);
