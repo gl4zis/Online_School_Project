@@ -1,12 +1,15 @@
 package ru.school.courseservice.model;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
 
 import java.util.Set;
 
 @Entity
+@Builder
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Course {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,6 +25,8 @@ public class Course {
     @Column(nullable = false, columnDefinition = "text")
     private String description;
     private String imageId;
+    @Column(nullable = false)
+    private boolean published;
 
     @ElementCollection
     public Set<Long> studentIds;

@@ -6,6 +6,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import ru.school.userservice.dto.ProfileData;
 import ru.school.userservice.dto.request.RegWithRoleRequest;
+import ru.school.userservice.dto.request.UserLockRequest;
+import ru.school.userservice.dto.request.UserPublishRequest;
 import ru.school.userservice.service.AuthService;
 import ru.school.userservice.service.ProfileService;
 import ru.school.userservice.service.UserService;
@@ -28,16 +30,16 @@ public class AdminController {
     }
 
     @Operation(summary = "Block or unblock user account", description = "Admin access")
-    @PutMapping("/block/{user}")
-    public void lockOrUnlockUser(@PathVariable Long user, @RequestParam boolean lock) {
-        userService.setLock(user, lock);
+    @PutMapping("/block")
+    public void lockOrUnlockUser(@RequestBody UserLockRequest req) {
+        userService.setLock(req.getUser(), req.isLock());
     }
 
     @Operation(summary = "Set profile published flag", description = "If published is true, this profile will " +
             "be published in free access. In teacher carousel, or in contact details if it is admin")
-    @PutMapping("/publish/{user}")
-    public void updateProfilePublish(@PathVariable Long user, @RequestParam boolean publish) {
-        userService.setPublic(user, publish);
+    @PutMapping("/publish")
+    public void updateProfilePublish(@RequestBody UserPublishRequest req) {
+        userService.setPublic(req.getUser(), req.isPublished());
     }
 
     @Operation(summary = "Returns all registered user profiles", description = "Admin access")
