@@ -1,0 +1,74 @@
+tasks.register('compile') {
+    rootProject.subprojects.forEach {
+        dependsOn(it.tasks.named('compileJava'))
+    }
+}
+
+tasks.register('build') {
+    dependsOn(clean)
+    dependsOn(compile)
+    rootProject.subprojects.forEach {
+        try {
+            dependsOn(it.tasks.named('bootJar'))
+        } catch (UnknownTaskException ignored) {
+            dependsOn(it.tasks.named('build'))
+        }
+    }
+}
+
+tasks.register('clean') {
+    rootProject.subprojects.forEach {
+        dependsOn(it.tasks.named('clean'))
+    }
+}
+
+tasks.register('music') {
+    dependsOn(build)
+    doLast {
+        'afplay fanfare.mp3'.execute()
+    }
+}
+
+tasks.register('test') {
+    rootProject.subprojects.forEach {
+        dependsOn(it.tasks.named('test'))
+    }
+}
+
+static def waitUntilGitAddingAll() {
+    def start = System.currentTimeMillis()
+    def command = 'git ls-files -m'
+    def out = ' '
+    def waitTime = 0L
+    while (!out.isEmpty() && waitTime < 10 * 1000) {
+        out = command.execute().text
+        waitTime = System.currentTimeMillis() - start
+    }
+
+    if (!out.isEmpty()) throw new RuntimeException("Time's up!")
+}
+
+tasks.register('diff') {
+    Properties properties = new Properties()
+    File propertiesFile = new File('build.properties')
+    propertiesFile.withInputStream {
+        properties.load(it)
+    }
+    def diffFiles= properties.get('diff-files').toString().split(',')
+
+    'git checkout test'.execute()
+    'git add *'.execute()
+    waitUntilGitAddingAll()
+    def proc = "git diff --name-only HEAD".execute()
+    def currDiffFiles = proc.text.split('\n')
+    for (String currDiffFile : currDiffFiles) {
+        for (String diffFile : diffFiles) {
+            if (currDiffFile.endsWith(diffFile)) {
+
+
+                'git commit -m auto'.execute()
+                break
+            }
+        }
+    }
+}

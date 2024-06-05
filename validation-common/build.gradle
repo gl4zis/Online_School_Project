@@ -3,7 +3,11 @@ plugins {
 }
 
 group = 'ru.school'
-version = 'unspecified'
+version = '0.0.1'
+
+java {
+    sourceCompatibility = '17'
+}
 
 repositories {
     mavenCentral()

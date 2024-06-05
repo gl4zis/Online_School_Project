@@ -8,3 +8,5 @@ include 'user-service'
 include 'jwt-common'
 include 'validation-common'
 include 'data-common'
+include 'e2e-test'
+
