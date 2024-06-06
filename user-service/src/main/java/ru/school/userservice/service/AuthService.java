@@ -17,6 +17,7 @@ import ru.school.userservice.dto.request.RegRequest;
 import ru.school.userservice.dto.response.JwtResponse;
 import ru.school.userservice.exception.EmailIsTakenException;
 import ru.school.userservice.exception.InvalidPasswordException;
+import ru.school.userservice.mbeans.register.Register;
 import ru.school.userservice.model.User;
 import ru.school.userservice.security.JwtGenerator;
 import ru.school.userservice.utils.DtoMapper;
@@ -33,6 +34,7 @@ public class AuthService {
     private final JwtTokenUtils jwtTokenUtils;
     private final DtoMapper mapper;
     private final PasswordEncoder passwordEncoder;
+    private final Register registerMBean;
 
     public JwtResponse login(AuthRequest request) {
         validationUtils.validateOrThrowException(request);
@@ -45,6 +47,7 @@ public class AuthService {
         );
 
         User user = (User) auth.getPrincipal();
+        registerMBean.onLogin(user);
         return setUserTokens(user);
     }
 
@@ -55,6 +58,7 @@ public class AuthService {
             throw new EmailIsTakenException(request.getEmail());
 
         User newStudent = mapper.createNewUser(request, User.Role.STUDENT);
+        registerMBean.onRegister(newStudent);
         userService.saveUser(newStudent);
         return setUserTokens(newStudent);
     }
@@ -73,7 +77,9 @@ public class AuthService {
         if (!userService.isEmailUnique(request.getEmail()))
             throw new EmailIsTakenException(request.getEmail());
 
-        userService.saveUser(mapper.createNewUser(request, request.getRole()));
+        User user = mapper.createNewUser(request, request.getRole());
+        userService.saveUser(user);
+        registerMBean.onRegister(user);
     }
 
     private JwtResponse setUserTokens(User user) {

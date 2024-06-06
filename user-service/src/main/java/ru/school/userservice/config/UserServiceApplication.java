@@ -6,6 +6,9 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
+import javax.management.*;
+import java.lang.management.ManagementFactory;
+
 @EnableDiscoveryClient
 @SpringBootApplication(scanBasePackages = "ru.school")
 @EntityScan("ru.school.userservice.model")
